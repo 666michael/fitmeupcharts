@@ -1,0 +1,526 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		331503701AB6CE1800F2FC79 /* UIColor+FitMeUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3315036F1AB6CE1800F2FC79 /* UIColor+FitMeUp.m */; };
+		3355055D1ABC50B600193BA2 /* NSDate+FitMeUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3355055C1ABC50B600193BA2 /* NSDate+FitMeUp.m */; };
+		338C85501AB2EA100025D2E4 /* NSString+FitMeUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 338C854F1AB2EA100025D2E4 /* NSString+FitMeUp.m */; };
+		338DAA001AB185AE00594ED0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DA9FF1AB185AE00594ED0 /* main.m */; };
+		338DAA031AB185AE00594ED0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA021AB185AE00594ED0 /* AppDelegate.m */; };
+		338DAA061AB185AE00594ED0 /* FitmeupChart.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA041AB185AE00594ED0 /* FitmeupChart.xcdatamodeld */; };
+		338DAA091AB185AE00594ED0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA081AB185AE00594ED0 /* ViewController.m */; };
+		338DAA0C1AB185AE00594ED0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 338DAA0A1AB185AE00594ED0 /* Main.storyboard */; };
+		338DAA0E1AB185AE00594ED0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 338DAA0D1AB185AE00594ED0 /* Images.xcassets */; };
+		338DAA111AB185AE00594ED0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 338DAA0F1AB185AE00594ED0 /* LaunchScreen.xib */; };
+		338DAA1D1AB185AE00594ED0 /* FitmeupChartTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA1C1AB185AE00594ED0 /* FitmeupChartTests.m */; };
+		338DAA2C1AB186DC00594ED0 /* GMChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA2B1AB186DC00594ED0 /* GMChartView.m */; };
+		338DAA2F1AB193D800594ED0 /* GMDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA2E1AB193D800594ED0 /* GMDataSet.m */; };
+		338DAA321AB1975E00594ED0 /* GMDataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA311AB1975E00594ED0 /* GMDataPoint.m */; };
+		338DAA351AB199E900594ED0 /* GMDatePoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA341AB199E900594ED0 /* GMDatePoint.m */; };
+		338DAA381AB19A8600594ED0 /* GMChartFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA371AB19A8600594ED0 /* GMChartFactory.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		338DAA171AB185AE00594ED0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 338DA9F21AB185AE00594ED0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 338DA9F91AB185AE00594ED0;
+			remoteInfo = FitmeupChart;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3315036E1AB6CE1800F2FC79 /* UIColor+FitMeUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+FitMeUp.h"; path = "GMChartView/UIColor+FitMeUp.h"; sourceTree = "<group>"; };
+		3315036F1AB6CE1800F2FC79 /* UIColor+FitMeUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+FitMeUp.m"; path = "GMChartView/UIColor+FitMeUp.m"; sourceTree = "<group>"; };
+		3355055B1ABC50B600193BA2 /* NSDate+FitMeUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+FitMeUp.h"; path = "GMChartView/NSDate+FitMeUp.h"; sourceTree = "<group>"; };
+		3355055C1ABC50B600193BA2 /* NSDate+FitMeUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+FitMeUp.m"; path = "GMChartView/NSDate+FitMeUp.m"; sourceTree = "<group>"; };
+		338C854E1AB2EA100025D2E4 /* NSString+FitMeUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+FitMeUp.h"; path = "GMChartView/NSString+FitMeUp.h"; sourceTree = "<group>"; };
+		338C854F1AB2EA100025D2E4 /* NSString+FitMeUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+FitMeUp.m"; path = "GMChartView/NSString+FitMeUp.m"; sourceTree = "<group>"; };
+		338DA9FA1AB185AE00594ED0 /* FitmeupChart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitmeupChart.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		338DA9FE1AB185AE00594ED0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		338DA9FF1AB185AE00594ED0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		338DAA011AB185AE00594ED0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		338DAA021AB185AE00594ED0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		338DAA051AB185AE00594ED0 /* FitmeupChart.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FitmeupChart.xcdatamodel; sourceTree = "<group>"; };
+		338DAA071AB185AE00594ED0 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		338DAA081AB185AE00594ED0 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		338DAA0B1AB185AE00594ED0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		338DAA0D1AB185AE00594ED0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		338DAA101AB185AE00594ED0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		338DAA161AB185AE00594ED0 /* FitmeupChartTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FitmeupChartTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		338DAA1B1AB185AE00594ED0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		338DAA1C1AB185AE00594ED0 /* FitmeupChartTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FitmeupChartTests.m; sourceTree = "<group>"; };
+		338DAA2A1AB186DC00594ED0 /* GMChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMChartView.h; path = GMChartView/GMChartView.h; sourceTree = "<group>"; };
+		338DAA2B1AB186DC00594ED0 /* GMChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMChartView.m; path = GMChartView/GMChartView.m; sourceTree = "<group>"; };
+		338DAA2D1AB193D800594ED0 /* GMDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMDataSet.h; path = GMChartView/GMDataSet.h; sourceTree = "<group>"; };
+		338DAA2E1AB193D800594ED0 /* GMDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMDataSet.m; path = GMChartView/GMDataSet.m; sourceTree = "<group>"; };
+		338DAA301AB1975E00594ED0 /* GMDataPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMDataPoint.h; path = GMChartView/GMDataPoint.h; sourceTree = "<group>"; };
+		338DAA311AB1975E00594ED0 /* GMDataPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMDataPoint.m; path = GMChartView/GMDataPoint.m; sourceTree = "<group>"; };
+		338DAA331AB199E900594ED0 /* GMDatePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMDatePoint.h; path = GMChartView/GMDatePoint.h; sourceTree = "<group>"; };
+		338DAA341AB199E900594ED0 /* GMDatePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMDatePoint.m; path = GMChartView/GMDatePoint.m; sourceTree = "<group>"; };
+		338DAA361AB19A8600594ED0 /* GMChartFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMChartFactory.h; path = GMChartView/GMChartFactory.h; sourceTree = "<group>"; };
+		338DAA371AB19A8600594ED0 /* GMChartFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMChartFactory.m; path = GMChartView/GMChartFactory.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		338DA9F71AB185AE00594ED0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		338DAA131AB185AE00594ED0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		338DA9F11AB185AE00594ED0 = {
+			isa = PBXGroup;
+			children = (
+				338DA9FC1AB185AE00594ED0 /* FitmeupChart */,
+				338DAA191AB185AE00594ED0 /* FitmeupChartTests */,
+				338DA9FB1AB185AE00594ED0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		338DA9FB1AB185AE00594ED0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				338DA9FA1AB185AE00594ED0 /* FitmeupChart.app */,
+				338DAA161AB185AE00594ED0 /* FitmeupChartTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		338DA9FC1AB185AE00594ED0 /* FitmeupChart */ = {
+			isa = PBXGroup;
+			children = (
+				338DAA291AB1869900594ED0 /* GMChartView */,
+				338DAA261AB185B900594ED0 /* ViewControllers */,
+				338DAA011AB185AE00594ED0 /* AppDelegate.h */,
+				338DAA021AB185AE00594ED0 /* AppDelegate.m */,
+				338DAA271AB1863800594ED0 /* Resources */,
+				338DAA281AB1864400594ED0 /* CoreData */,
+				338DA9FD1AB185AE00594ED0 /* Supporting Files */,
+			);
+			path = FitmeupChart;
+			sourceTree = "<group>";
+		};
+		338DA9FD1AB185AE00594ED0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				338DA9FE1AB185AE00594ED0 /* Info.plist */,
+				338DA9FF1AB185AE00594ED0 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		338DAA191AB185AE00594ED0 /* FitmeupChartTests */ = {
+			isa = PBXGroup;
+			children = (
+				338DAA1C1AB185AE00594ED0 /* FitmeupChartTests.m */,
+				338DAA1A1AB185AE00594ED0 /* Supporting Files */,
+			);
+			path = FitmeupChartTests;
+			sourceTree = "<group>";
+		};
+		338DAA1A1AB185AE00594ED0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				338DAA1B1AB185AE00594ED0 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		338DAA261AB185B900594ED0 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				338DAA071AB185AE00594ED0 /* ViewController.h */,
+				338DAA081AB185AE00594ED0 /* ViewController.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		338DAA271AB1863800594ED0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				338DAA0A1AB185AE00594ED0 /* Main.storyboard */,
+				338DAA0D1AB185AE00594ED0 /* Images.xcassets */,
+				338DAA0F1AB185AE00594ED0 /* LaunchScreen.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		338DAA281AB1864400594ED0 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				338DAA041AB185AE00594ED0 /* FitmeupChart.xcdatamodeld */,
+			);
+			name = CoreData;
+			sourceTree = "<group>";
+		};
+		338DAA291AB1869900594ED0 /* GMChartView */ = {
+			isa = PBXGroup;
+			children = (
+				338DAA361AB19A8600594ED0 /* GMChartFactory.h */,
+				338DAA371AB19A8600594ED0 /* GMChartFactory.m */,
+				338DAA2A1AB186DC00594ED0 /* GMChartView.h */,
+				338DAA2B1AB186DC00594ED0 /* GMChartView.m */,
+				338DAA2D1AB193D800594ED0 /* GMDataSet.h */,
+				338DAA2E1AB193D800594ED0 /* GMDataSet.m */,
+				338DAA301AB1975E00594ED0 /* GMDataPoint.h */,
+				338DAA311AB1975E00594ED0 /* GMDataPoint.m */,
+				338DAA331AB199E900594ED0 /* GMDatePoint.h */,
+				338DAA341AB199E900594ED0 /* GMDatePoint.m */,
+				338C854E1AB2EA100025D2E4 /* NSString+FitMeUp.h */,
+				338C854F1AB2EA100025D2E4 /* NSString+FitMeUp.m */,
+				3315036E1AB6CE1800F2FC79 /* UIColor+FitMeUp.h */,
+				3315036F1AB6CE1800F2FC79 /* UIColor+FitMeUp.m */,
+				3355055B1ABC50B600193BA2 /* NSDate+FitMeUp.h */,
+				3355055C1ABC50B600193BA2 /* NSDate+FitMeUp.m */,
+			);
+			name = GMChartView;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		338DA9F91AB185AE00594ED0 /* FitmeupChart */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 338DAA201AB185AE00594ED0 /* Build configuration list for PBXNativeTarget "FitmeupChart" */;
+			buildPhases = (
+				338DA9F61AB185AE00594ED0 /* Sources */,
+				338DA9F71AB185AE00594ED0 /* Frameworks */,
+				338DA9F81AB185AE00594ED0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FitmeupChart;
+			productName = FitmeupChart;
+			productReference = 338DA9FA1AB185AE00594ED0 /* FitmeupChart.app */;
+			productType = "com.apple.product-type.application";
+		};
+		338DAA151AB185AE00594ED0 /* FitmeupChartTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 338DAA231AB185AE00594ED0 /* Build configuration list for PBXNativeTarget "FitmeupChartTests" */;
+			buildPhases = (
+				338DAA121AB185AE00594ED0 /* Sources */,
+				338DAA131AB185AE00594ED0 /* Frameworks */,
+				338DAA141AB185AE00594ED0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				338DAA181AB185AE00594ED0 /* PBXTargetDependency */,
+			);
+			name = FitmeupChartTests;
+			productName = FitmeupChartTests;
+			productReference = 338DAA161AB185AE00594ED0 /* FitmeupChartTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		338DA9F21AB185AE00594ED0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0620;
+				ORGANIZATIONNAME = "Anton Gubarenko";
+				TargetAttributes = {
+					338DA9F91AB185AE00594ED0 = {
+						CreatedOnToolsVersion = 6.2;
+					};
+					338DAA151AB185AE00594ED0 = {
+						CreatedOnToolsVersion = 6.2;
+						TestTargetID = 338DA9F91AB185AE00594ED0;
+					};
+				};
+			};
+			buildConfigurationList = 338DA9F51AB185AE00594ED0 /* Build configuration list for PBXProject "FitmeupChart" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 338DA9F11AB185AE00594ED0;
+			productRefGroup = 338DA9FB1AB185AE00594ED0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				338DA9F91AB185AE00594ED0 /* FitmeupChart */,
+				338DAA151AB185AE00594ED0 /* FitmeupChartTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		338DA9F81AB185AE00594ED0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				338DAA0C1AB185AE00594ED0 /* Main.storyboard in Resources */,
+				338DAA111AB185AE00594ED0 /* LaunchScreen.xib in Resources */,
+				338DAA0E1AB185AE00594ED0 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		338DAA141AB185AE00594ED0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		338DA9F61AB185AE00594ED0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				338DAA321AB1975E00594ED0 /* GMDataPoint.m in Sources */,
+				331503701AB6CE1800F2FC79 /* UIColor+FitMeUp.m in Sources */,
+				338DAA2F1AB193D800594ED0 /* GMDataSet.m in Sources */,
+				3355055D1ABC50B600193BA2 /* NSDate+FitMeUp.m in Sources */,
+				338DAA061AB185AE00594ED0 /* FitmeupChart.xcdatamodeld in Sources */,
+				338DAA031AB185AE00594ED0 /* AppDelegate.m in Sources */,
+				338DAA351AB199E900594ED0 /* GMDatePoint.m in Sources */,
+				338DAA2C1AB186DC00594ED0 /* GMChartView.m in Sources */,
+				338C85501AB2EA100025D2E4 /* NSString+FitMeUp.m in Sources */,
+				338DAA091AB185AE00594ED0 /* ViewController.m in Sources */,
+				338DAA381AB19A8600594ED0 /* GMChartFactory.m in Sources */,
+				338DAA001AB185AE00594ED0 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		338DAA121AB185AE00594ED0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				338DAA1D1AB185AE00594ED0 /* FitmeupChartTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		338DAA181AB185AE00594ED0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 338DA9F91AB185AE00594ED0 /* FitmeupChart */;
+			targetProxy = 338DAA171AB185AE00594ED0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		338DAA0A1AB185AE00594ED0 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				338DAA0B1AB185AE00594ED0 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		338DAA0F1AB185AE00594ED0 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				338DAA101AB185AE00594ED0 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		338DAA1E1AB185AE00594ED0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		338DAA1F1AB185AE00594ED0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		338DAA211AB185AE00594ED0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = FitmeupChart/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		338DAA221AB185AE00594ED0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = FitmeupChart/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		338DAA241AB185AE00594ED0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = FitmeupChartTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FitmeupChart.app/FitmeupChart";
+			};
+			name = Debug;
+		};
+		338DAA251AB185AE00594ED0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = FitmeupChartTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FitmeupChart.app/FitmeupChart";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		338DA9F51AB185AE00594ED0 /* Build configuration list for PBXProject "FitmeupChart" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				338DAA1E1AB185AE00594ED0 /* Debug */,
+				338DAA1F1AB185AE00594ED0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		338DAA201AB185AE00594ED0 /* Build configuration list for PBXNativeTarget "FitmeupChart" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				338DAA211AB185AE00594ED0 /* Debug */,
+				338DAA221AB185AE00594ED0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		338DAA231AB185AE00594ED0 /* Build configuration list for PBXNativeTarget "FitmeupChartTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				338DAA241AB185AE00594ED0 /* Debug */,
+				338DAA251AB185AE00594ED0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		338DAA041AB185AE00594ED0 /* FitmeupChart.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				338DAA051AB185AE00594ED0 /* FitmeupChart.xcdatamodel */,
+			);
+			currentVersion = 338DAA051AB185AE00594ED0 /* FitmeupChart.xcdatamodel */;
+			path = FitmeupChart.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 338DA9F21AB185AE00594ED0 /* Project object */;
+}
