@@ -18,6 +18,7 @@
 
 const CGFloat chartPadding = 30.0f;
 const CGFloat chartTopPadding = 60.0f;
+const CGFloat chartBottomPadding = 120.0f;
 const CGFloat defaultLineWidth = 2.0f;
 const CGFloat defaultGridLineWidth = 0.5f;
 const NSInteger defaultGridLines = 5;
@@ -25,6 +26,7 @@ const CGFloat defaultFontSize = 21.0f;
 const CGFloat defaultCircleRadius = 5;
 const CGFloat defaultSmallCircleRadius = 2.5;
 const NSString* defaultDateFormat = @"dd.MM";
+const CGFloat defaultLegendSquare = 30.0f;
 
 //=============================================================================
 
@@ -38,7 +40,7 @@ const NSString* defaultDateFormat = @"dd.MM";
 
 - (id) initWithFrame: (CGRect) frame
 {
-    if(self == [super initWithFrame:frame])
+    if(self == [super initWithFrame: frame])
     {
         [self setupDefaultViewLayout];
     }
@@ -49,7 +51,7 @@ const NSString* defaultDateFormat = @"dd.MM";
 
 - (id) initWithCoder: (NSCoder*) aDecoder
 {
-    if(self == [super initWithCoder:aDecoder])
+    if(self == [super initWithCoder: aDecoder])
     {
         [self setupDefaultViewLayout];
     }
@@ -60,13 +62,13 @@ const NSString* defaultDateFormat = @"dd.MM";
 
 - (void) setupDefaultViewLayout
 {
-    [self setBackgroundColor:[UIColor darkGrayColor]];
+    [self setBackgroundColor: [UIColor darkGrayColor]];
     
     _xAxisColor = [UIColor whiteColor];
     _yAxisColor = [UIColor gm_greenColor];
     
     _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding;
-    _plotHeight = CGRectGetHeight(self.frame) - 2 * chartTopPadding;
+    _plotHeight = CGRectGetHeight(self.frame) - chartTopPadding - chartBottomPadding;
     
     [self setupXLabel];
     [self setupYLabel];
@@ -90,22 +92,22 @@ const NSString* defaultDateFormat = @"dd.MM";
 
 - (void) setupXLabel
 {
-    _xAxisLabel = [[UILabel alloc] initWithFrame:CGRectMake(_plotHeight + 10, chartPadding, _plotWidth, 0)];
-    [_xAxisLabel setTextAlignment:NSTextAlignmentCenter];
-    [_xAxisLabel setFont:[UIFont systemFontOfSize:defaultFontSize]];
+    _xAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_plotHeight + 10, chartPadding, _plotWidth, 0)];
+    [_xAxisLabel setTextAlignment: NSTextAlignmentCenter];
+    [_xAxisLabel setFont: [UIFont systemFontOfSize:defaultFontSize]];
     UIViewAutoresizing mask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth
     | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
-    [_xAxisLabel setAutoresizingMask:mask];
-    [self addSubview:_xAxisLabel];
+    [_xAxisLabel setAutoresizingMask: mask];
+    [self addSubview: _xAxisLabel];
 }
 
 //=============================================================================
 
 - (void) setupYLabel
 {
-    _yAxisLabel = [[UILabel alloc] initWithFrame:CGRectMake(chartPadding, 10, _plotWidth, 0)];
-    [_yAxisLabel setFont:[UIFont systemFontOfSize:defaultFontSize]];
-    [self addSubview:_yAxisLabel];
+    _yAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(chartPadding, 10, _plotWidth, 0)];
+    [_yAxisLabel setFont: [UIFont systemFontOfSize:defaultFontSize]];
+    [self addSubview: _yAxisLabel];
 }
 
 //=============================================================================
@@ -135,7 +137,7 @@ const NSString* defaultDateFormat = @"dd.MM";
         [self clearContext];
         
         _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding;
-        _plotHeight = CGRectGetHeight(self.frame) - 2 * chartTopPadding;
+        _plotHeight = CGRectGetHeight(self.frame) -  chartTopPadding - chartBottomPadding;
         
         [self arrangeLabels];
         [self calcScale];
@@ -167,11 +169,11 @@ const NSString* defaultDateFormat = @"dd.MM";
     [_xAxisLabel setTextColor:_xAxisColor];
     [_yAxisLabel setTextColor:_yAxisColor];
     
-    CGFloat xTextHeight = [_xAxisLabel.text gm_heightForFont:[UIFont systemFontOfSize:defaultFontSize]];
-    CGFloat yTextHeight = [_xAxisLabel.text gm_heightForFont:[UIFont systemFontOfSize:defaultFontSize]];
+    CGFloat xTextHeight = [_xAxisLabel.text gm_heightForFont: [UIFont systemFontOfSize:defaultFontSize]];
+    CGFloat yTextHeight = [_xAxisLabel.text gm_heightForFont: [UIFont systemFontOfSize:defaultFontSize]];
     
-    [_xAxisLabel setFrame:CGRectMake(chartPadding, _plotHeight + chartTopPadding + xTextHeight/2.0, _plotWidth, xTextHeight)];
-    [_yAxisLabel setFrame:CGRectMake(chartPadding, chartTopPadding - yTextHeight * 1.5, _plotWidth, yTextHeight)];
+    [_xAxisLabel setFrame: CGRectMake(chartPadding, _plotHeight + chartTopPadding + xTextHeight/2.0, _plotWidth, xTextHeight)];
+    [_yAxisLabel setFrame: CGRectMake(chartPadding, chartTopPadding - yTextHeight * 1.5, _plotWidth, yTextHeight)];
 }
 
 //=============================================================================
@@ -323,8 +325,12 @@ const NSString* defaultDateFormat = @"dd.MM";
 {
     [self plotGraph];
     [self plotLabels];
+    
     if(!_xAxisLabel.text.length)
-        [self drawLegend];
+        [self drawXLegend];
+    
+    [self drawYLegend];
+    [self drawLowerLegend];
 }
 
 //=============================================================================
@@ -357,6 +363,10 @@ const NSString* defaultDateFormat = @"dd.MM";
                 if(dataSet.minPoint.y < _minY)
                     _minY = dataSet.minPoint.y;
             }
+            
+            CGFloat avgToAdd = fabs(_minY - _maxY) / 10.0f;
+            _minY = _minY - avgToAdd;
+            _maxY = _maxY + avgToAdd;
             
             _minX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_minX] gm_startOfDay] timeIntervalSinceReferenceDate];
             _maxX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_maxX] gm_startOfNextDay] timeIntervalSinceReferenceDate];
@@ -486,8 +496,8 @@ const NSString* defaultDateFormat = @"dd.MM";
     {
         y += textHeight / 2.0;
     }
-    [text drawAtPoint:CGPointMake(x, y)
-       withAttributes:attributes];
+    [text drawAtPoint: CGPointMake(x, y)
+       withAttributes: attributes];
 }
 
 //=============================================================================
@@ -507,12 +517,8 @@ const NSString* defaultDateFormat = @"dd.MM";
 
 - (CGFloat) yCoordinatesForValue: (CGFloat) yValue
 {
-    CGFloat avgToAdd = fabs(_minY - _maxY) / 4.0f;
-    CGFloat minY = _minY - avgToAdd;
-    CGFloat maxY = _maxY + avgToAdd;
-    
-    CGFloat yOld = (yValue * _plotHeight) / maxY;
-    CGFloat yMinOffset = (minY * _plotHeight) / maxY;
+    CGFloat yOld = (yValue * _plotHeight) / _maxY;
+    CGFloat yMinOffset = (_minY * _plotHeight) / _maxY;
     
     CGFloat scaleY = _plotHeight / (_plotHeight - yMinOffset);
     
@@ -523,7 +529,7 @@ const NSString* defaultDateFormat = @"dd.MM";
 
 //=============================================================================
 
-- (void) drawLegend
+- (void) drawXLegend
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -550,13 +556,49 @@ const NSString* defaultDateFormat = @"dd.MM";
                                          NSForegroundColorAttributeName : [UIColor gm_greenColor]};
             NSString* legendText = [NSString stringWithFormat:@"%@", [[self defaultDateFormatter] stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:_minX + i * SECS_PER_DAY]]];
             
-            CGFloat textHeight = [legendText gm_heightForFont:textFont];
+            CGFloat textHeight = [legendText gm_heightForFont: textFont];
             if(i == howMany)
             {
-                x -= [legendText gm_widthForFont:textFont];
+                x -= [legendText gm_widthForFont: textFont];
             }
-            [legendText drawAtPoint:CGPointMake(x, y + textHeight/2.0)
-                     withAttributes:attributes];
+            [legendText drawAtPoint: CGPointMake(x, y + textHeight/2.0)
+                     withAttributes: attributes];
+            
+            CGContextDrawPath(context, kCGPathFillStroke);
+        }
+    }
+}
+
+//=============================================================================
+
+- (void) drawYLegend
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetLineWidth(context, defaultGridLineWidth);
+    
+    UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-10];
+    
+    CGFloat stepY = _plotHeight / _yGridLines;
+    
+    for (NSInteger i = 0; i <= _yGridLines; i++)
+    {
+        if (i % 3 == 0 || i == _yGridLines)
+        {
+            CGFloat x = chartPadding;
+            CGFloat y = (_plotHeight - i * stepY)+ chartTopPadding;
+            
+            CGRect rect = CGRectMake(x - defaultSmallCircleRadius, y - defaultSmallCircleRadius, 2 * defaultSmallCircleRadius, 2 * defaultSmallCircleRadius);
+            CGContextAddEllipseInRect(context, rect);
+            
+            NSDictionary *attributes = @{
+                                         NSFontAttributeName : textFont,
+                                         NSForegroundColorAttributeName : [UIColor gm_greenColor]};
+            NSString* legendText = [NSString stringWithFormat:@"%0.0f", (i * (_maxY - _minY)/_yGridLines) +_minY ];
+            
+            x -= [legendText gm_widthForFont: textFont] + 5.0;
+            [legendText drawAtPoint: CGPointMake(x, y - [legendText gm_heightForFont: textFont] / 2.0)
+                     withAttributes: attributes];
             
             CGContextDrawPath(context, kCGPathFillStroke);
         }
@@ -567,10 +609,51 @@ const NSString* defaultDateFormat = @"dd.MM";
 
 - (NSDateFormatter*) defaultDateFormatter
 {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:[defaultDateFormat copy]];
-    [dateFormatter setTimeZone:[NSTimeZone defaultTimeZone]];
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDateFormat: [defaultDateFormat copy]];
+    [dateFormatter setTimeZone: [NSTimeZone defaultTimeZone]];
     return dateFormatter;
+}
+
+//=============================================================================
+
+- (void) drawLowerLegend
+{
+    for (NSInteger i = 0; i < _dataSets.count; i++)
+    {
+        [self drawDataSetSquareAtIndex:i];
+    }
+}
+
+//=============================================================================
+
+- (void) drawDataSetSquareAtIndex: (NSInteger) index
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGFloat x = chartPadding;
+    
+    if(index % 2 != 0)
+    {
+           x += _plotWidth / 2.0;
+    }
+    CGFloat y = _plotHeight + chartTopPadding + chartPadding*1.5;
+    
+    UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-10];
+    NSDictionary* attributes = @{
+                                 NSFontAttributeName : textFont,
+                                 NSForegroundColorAttributeName : [UIColor whiteColor]};
+    
+    UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect :CGRectMake(x, y, defaultLegendSquare, defaultLegendSquare)
+                                                          cornerRadius: 5.0];
+    
+    UIColor* legendColor = [_dataSets[index] plotColor] ? [_dataSets[index] plotColor] : [UIColor whiteColor];
+    CGContextSetStrokeColorWithColor(context, legendColor.CGColor);
+    CGContextSetFillColorWithColor(context, legendColor.CGColor);
+    [bezierPath stroke];
+    [bezierPath fill];
+    
+    [[_dataSets[index] plotName] drawAtPoint: CGPointMake(x + chartPadding/2.0 + defaultLegendSquare, y + [[_dataSets[index] plotName] gm_heightForFont: textFont]/2.0)
+             withAttributes: attributes];
 }
 
 //=============================================================================

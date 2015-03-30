@@ -37,7 +37,7 @@
 
 - (NSString*) description
 {
-    return [NSString stringWithFormat:@"x: %f y: %f", _xValue, _yValue];
+    return [NSString stringWithFormat: @"x: %f y: %f", _xValue, _yValue];
 }
 
 //=============================================================================

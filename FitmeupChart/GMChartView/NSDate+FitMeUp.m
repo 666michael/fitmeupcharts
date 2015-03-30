@@ -20,30 +20,20 @@
 - (NSDate*) gm_startOfDay
 {
     NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDateComponents *components = [calendar components:( NSCalendarUnitYear |  NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour |  NSCalendarUnitMinute |  NSCalendarUnitSecond ) fromDate:self];
+    NSDateComponents *components = [calendar components: ( NSCalendarUnitYear |  NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour |  NSCalendarUnitMinute |  NSCalendarUnitSecond ) fromDate: self];
     
-    [components setHour:0];
-    [components setMinute:0];
-    [components setSecond:0];
+    [components setHour: 0];
+    [components setMinute: 0];
+    [components setSecond: 0];
     
-    return [calendar dateFromComponents:components];
+    return [calendar dateFromComponents: components];
 }
 
 //=============================================================================
 
 - (NSDate*) gm_startOfNextDay
 {
-    return [[self dateByAddingTimeInterval:SECS_PER_DAY] gm_startOfDay];
+    return [[self dateByAddingTimeInterval: SECS_PER_DAY] gm_startOfDay];
 }
 
-//=============================================================================
-
-- (NSInteger) daysBetweenDate: (NSDate*) toDate
-{
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDateComponents *components = [calendar components:( NSCalendarUnitYear |  NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour |  NSCalendarUnitMinute |  NSCalendarUnitSecond ) fromDate:toDate toDate:self options:nil];
-    NSInteger daysTotal = fabs([components day]) / 3;
-    return daysTotal;
-}
-//=============================================================================
 @end

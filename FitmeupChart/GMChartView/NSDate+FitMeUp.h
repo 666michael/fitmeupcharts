@@ -14,6 +14,5 @@
 
 - (NSDate*) gm_startOfDay;
 - (NSDate*) gm_startOfNextDay;
-- (NSInteger) daysBetweenDate: (NSDate*) toDate;
 
 @end

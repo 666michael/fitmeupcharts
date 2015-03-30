@@ -27,7 +27,7 @@
     if (self == nil)
         return nil;
     
-    _dataPoints = [NSMutableArray arrayWithCapacity:0];
+    _dataPoints = [NSMutableArray arrayWithCapacity: 0];
     
     _minX = MAXFLOAT;
     _minY = MAXFLOAT;
@@ -65,7 +65,7 @@
 
 - (void) addDataPoint: (GMDataPoint*) dataPoint
 {
-    [_dataPoints addObject:dataPoint];
+    [_dataPoints addObject: dataPoint];
 }
 
 //=============================================================================
@@ -82,7 +82,7 @@
     if(index >= _dataPoints.count)
         return nil;
     
-    return [_dataPoints objectAtIndex:index];
+    return _dataPoints[index];
 }
 
 //=============================================================================
@@ -103,7 +103,7 @@
 
 - (void) sortPoints
 {
-    [_dataPoints sortUsingComparator:^NSComparisonResult(GMDataPoint* pt1, GMDataPoint* pt2) {
+    [_dataPoints sortUsingComparator: ^NSComparisonResult(GMDataPoint* pt1, GMDataPoint* pt2) {
         
         if(pt1.xValue > _maxX)
             _maxX = pt1.xValue;

@@ -31,8 +31,8 @@
 @property (nonatomic, strong) UIColor* yAxisColor;
 @property (nonatomic, strong) UIColor* xAxisColor;
 
-@property (nonatomic, copy) UILabel* yAxisLabel;
-@property (nonatomic, copy) UILabel* xAxisLabel;
+@property (nonatomic, strong) UILabel* yAxisLabel;
+@property (nonatomic, strong) UILabel* xAxisLabel;
 
 - (void) plotChart;
 - (void) setDataSetsWithArray: (NSArray*) dataSets;

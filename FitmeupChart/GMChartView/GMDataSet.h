@@ -19,6 +19,7 @@
 }
 
 @property (nonatomic, strong) UIColor* plotColor;
+@property (nonatomic, copy) NSString* plotName;
 
 - (id) initWithDataPoints: (NSArray*) dataPoints;
 

@@ -27,8 +27,8 @@
     if (self == nil)
         return nil;
     
-    super.xValue = [date timeIntervalSinceReferenceDate];
-    super.yValue = yValue;
+    self.xValue = [date timeIntervalSinceReferenceDate];
+    self.yValue = yValue;
     
     return self;
 }
@@ -37,7 +37,7 @@
 
 - (NSString*) description
 {
-    return [NSString stringWithFormat:@"x: %f y: %f", super.xValue, super.yValue];
+    return [NSString stringWithFormat: @"x: %f y: %f", super.xValue, super.yValue];
 }
 
 //=============================================================================
