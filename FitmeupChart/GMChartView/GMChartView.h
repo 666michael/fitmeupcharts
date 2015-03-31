@@ -33,6 +33,7 @@
 
 @property (nonatomic, strong) UILabel* yAxisLabel;
 @property (nonatomic, strong) UILabel* xAxisLabel;
+@property (nonatomic) BOOL showGrid;
 
 - (void) plotChart;
 - (void) setDataSetsWithArray: (NSArray*) dataSets;

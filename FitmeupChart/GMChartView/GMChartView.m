@@ -87,6 +87,8 @@ const CGFloat defaultLegendSquare = 30.0f;
     
     _minGridSize = 30.0f;
     
+    self.showGrid = YES;
+    
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -205,8 +207,11 @@ const CGFloat defaultLegendSquare = 30.0f;
     [self calculateLinesNumber];
     [self drawXAxis];
     [self drawYAxis];
-    [self drawVerticalLines];
-    [self drawHorizontalLines];
+    if(self.showGrid)
+    {
+        [self drawVerticalLines];
+        [self drawHorizontalLines];
+    }
 }
 
 //=============================================================================
