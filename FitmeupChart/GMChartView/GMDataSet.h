@@ -22,6 +22,7 @@
 @property (nonatomic, copy) NSString* plotName;
 
 - (id) initWithDataPoints: (NSArray*) dataPoints;
+- (id) initWithDictionary: (NSDictionary*) dictionary;
 
 - (void) addDataPoint: (GMDataPoint*) dataPoint;
 - (NSInteger) count;

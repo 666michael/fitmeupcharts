@@ -10,6 +10,7 @@
 
 #import "GMDataSet.h"
 #import "GMDataPoint.h"
+#import "GMDatePoint.h"
 
 //=============================================================================
 
@@ -55,6 +56,23 @@
     _maxY = 0.0f;
     
     return self;
+}
+
+//=============================================================================
+
+- (id) initWithDictionary: (NSDictionary*) dictionary
+{
+    NSMutableArray* dataPoints = [NSMutableArray new];
+    
+    if(!dictionary || ![[dictionary allKeys] count])
+        return nil;
+    
+    for (NSString* key in [dictionary allKeys])
+    {
+        [dataPoints addObject:[[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceReferenceDate:[key integerValue]] yValue:[dictionary[key] floatValue]]];
+    }    
+    
+    return [self initWithDataPoints:dataPoints];
 }
 
 //=============================================================================

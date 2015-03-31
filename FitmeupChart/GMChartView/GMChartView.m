@@ -195,7 +195,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     _yGridLines = defaultGridLines;
     
     NSInteger amountOfDays = (_maxX - _minX)/SECS_PER_DAY;
-    CGFloat stepX = _plotWidth / amountOfDays;
+    CGFloat stepX = _plotWidth / amountOfDays +3;
     /*_minGridSize = stepX;
     
     stepX = _plotWidth / _xGridLines;
@@ -325,10 +325,8 @@ const CGFloat defaultLegendSquare = 30.0f;
 {
     [self plotGraph];
     [self plotLabels];
-    
     if(!_xAxisLabel.text.length)
         [self drawXLegend];
-    
     [self drawYLegend];
     [self drawLowerLegend];
 }
