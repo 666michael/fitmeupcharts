@@ -86,6 +86,20 @@ const CGFloat defaultLegendSquare = 30.0f;
     _maxY = 0.0f;
     
     _minGridSize = 30.0f;
+    
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(didRotateDeviceChangeNotification:)
+                                                 name: UIDeviceOrientationDidChangeNotification
+                                               object: nil];
+}
+
+//=============================================================================
+
+-(void)didRotateDeviceChangeNotification:(NSNotification *)notification
+{
+    [self setNeedsDisplay];
 }
 
 //=============================================================================
@@ -115,6 +129,14 @@ const CGFloat defaultLegendSquare = 30.0f;
 - (void) setDataSetsWithArray: (NSArray*) dataSets
 {
     _dataSets = [dataSets copy];
+}
+
+//=============================================================================
+
+- (void) dealloc
+{
+    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 //=============================================================================

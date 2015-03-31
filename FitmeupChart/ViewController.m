@@ -70,7 +70,7 @@
 
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    [self.chartView setNeedsDisplay];
+    //[self.chartView setNeedsDisplay];
 }
 
 @end
