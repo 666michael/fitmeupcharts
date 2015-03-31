@@ -47,7 +47,7 @@
     if (self == nil)
         return nil;
 
-    _dataPoints = [dataPoints copy];
+    _dataPoints = [dataPoints mutableCopy];
     
     _minX = MAXFLOAT;
     _minY = MAXFLOAT;
@@ -67,10 +67,31 @@
     if(!dictionary || ![[dictionary allKeys] count])
         return nil;
     
-    for (NSString* key in [dictionary allKeys])
+    for (NSNumber* key in [dictionary allKeys])
     {
-        [dataPoints addObject:[[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceReferenceDate:[key integerValue]] yValue:[dictionary[key] floatValue]]];
+        [dataPoints addObject:[[GMDatePoint alloc] initWithDate: [NSDate dateWithTimeIntervalSinceReferenceDate:[key integerValue]]
+                                                         yValue: [dictionary[key] floatValue]]];
     }    
+    
+    return [self initWithDataPoints:dataPoints];
+}
+
+//=============================================================================
+
+- (id) initWithDates: (NSArray*) dates
+           andValues: (NSArray*) values
+{
+    NSMutableArray* dataPoints = [NSMutableArray new];
+    
+    if(!dates || !values)
+        return nil;
+    if([dates count] != [values count])
+        return nil;
+    for (NSInteger index = 0; index < [dates count]; index++)
+    {
+        [dataPoints addObject:[[GMDatePoint alloc] initWithDate: dates[index]
+                                                         yValue: [values[index] floatValue]]];
+    }
     
     return [self initWithDataPoints:dataPoints];
 }

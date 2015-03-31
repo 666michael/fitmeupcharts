@@ -23,6 +23,8 @@
 
 - (id) initWithDataPoints: (NSArray*) dataPoints;
 - (id) initWithDictionary: (NSDictionary*) dictionary;
+- (id) initWithDates: (NSArray*) dates
+           andValues: (NSArray*) values;
 
 - (void) addDataPoint: (GMDataPoint*) dataPoint;
 - (NSInteger) count;
