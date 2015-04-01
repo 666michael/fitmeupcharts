@@ -17,6 +17,7 @@
 //=============================================================================
 
 const CGFloat chartPadding = 30.0f;
+const CGFloat leftPadding = 60.0f;
 const CGFloat chartTopPadding = 60.0f;
 const CGFloat chartBottomPadding = 120.0f;
 const CGFloat defaultLineWidth = 2.0f;
@@ -67,7 +68,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     _xAxisColor = [UIColor gm_grayColor];
     _yAxisColor = [UIColor gm_grayColor];
     
-    _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding;
+    _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding - leftPadding;
     _plotHeight = CGRectGetHeight(self.frame) - chartTopPadding - chartBottomPadding;
     
     [self setupXLabel];
@@ -160,8 +161,8 @@ const CGFloat defaultLegendSquare = 30.0f;
     {
         [self clearContext];
         
-        _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding;
-        _plotHeight = CGRectGetHeight(self.frame) -  chartTopPadding - chartBottomPadding;
+        _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding - leftPadding;
+        _plotHeight = CGRectGetHeight(self.frame) - chartTopPadding - chartBottomPadding;
         
         [self arrangeLabels];
         [self calcScale];
@@ -266,7 +267,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     CGContextSetStrokeColorWithColor(context, [_xAxisColor CGColor]);
     
     CGContextMoveToPoint(context, chartPadding, _plotHeight + chartTopPadding);
-    CGContextAddLineToPoint(context, _plotWidth + chartPadding, _plotHeight + chartTopPadding);
+    CGContextAddLineToPoint(context, _plotWidth + chartPadding+leftPadding, _plotHeight + chartTopPadding);
     
     CGContextStrokePath(context);
 }
@@ -312,10 +313,10 @@ const CGFloat defaultLegendSquare = 30.0f;
     CGFloat stepX = _plotWidth / _xGridLines;
     NSInteger howMany = _plotWidth/ stepX;
     
-    for (NSInteger i = 1; i <= howMany; i++)
+    for (NSInteger i = 0; i <= howMany; i++)
     {
-        CGContextMoveToPoint(context,chartPadding + i * stepX, chartTopPadding);
-        CGContextAddLineToPoint(context, chartPadding + i * stepX, _plotHeight + chartTopPadding);
+        CGContextMoveToPoint(context,chartPadding + i * stepX + leftPadding, chartTopPadding);
+        CGContextAddLineToPoint(context, chartPadding + i * stepX + leftPadding, _plotHeight + chartTopPadding);
     }
     
     CGContextStrokePath(context);
@@ -336,7 +337,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     for (NSInteger i = 1; i <= howManyHorizontal; i++)
     {
         CGContextMoveToPoint(context, chartPadding, _plotHeight + chartTopPadding - i * stepY);
-        CGContextAddLineToPoint(context, _plotWidth + chartPadding, _plotHeight + chartTopPadding - i * stepY);
+        CGContextAddLineToPoint(context, _plotWidth + chartPadding + leftPadding, _plotHeight + chartTopPadding - i * stepY);
     }
     
     CGContextStrokePath(context);
@@ -535,7 +536,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     CGFloat scaleX = _plotWidth / (_plotWidth - xMinOffset);
     
     CGFloat res = (xOld - xMinOffset) * scaleX;
-    return chartPadding + res;
+    return chartPadding + res + leftPadding;
 }
 
 //=============================================================================
@@ -570,7 +571,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     {
         if (YES)
         {
-            CGFloat x = chartPadding + i * stepX;
+            CGFloat x = chartPadding + i * stepX + leftPadding;
             CGFloat y = _plotHeight + chartTopPadding;
             
             CGRect rect = CGRectMake(x - defaultSmallCircleRadius, y - defaultSmallCircleRadius, 2 * defaultSmallCircleRadius, 2 * defaultSmallCircleRadius);
@@ -581,11 +582,9 @@ const CGFloat defaultLegendSquare = 30.0f;
                                          NSForegroundColorAttributeName : [UIColor gm_greenColor]};
             NSString* legendText = [NSString stringWithFormat:@"%@", [[self defaultDateFormatter] stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:_minX + i * SECS_PER_DAY]]];
             
-            CGFloat textHeight = [legendText gm_heightForFont: textFont];
-            if(i == howMany)
-            {
-                x -= [legendText gm_widthForFont: textFont];
-            }
+            CGFloat textHeight = [legendText gm_heightForFont: textFont];            
+            x -= [legendText gm_widthForFont: textFont] / 2.0;
+
             [legendText drawAtPoint: CGPointMake(x, y + textHeight/2.0)
                      withAttributes: attributes];
             
@@ -606,7 +605,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     
     CGFloat stepY = _plotHeight / _yGridLines;
     
-    for (NSInteger i = 0; i <= _yGridLines; i++)
+    for (NSInteger i = 1; i <= _yGridLines; i++)
     {
         if (i % 2 == 0 || i == _yGridLines)
         {
