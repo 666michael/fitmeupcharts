@@ -26,29 +26,61 @@
 
 - (void)initChart
 {
+    GMDataSet *dataSet = [GMDataSet new];
+    
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     [dateFormatter setDateFormat:@"dd/ HH:mm"];
     
-    NSDictionary *data1 = @{
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: -3 * SECS_PER_DAY] timeIntervalSinceReferenceDate]]: @10,
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: -2 * SECS_PER_DAY] timeIntervalSinceReferenceDate]]: @15,
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: -1 * SECS_PER_DAY] timeIntervalSinceReferenceDate]]: @9,
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: 0] timeIntervalSinceReferenceDate]]: @26,
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: 1 * SECS_PER_DAY] timeIntervalSinceReferenceDate]]: @28,
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: 2 * SECS_PER_DAY] timeIntervalSinceReferenceDate]]: @21,
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: 3 * SECS_PER_DAY] timeIntervalSinceReferenceDate]]: @4};
-    GMDataSet *dataSet = [[GMDataSet alloc] initWithDictionary:data1];
+    GMDatePoint *pt1 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-3 * SECS_PER_DAY]  yValue:10];
+    [pt1 setShouldShowLabel:YES];
+    [pt1 setPointLabelText:@"10"];
+    [pt1 setPointStyle:GMPointLowerStyle];
+    GMDatePoint *pt2 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-2 * SECS_PER_DAY]  yValue:15];
+    GMDatePoint *pt3 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-1 * SECS_PER_DAY]  yValue:9];
+    GMDatePoint *pt4 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:0]  yValue:26];
+    GMDatePoint *pt5 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:1 * SECS_PER_DAY]  yValue:28];
+    [pt5 setShouldShowLabel:YES];
+    [pt5 setPointLabelText:@"28"];
+    [pt5 setPointStyle:GMPointUpperStyle];
+    GMDatePoint *pt6 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:2 * SECS_PER_DAY]  yValue:21];
+    GMDatePoint *pt7 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:3 * SECS_PER_DAY]  yValue:4];
+    [pt7 setShouldShowLabel:YES];
+    [pt7 setPointLabelText:@"4"];
+    [pt7 setPointStyle:GMPointUpperStyle];
+    
+    [dataSet addDataPoint:pt1];
+    [dataSet addDataPoint:pt2];
+    [dataSet addDataPoint:pt3];
+    [dataSet addDataPoint:pt4];
+    [dataSet addDataPoint:pt5];
+    [dataSet addDataPoint:pt6];
+    [dataSet addDataPoint:pt7];
     [dataSet setPlotColor:[UIColor gm_greenColor]];
     [dataSet setPlotName:@"proteins"];
     
-    NSDictionary *data2 = @{
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: -3 * SECS_PER_DAY] timeIntervalSinceReferenceDate]]: @25,
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: -2 * SECS_PER_DAY] timeIntervalSinceReferenceDate]]: @31,
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: -1 * SECS_PER_DAY] timeIntervalSinceReferenceDate]]: @20,
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: 0] timeIntervalSinceReferenceDate]]: @45,
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: 3 * SECS_PER_DAY] timeIntervalSinceReferenceDate]]: @51,
-                            [NSNumber numberWithInteger:[[NSDate dateWithTimeIntervalSinceNow: 5 * SECS_PER_DAY] timeIntervalSinceReferenceDate]]: @48};
-    GMDataSet *dataSet1 = [[GMDataSet alloc] initWithDictionary:data2];
+    GMDataSet *dataSet1 = [[GMDataSet alloc] init];
+    GMDatePoint *pt11 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-5 * SECS_PER_DAY]  yValue:18];
+    [pt11 setShouldShowLabel:YES];
+    [pt11 setPointLabelText:@"18"];
+    [pt11 setPointStyle:GMPointLowerStyle];
+    GMDatePoint *pt12 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-3 * SECS_PER_DAY]  yValue:25];
+    GMDatePoint *pt13 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-2 * SECS_PER_DAY]  yValue:31];
+    GMDatePoint *pt14 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-1 * SECS_PER_DAY]  yValue:20];
+    GMDatePoint *pt15 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:0]  yValue:45];
+    GMDataPoint *pt16 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:3 * SECS_PER_DAY]  yValue:51];
+    GMDatePoint *pt17 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:5 * SECS_PER_DAY]  yValue:48];
+    [pt17 setShouldShowLabel:YES];
+    [pt17 setPointLabelText:@"48"];
+    [pt17 setPointStyle:GMPointUpperStyle];
+    
+    [dataSet1 addDataPoint:pt11];
+    [dataSet1 addDataPoint:pt12];
+    [dataSet1 addDataPoint:pt13];
+    [dataSet1 addDataPoint:pt14];
+    [dataSet1 addDataPoint:pt15];
+    [dataSet1 addDataPoint:pt16];
+    [dataSet1 addDataPoint:pt17];
+    
     [dataSet1 setPlotColor:[UIColor gm_redColor]];
     [dataSet1 setPlotName:@"calories"];
     

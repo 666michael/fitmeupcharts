@@ -9,6 +9,7 @@
 //=============================================================================
 
 #import "GMDatePoint.h"
+#import "NSDate+FitMeUp.h"
 
 //=============================================================================
 
@@ -27,7 +28,7 @@
     if (self == nil)
         return nil;
     
-    self.xValue = [date timeIntervalSinceReferenceDate];
+    self.xValue = [[date gm_startOfDay] timeIntervalSinceReferenceDate];
     self.yValue = yValue;
     
     return self;
