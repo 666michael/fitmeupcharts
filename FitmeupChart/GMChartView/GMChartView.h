@@ -39,6 +39,7 @@ typedef enum {
 @property (nonatomic, strong) UILabel* yAxisLabel;
 @property (nonatomic, strong) UILabel* xAxisLabel;
 @property (nonatomic) BOOL showGrid;
+@property (nonatomic) BOOL showYValues;
 @property (nonatomic) ChartGridType gridType;
 
 - (void) plotChart;

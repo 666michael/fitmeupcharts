@@ -17,7 +17,7 @@
 //=============================================================================
 
 const CGFloat chartPadding = 30.0f;
-const CGFloat leftPadding = 50.0f;
+const CGFloat leftPadding = 40.0f;
 const CGFloat chartTopPadding = 60.0f;
 const CGFloat chartBottomPadding = 120.0f;
 const CGFloat defaultLineWidth = 2.0f;
@@ -225,41 +225,11 @@ const CGFloat defaultLegendSquare = 30.0f;
     _xGridLines = defaultGridLines;
     _yGridLines = defaultGridLines;
     
-    NSInteger amountOfDays = (_maxX - _minX)/SECS_PER_DAY;
     CGFloat stepX = _plotWidth / 14;
     NSInteger fixedCount = _plotHeight / stepX;
     fixedCount = fixedCount -( fixedCount%2);
     _plotHeight -= (_plotHeight - stepX*fixedCount);
     
-    /*_minGridSize = stepX;
-    
-    stepX = _plotWidth / _xGridLines;
-    CGFloat stepY = _plotHeight / _yGridLines;
-    
-    CGFloat epsilon = 1.0;
-    while(fabsf(stepX - stepY) > epsilon || stepX - _minGridSize > epsilon)
-    {
-        if ((stepX - stepY) > epsilon)
-        {
-            _xGridLines++;
-        }
-        else
-            if ((stepY - stepX) > epsilon)
-            {
-                _yGridLines++;
-            }
-        stepX = _plotWidth / _xGridLines;
-        stepY = _plotHeight / _yGridLines;
-        if(fabsf(stepX - stepY) < epsilon && stepX - _minGridSize > epsilon)
-        {
-            _xGridLines++;
-            _yGridLines++;
-        }
-    }
-    NSLog(@"diff %f", _minGridSize/stepX);*/
-    //_minX -= (SECS_PER_DAY)*1.2;
-    //_maxX += (SECS_PER_DAY)*1.2;
-    //_minX - 0
     _xGridLines = 14;
     _yGridLines = fixedCount;
 }
@@ -339,7 +309,6 @@ const CGFloat defaultLegendSquare = 30.0f;
     CGContextSetStrokeColorWithColor(context, _defaultGridLineColor);
     
     CGFloat stepY = _plotHeight/_yGridLines;
-    NSInteger howManyHorizontal = _plotHeight / stepY;
     
     for (NSInteger i = 1; i <= _yGridLines; i++)
     {
@@ -545,7 +514,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     CGFloat res = (xOld - xMinOffset) * scaleX;*/
     
     CGFloat stepX = (_plotWidth / _xGridLines) * 2;
-    CGFloat res = stepX * ((xValue - _minX)/86400);
+    CGFloat res = stepX * ((xValue - _minX)/SECS_PER_DAY);
     
     return chartPadding + res + leftPadding;
 }
@@ -574,8 +543,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     
     UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-15];
     
-    NSInteger amountPerLine = 86400/2;
-    CGFloat stepX = _plotWidth / _xGridLines;
+    NSInteger amountPerLine = SECS_PER_DAY/2;
     
     for (NSInteger i = 0; i < _xGridLines; i++)
     {
