@@ -17,7 +17,7 @@
 //=============================================================================
 
 const CGFloat chartPadding = 30.0f;
-const CGFloat leftPadding = 0.0f;
+const CGFloat leftPadding = 50.0f;
 const CGFloat chartTopPadding = 60.0f;
 const CGFloat chartBottomPadding = 120.0f;
 const CGFloat defaultLineWidth = 2.0f;
@@ -320,7 +320,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     CGFloat stepX = _plotWidth / _xGridLines;
     NSInteger howMany = _plotWidth/ stepX;
     
-    for (NSInteger i = 0; i <= howMany; i++)
+    for (NSInteger i = -1; i <= howMany; i++)
     {
         CGContextMoveToPoint(context,chartPadding + i * stepX + leftPadding, chartTopPadding);
         CGContextAddLineToPoint(context, chartPadding + i * stepX + leftPadding, _plotHeight + chartTopPadding);
