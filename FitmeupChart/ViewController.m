@@ -44,6 +44,7 @@
     //[pt5 setPointStyle:GMPointUpperStyle];
     GMDatePoint *pt6 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:2 * SECS_PER_DAY]  yValue:21];
     GMDatePoint *pt7 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:3 * SECS_PER_DAY]  yValue:4];
+    GMDatePoint *pt8 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:4 * SECS_PER_DAY]  yValue:15];
     //[pt7 setShouldShowLabel:YES];
     //[pt7 setPointLabelText:@"4"];
     //[pt7 setPointStyle:GMPointUpperStyle];
@@ -55,6 +56,7 @@
     [dataSet addDataPoint:pt5];
     [dataSet addDataPoint:pt6];
     [dataSet addDataPoint:pt7];
+    [dataSet addDataPoint:pt8];
     [dataSet setPlotColor:[UIColor gm_greenColor]];
     [dataSet setPlotName:@"proteins"];
     

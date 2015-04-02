@@ -26,7 +26,7 @@ const NSInteger defaultGridLines = 5;
 const CGFloat defaultFontSize = 21.0f;
 const CGFloat defaultCircleRadius = 5;
 const CGFloat defaultSmallCircleRadius = 2.5;
-const NSString* defaultDateFormat = @"dd/HH.mm";
+const NSString* defaultDateFormat = @"EEE";
 const CGFloat defaultLegendSquare = 30.0f;
 
 //=============================================================================
@@ -226,7 +226,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     _yGridLines = defaultGridLines;
     
     NSInteger amountOfDays = (_maxX - _minX)/SECS_PER_DAY;
-    CGFloat stepX = _plotWidth / 18;
+    CGFloat stepX = _plotWidth / 14;
     NSInteger fixedCount = _plotHeight / stepX;
     fixedCount = fixedCount -( fixedCount%2);
     _plotHeight -= (_plotHeight - stepX*fixedCount);
@@ -260,7 +260,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     //_minX -= (SECS_PER_DAY)*1.2;
     //_maxX += (SECS_PER_DAY)*1.2;
     //_minX - 0
-    _xGridLines = 18;
+    _xGridLines = 14;
     _yGridLines = fixedCount;
 }
 
@@ -338,10 +338,10 @@ const CGFloat defaultLegendSquare = 30.0f;
     CGContextSetLineWidth(context, defaultGridLineWidth);
     CGContextSetStrokeColorWithColor(context, _defaultGridLineColor);
     
-    CGFloat stepY = _plotHeight / _yGridLines;
+    CGFloat stepY = _plotHeight/_yGridLines;
     NSInteger howManyHorizontal = _plotHeight / stepY;
     
-    for (NSInteger i = 1; i <= howManyHorizontal; i++)
+    for (NSInteger i = 1; i <= _yGridLines; i++)
     {
         CGContextMoveToPoint(context, chartPadding, _plotHeight + chartTopPadding - i * stepY);
         CGContextAddLineToPoint(context, _plotWidth + chartPadding + leftPadding, _plotHeight + chartTopPadding - i * stepY);
@@ -537,12 +537,16 @@ const CGFloat defaultLegendSquare = 30.0f;
 
 - (CGFloat) xCoordinatesForValue: (CGFloat) xValue
 {
-    CGFloat xOld = (xValue * _plotWidth) / _maxX;
+    /*CGFloat xOld = (xValue * _plotWidth) / _maxX;
     CGFloat xMinOffset = (_minX * _plotWidth) / _maxX;
     
     CGFloat scaleX = _plotWidth / (_plotWidth - xMinOffset);
     
-    CGFloat res = (xOld - xMinOffset) * scaleX;
+    CGFloat res = (xOld - xMinOffset) * scaleX;*/
+    
+    CGFloat stepX = (_plotWidth / _xGridLines) * 2;
+    CGFloat res = stepX * ((xValue - _minX)/86400);
+    
     return chartPadding + res + leftPadding;
 }
 
@@ -570,14 +574,14 @@ const CGFloat defaultLegendSquare = 30.0f;
     
     UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-15];
     
-    NSInteger amountPerLine = (_maxX - _minX)/_xGridLines;
+    NSInteger amountPerLine = 86400/2;
     CGFloat stepX = _plotWidth / _xGridLines;
     
-    for (NSInteger i = 0; i <= _xGridLines; i++)
+    for (NSInteger i = 0; i < _xGridLines; i++)
     {
         if (i % 2 == 0)
         {
-            CGFloat x = chartPadding + i * stepX + leftPadding;
+            CGFloat x = [self xCoordinatesForValue:_minX + i * amountPerLine];
             CGFloat y = _plotHeight + chartTopPadding;
             
             CGRect rect = CGRectMake(x - defaultSmallCircleRadius, y - defaultSmallCircleRadius, 2 * defaultSmallCircleRadius, 2 * defaultSmallCircleRadius);
@@ -609,14 +613,14 @@ const CGFloat defaultLegendSquare = 30.0f;
     
     UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-10];
     
-    CGFloat stepY = floorf((_maxY -_minY) / _yGridLines);
+    CGFloat stepY = (_maxY -_minY) / _yGridLines;
     
-    for (NSInteger i = 0; i <= _yGridLines; i++)
+    for (NSInteger i = 1; i <= _yGridLines; i++)
     {
-        if (i % 2 == 0)
+        if (i % 2 == 0 && [self yCoordinatesForValue:(i * stepY)]>=chartTopPadding)
         {
             CGFloat x = chartPadding;
-            CGFloat y = ([self yCoordinatesForValue:(i * stepY)]);
+            CGFloat y = [self yCoordinatesForValue:(i * stepY)];
             
             CGRect rect = CGRectMake(x - defaultSmallCircleRadius, y - defaultSmallCircleRadius, 2 * defaultSmallCircleRadius, 2 * defaultSmallCircleRadius);
             CGContextAddEllipseInRect(context, rect);
