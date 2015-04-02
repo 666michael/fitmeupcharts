@@ -17,7 +17,7 @@
 //=============================================================================
 
 const CGFloat chartPadding = 30.0f;
-const CGFloat leftPadding = 60.0f;
+const CGFloat leftPadding = 0.0f;
 const CGFloat chartTopPadding = 60.0f;
 const CGFloat chartBottomPadding = 120.0f;
 const CGFloat defaultLineWidth = 2.0f;
@@ -26,7 +26,7 @@ const NSInteger defaultGridLines = 5;
 const CGFloat defaultFontSize = 21.0f;
 const CGFloat defaultCircleRadius = 5;
 const CGFloat defaultSmallCircleRadius = 2.5;
-const NSString* defaultDateFormat = @"EEE";
+const NSString* defaultDateFormat = @"dd/HH.mm";
 const CGFloat defaultLegendSquare = 30.0f;
 
 //=============================================================================
@@ -79,6 +79,8 @@ const CGFloat defaultLegendSquare = 30.0f;
     _defaultGridLineColor = [[UIColor lightGrayColor] CGColor];
     
     _dataSets = @[];
+    
+    self.gridType = Grid18x10;
     
     _minX = MAXFLOAT;
     _minY = MAXFLOAT;
@@ -164,8 +166,9 @@ const CGFloat defaultLegendSquare = 30.0f;
         _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding - leftPadding;
         _plotHeight = CGRectGetHeight(self.frame) - chartTopPadding - chartBottomPadding;
         
-        [self arrangeLabels];
         [self calcScale];
+        [self calculateLinesNumber];
+        [self arrangeLabels];
         [self drawGrid];
     }
 }
@@ -223,7 +226,11 @@ const CGFloat defaultLegendSquare = 30.0f;
     _yGridLines = defaultGridLines;
     
     NSInteger amountOfDays = (_maxX - _minX)/SECS_PER_DAY;
-    CGFloat stepX = _plotWidth / amountOfDays;
+    CGFloat stepX = _plotWidth / 18;
+    NSInteger fixedCount = _plotHeight / stepX;
+    fixedCount = fixedCount -( fixedCount%2);
+    _plotHeight -= (_plotHeight - stepX*fixedCount);
+    
     /*_minGridSize = stepX;
     
     stepX = _plotWidth / _xGridLines;
@@ -253,8 +260,8 @@ const CGFloat defaultLegendSquare = 30.0f;
     //_minX -= (SECS_PER_DAY)*1.2;
     //_maxX += (SECS_PER_DAY)*1.2;
     //_minX - 0
-    _xGridLines = (_plotWidth/stepX);
-    _yGridLines = (_plotHeight/stepX);
+    _xGridLines = 18;
+    _yGridLines = fixedCount;
 }
 
 //=============================================================================
@@ -391,10 +398,10 @@ const CGFloat defaultLegendSquare = 30.0f;
             }
             
             CGFloat avgToAdd = fabs(_minY - _maxY) / 10.0f;
-            _minY = _minY - avgToAdd;
-            _maxY = _maxY + avgToAdd;
+            _minY = _minY - floorf(avgToAdd);
+            _maxY = _maxY + floorf(avgToAdd);
             
-            _minX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_minX] gm_startOfDay] timeIntervalSinceReferenceDate] - 86400;
+            _minX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_minX] gm_startOfDay] timeIntervalSinceReferenceDate];
             _maxX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_maxX] gm_startOfDay] timeIntervalSinceReferenceDate];
         }
     }
@@ -563,13 +570,12 @@ const CGFloat defaultLegendSquare = 30.0f;
     
     UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-15];
     
-    NSInteger amountOfDays = (_maxX - _minX)/SECS_PER_DAY;
-    CGFloat stepX = _plotWidth / amountOfDays;
-    NSInteger howMany = _plotWidth / stepX;
+    NSInteger amountPerLine = (_maxX - _minX)/_xGridLines;
+    CGFloat stepX = _plotWidth / _xGridLines;
     
-    for (NSInteger i = 0; i <= amountOfDays; i++)
+    for (NSInteger i = 0; i <= _xGridLines; i++)
     {
-        if (YES)
+        if (i % 2 == 0)
         {
             CGFloat x = chartPadding + i * stepX + leftPadding;
             CGFloat y = _plotHeight + chartTopPadding;
@@ -579,10 +585,10 @@ const CGFloat defaultLegendSquare = 30.0f;
             
             NSDictionary *attributes = @{
                                          NSFontAttributeName : textFont,
-                                         NSForegroundColorAttributeName : [UIColor gm_greenColor]};
-            NSString* legendText = [NSString stringWithFormat:@"%@", [[self defaultDateFormatter] stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:_minX + i * SECS_PER_DAY]]];
+                                         NSForegroundColorAttributeName : [UIColor gm_grayColor]};
+            NSString* legendText = [NSString stringWithFormat:@"%@", [[self defaultDateFormatter] stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:_minX + i * amountPerLine]]];
             
-            CGFloat textHeight = [legendText gm_heightForFont: textFont];            
+            CGFloat textHeight = [legendText gm_heightForFont: textFont];
             x -= [legendText gm_widthForFont: textFont] / 2.0;
 
             [legendText drawAtPoint: CGPointMake(x, y + textHeight/2.0)
@@ -603,14 +609,14 @@ const CGFloat defaultLegendSquare = 30.0f;
     
     UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-10];
     
-    CGFloat stepY = _plotHeight / _yGridLines;
+    CGFloat stepY = floorf((_maxY -_minY) / _yGridLines);
     
-    for (NSInteger i = 1; i <= _yGridLines; i++)
+    for (NSInteger i = 0; i <= _yGridLines; i++)
     {
-        if (i % 2 == 0 || i == _yGridLines)
+        if (i % 2 == 0)
         {
             CGFloat x = chartPadding;
-            CGFloat y = (_plotHeight - i * stepY)+ chartTopPadding;
+            CGFloat y = ([self yCoordinatesForValue:(i * stepY)]);
             
             CGRect rect = CGRectMake(x - defaultSmallCircleRadius, y - defaultSmallCircleRadius, 2 * defaultSmallCircleRadius, 2 * defaultSmallCircleRadius);
             CGContextAddEllipseInRect(context, rect);
@@ -618,7 +624,7 @@ const CGFloat defaultLegendSquare = 30.0f;
             NSDictionary *attributes = @{
                                          NSFontAttributeName : textFont,
                                          NSForegroundColorAttributeName : [UIColor gm_grayColor]};
-            NSString* legendText = [NSString stringWithFormat:@"%0.0f", (i * (_maxY - _minY)/_yGridLines) +_minY ];
+            NSString* legendText = [NSString stringWithFormat:@"%.0f", (i * stepY) ];
             
             x += fminf(5.0, [legendText gm_widthForFont: textFont]);
             [legendText drawAtPoint: CGPointMake(x, y + fminf( 5.0f, [legendText gm_heightForFont: textFont] / 2.0))
@@ -660,7 +666,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     {
            x += _plotWidth / 2.0;
     }
-    CGFloat y = _plotHeight + chartTopPadding + chartPadding*1.5;
+    CGFloat y = _plotHeight + chartTopPadding + chartPadding;
     
     UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-10];
     NSDictionary* attributes = @{
