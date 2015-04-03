@@ -27,6 +27,8 @@
     CGFloat _maxY;
     CGFloat _minGridSize;
     CGFloat _leftPadding;
+    
+    NSMutableArray* _labelsGrid;
 }
 
 @property (nonatomic, strong) UIColor* yAxisColor;

@@ -234,6 +234,10 @@ const CGFloat defaultXSquaresCount = 14;
     
     _xGridLines = defaultXSquaresCount;
     _yGridLines = fixedCount;
+    
+    _labelsGrid = [NSMutableArray array];
+    for (short i = 0; i < _yGridLines; i++)
+        [_labelsGrid addObject:[NSMutableArray arrayWithCapacity:_xGridLines]];
 }
 
 //=============================================================================
@@ -527,6 +531,30 @@ const CGFloat defaultXSquaresCount = 14;
                     float x = [self xCoordinatesForValue:dataPoint.xValue];
                     float y = [self yCoordinatesForValue:dataPoint.yValue];
                     
+                    NSInteger row = floorf((x-_leftPadding-chartPadding) / (_plotWidth/_xGridLines));
+                    NSInteger col = floorf((_plotHeight  - (y)+chartTopPadding) / (_plotHeight/_yGridLines));
+                    
+                    [self highlightCellInGridAtRow:row andColumn:col];
+                    
+                    if(index+1 < [dataSet count])
+                    {
+                        GMDataPoint *dataPoint1 = [dataSet dataPointAtIndex:index+1];
+                        float x1 = [self xCoordinatesForValue:dataPoint1.xValue];
+                        float y1 = [self yCoordinatesForValue:dataPoint1.yValue];
+                        
+                        for (CGFloat t = 0; t<=1.0; t+=0.05)
+                        {
+                            float midX = (1 - t) * x + t * x1;
+                            float midY = (1 - t) * y + t * y1;
+                            
+                            NSInteger row = floorf((midX-_leftPadding-chartPadding) / (_plotWidth/_xGridLines));
+                            NSInteger col = floorf((_plotHeight  - (midY)+chartTopPadding) / (_plotHeight/_yGridLines));
+                            
+                            [self highlightCellInGridAtRow:row andColumn:col];
+                        }
+                        
+                    }
+                    
                     if(dataPoint.shouldShowLabel)
                     {
                         UIColor* colorForText = dataPoint.pointStyle == GMPointUpperStyle ? [UIColor gm_redColor] : [UIColor gm_greenColor];
@@ -752,5 +780,25 @@ const CGFloat defaultXSquaresCount = 14;
 }
 
 //=============================================================================
+
+- (void) highlightCellInGridAtRow: (NSInteger) row
+                        andColumn: (NSInteger) column
+{
+    CGFloat stepY = _plotHeight/_yGridLines;
+    CGFloat stepX = _plotWidth / _xGridLines;
+    
+    if(row < 0 || row >= _xGridLines)
+        return;
+    
+    if(column+1 < 0 || column+1 > _yGridLines)
+        return;
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
+    CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
+    CGContextAddRect(context, CGRectMake(chartPadding + _leftPadding + row*stepY, _plotHeight + chartTopPadding - (column+1)*stepY, stepX, stepX));
+    
+    CGContextDrawPath(context, kCGPathFillStroke);
+}
 
 @end
