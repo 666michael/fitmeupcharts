@@ -572,7 +572,7 @@ const CGFloat defaultXSquaresCount = 14;
        pointStyle: (GMPointStyle) pointStyle
        andContext: (CGContextRef) context
 {
-    UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize];
+    UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-8];
     
     
     NSDictionary *attributes = @{
