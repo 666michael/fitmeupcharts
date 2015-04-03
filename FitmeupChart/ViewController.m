@@ -86,6 +86,7 @@
     self.chartView.yAxisLabel.text = @"weight";
     
     [self.chartView setDataSetsWithArray:@[dataSet, dataSet1]];
+    [self.chartView setShowYValues:YES];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -31,6 +31,7 @@ typedef enum {
     CGFloat _maxX;
     CGFloat _maxY;
     CGFloat _minGridSize;
+    CGFloat _leftPadding;
 }
 
 @property (nonatomic, strong) UIColor* yAxisColor;

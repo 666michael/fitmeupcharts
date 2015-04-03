@@ -17,7 +17,6 @@
 //=============================================================================
 
 const CGFloat chartPadding = 30.0f;
-const CGFloat leftPadding = 40.0f;
 const CGFloat chartTopPadding = 60.0f;
 const CGFloat chartBottomPadding = 120.0f;
 const CGFloat defaultLineWidth = 2.0f;
@@ -68,7 +67,9 @@ const CGFloat defaultLegendSquare = 30.0f;
     _xAxisColor = [UIColor gm_grayColor];
     _yAxisColor = [UIColor gm_grayColor];
     
-    _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding - leftPadding;
+    _leftPadding = 40.0f;
+    
+    _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding - _leftPadding;
     _plotHeight = CGRectGetHeight(self.frame) - chartTopPadding - chartBottomPadding;
     
     [self setupXLabel];
@@ -163,7 +164,9 @@ const CGFloat defaultLegendSquare = 30.0f;
     {
         [self clearContext];
         
-        _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding - leftPadding;
+        _leftPadding = self.showYValues ? 50.0f : 0.0f;
+        
+        _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding - _leftPadding;
         _plotHeight = CGRectGetHeight(self.frame) - chartTopPadding - chartBottomPadding;
         
         [self calcScale];
@@ -244,7 +247,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     CGContextSetStrokeColorWithColor(context, [_xAxisColor CGColor]);
     
     CGContextMoveToPoint(context, chartPadding, _plotHeight + chartTopPadding);
-    CGContextAddLineToPoint(context, _plotWidth + chartPadding+leftPadding, _plotHeight + chartTopPadding);
+    CGContextAddLineToPoint(context, _plotWidth + chartPadding+_leftPadding, _plotHeight + chartTopPadding);
     
     CGContextStrokePath(context);
 }
@@ -290,10 +293,10 @@ const CGFloat defaultLegendSquare = 30.0f;
     CGFloat stepX = _plotWidth / _xGridLines;
     NSInteger howMany = _plotWidth/ stepX;
     
-    for (NSInteger i = -1; i <= howMany; i++)
+    for (NSInteger i = self.showYValues ? -1 : 0; i <= howMany; i++)
     {
-        CGContextMoveToPoint(context,chartPadding + i * stepX + leftPadding, chartTopPadding);
-        CGContextAddLineToPoint(context, chartPadding + i * stepX + leftPadding, _plotHeight + chartTopPadding);
+        CGContextMoveToPoint(context,chartPadding + i * stepX + _leftPadding, chartTopPadding);
+        CGContextAddLineToPoint(context, chartPadding + i * stepX + _leftPadding, _plotHeight + chartTopPadding);
     }
     
     CGContextStrokePath(context);
@@ -313,7 +316,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     for (NSInteger i = 1; i <= _yGridLines; i++)
     {
         CGContextMoveToPoint(context, chartPadding, _plotHeight + chartTopPadding - i * stepY);
-        CGContextAddLineToPoint(context, _plotWidth + chartPadding + leftPadding, _plotHeight + chartTopPadding - i * stepY);
+        CGContextAddLineToPoint(context, _plotWidth + chartPadding + _leftPadding, _plotHeight + chartTopPadding - i * stepY);
     }
     
     CGContextStrokePath(context);
@@ -331,7 +334,10 @@ const CGFloat defaultLegendSquare = 30.0f;
     [self plotLabels];
     if(!_xAxisLabel.text.length)
         [self drawXLegend];
-    [self drawYLegend];
+    if (self.showYValues)
+    {
+        [self drawYLegend];
+    }
     [self drawLowerLegend];
 }
 
@@ -516,7 +522,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     CGFloat stepX = (_plotWidth / _xGridLines) * 2;
     CGFloat res = stepX * ((xValue - _minX)/SECS_PER_DAY);
     
-    return chartPadding + res + leftPadding;
+    return chartPadding + res + _leftPadding;
 }
 
 //=============================================================================
@@ -541,7 +547,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     
     CGContextSetLineWidth(context, defaultGridLineWidth);
     
-    UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-15];
+    UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-10];
     
     NSInteger amountPerLine = SECS_PER_DAY/2;
     
