@@ -21,6 +21,9 @@
 @property (nonatomic, strong) UIColor* plotColor;
 @property (nonatomic, copy) NSString* plotName;
 
+@property (nonatomic, copy) CGFloat (^xCoordForValue)(CGFloat xValue);
+@property (nonatomic, copy) CGFloat (^yCoordForValue)(CGFloat yValue);
+
 - (id) initWithDataPoints: (NSArray*) dataPoints;
 - (id) initWithDictionary: (NSDictionary*) dictionary;
 - (id) initWithDates: (NSArray*) dates
@@ -32,4 +35,6 @@
 - (CGPoint) minPoint;
 - (CGPoint) maxPoint;
 - (void) sortPoints;
+- (NSArray*) pointsArray;
+
 @end

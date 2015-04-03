@@ -27,6 +27,7 @@ const CGFloat defaultCircleRadius = 5;
 const CGFloat defaultSmallCircleRadius = 2.5;
 const NSString* defaultDateFormat = @"EEE";
 const CGFloat defaultLegendSquare = 30.0f;
+const CGFloat defaultXSquaresCount = 14;
 
 //=============================================================================
 
@@ -67,7 +68,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     _xAxisColor = [UIColor gm_grayColor];
     _yAxisColor = [UIColor gm_grayColor];
     
-    _leftPadding = 40.0f;
+    _leftPadding = 0.0f;
     
     _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding - _leftPadding;
     _plotHeight = CGRectGetHeight(self.frame) - chartTopPadding - chartBottomPadding;
@@ -80,8 +81,6 @@ const CGFloat defaultLegendSquare = 30.0f;
     _defaultGridLineColor = [[UIColor lightGrayColor] CGColor];
     
     _dataSets = @[];
-    
-    self.gridType = Grid18x10;
     
     _minX = MAXFLOAT;
     _minY = MAXFLOAT;
@@ -164,7 +163,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     {
         [self clearContext];
         
-        _leftPadding = self.showYValues ? 50.0f : 0.0f;
+        _leftPadding = self.showYValues ? ( ((CGRectGetWidth(self.frame) - 2 * chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
         
         _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding - _leftPadding;
         _plotHeight = CGRectGetHeight(self.frame) - chartTopPadding - chartBottomPadding;
@@ -228,12 +227,12 @@ const CGFloat defaultLegendSquare = 30.0f;
     _xGridLines = defaultGridLines;
     _yGridLines = defaultGridLines;
     
-    CGFloat stepX = _plotWidth / 14;
+    CGFloat stepX = _plotWidth / defaultXSquaresCount;
     NSInteger fixedCount = _plotHeight / stepX;
     fixedCount = fixedCount -( fixedCount%2);
     _plotHeight -= (_plotHeight - stepX*fixedCount);
     
-    _xGridLines = 14;
+    _xGridLines = defaultXSquaresCount;
     _yGridLines = fixedCount;
 }
 
@@ -397,25 +396,113 @@ const CGFloat defaultLegendSquare = 30.0f;
             CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
             CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
             
-            for (NSInteger index = 0; index < [dataSet count]; index++)
+            if(!self.shouldUseBezier)
             {
-                GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
-                CGFloat x = [self xCoordinatesForValue:dataPoint.xValue];
-                CGFloat y = [self yCoordinatesForValue:dataPoint.yValue];
-                if(index == 0)
+                for (NSInteger index = 0; index < [dataSet count]; index++)
                 {
-                    CGContextBeginPath(context);
-                    CGContextMoveToPoint(context, x, y);
+                    GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
+                    CGFloat x = [self xCoordinatesForValue:dataPoint.xValue];
+                    CGFloat y = [self yCoordinatesForValue:dataPoint.yValue];
+                    if(index == 0)
+                    {
+                        CGContextBeginPath(context);
+                        CGContextMoveToPoint(context, x, y);
+                    }
+                    else
+                    {
+                        CGContextAddLineToPoint(context, x, y);
+                    }
                 }
-                else
-                {                   
-                    CGContextAddLineToPoint(context, x, y);
+                CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
+                CGContextDrawPath(context, kCGPathStroke);
+            }
+            else
+            {
+                [dataSet setXCoordForValue:^CGFloat(CGFloat xValue) {
+                    return [self xCoordinatesForValue:xValue];
+                }];
+                [dataSet setYCoordForValue:^CGFloat(CGFloat yValue) {
+                    return [self yCoordinatesForValue:yValue];
+                }];
+                UIBezierPath *path = [self interpolateCGPointsWithHermiteForDataSet:[dataSet pointsArray]];
+                if(path)
+                {
+                    [path stroke];
+                    CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
+                    CGContextAddPath(context, [path CGPath]);
+                    CGContextDrawPath(context, kCGPathStroke);
                 }
             }
-            CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
-            CGContextDrawPath(context, kCGPathStroke);
         }
     }
+}
+
+//=============================================================================
+
+- (UIBezierPath*) interpolateCGPointsWithHermiteForDataSet: (NSArray*) points
+{
+    if ([points count] < 2)
+        return nil;
+    
+    NSInteger nCurves = [points count] -1 ;
+    
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    
+    for (NSInteger index = 0; index < nCurves; ++index)
+    {
+        CGPoint curPoint  = [points[index] CGPointValue];
+        CGPoint prevPt, nextPt, endPt;
+        
+        if (index == 0)
+            [path moveToPoint:curPoint];
+        
+        NSInteger nextIndex = (index+1) % [points count];
+        NSInteger prevIndex = (index-1 < 0 ? [points count]-1 : index - 1);
+        
+        prevPt = [points[prevIndex] CGPointValue];
+        nextPt = [points[nextIndex] CGPointValue];
+        endPt = nextPt;
+        
+        float mx, my;
+        if (index > 0)
+        {
+            mx = (nextPt.x - curPoint.x)*0.5 + (curPoint.x - prevPt.x)*0.5;
+            my = (nextPt.y - curPoint.y)*0.5 + (curPoint.y - prevPt.y)*0.5;
+        }
+        else
+        {
+            mx = (nextPt.x - curPoint.x)*0.5;
+            my = (nextPt.y - curPoint.y)*0.5;
+        }
+        
+        CGPoint ctrlPt1;
+        ctrlPt1.x = curPoint.x + mx / 3.0;
+        ctrlPt1.y = curPoint.y + my / 3.0;
+        
+        curPoint = [points[nextIndex] CGPointValue];
+        
+        nextIndex = (nextIndex+1)%[points count];
+        prevIndex = index;
+        
+        prevPt = [points[prevIndex] CGPointValue];
+        nextPt = [points[nextIndex] CGPointValue];
+        
+        if (index < nCurves-1) {
+            mx = (nextPt.x - curPoint.x)*0.5 + (curPoint.x - prevPt.x)*0.5;
+            my = (nextPt.y - curPoint.y)*0.5 + (curPoint.y - prevPt.y)*0.5;
+        }
+        else {
+            mx = (curPoint.x - prevPt.x)*0.5;
+            my = (curPoint.y - prevPt.y)*0.5;
+        }
+        
+        CGPoint ctrlPt2;
+        ctrlPt2.x = curPoint.x - mx / 3.0;
+        ctrlPt2.y = curPoint.y - my / 3.0;
+        
+        [path addCurveToPoint:endPt controlPoint1:ctrlPt1 controlPoint2:ctrlPt2];
+    }
+    return path;
 }
 
 //=============================================================================
@@ -513,11 +600,11 @@ const CGFloat defaultLegendSquare = 30.0f;
 - (CGFloat) xCoordinatesForValue: (CGFloat) xValue
 {
     /*CGFloat xOld = (xValue * _plotWidth) / _maxX;
-    CGFloat xMinOffset = (_minX * _plotWidth) / _maxX;
-    
-    CGFloat scaleX = _plotWidth / (_plotWidth - xMinOffset);
-    
-    CGFloat res = (xOld - xMinOffset) * scaleX;*/
+     CGFloat xMinOffset = (_minX * _plotWidth) / _maxX;
+     
+     CGFloat scaleX = _plotWidth / (_plotWidth - xMinOffset);
+     
+     CGFloat res = (xOld - xMinOffset) * scaleX;*/
     
     CGFloat stepX = (_plotWidth / _xGridLines) * 2;
     CGFloat res = stepX * ((xValue - _minX)/SECS_PER_DAY);
@@ -568,7 +655,7 @@ const CGFloat defaultLegendSquare = 30.0f;
             
             CGFloat textHeight = [legendText gm_heightForFont: textFont];
             x -= [legendText gm_widthForFont: textFont] / 2.0;
-
+            
             [legendText drawAtPoint: CGPointMake(x, y + textHeight/2.0)
                      withAttributes: attributes];
             
@@ -642,7 +729,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     
     if(index % 2 != 0)
     {
-           x += _plotWidth / 2.0;
+        x += _plotWidth / 2.0;
     }
     CGFloat y = _plotHeight + chartTopPadding + chartPadding;
     
@@ -652,7 +739,7 @@ const CGFloat defaultLegendSquare = 30.0f;
                                  NSForegroundColorAttributeName : [UIColor gm_grayColor]};
     
     UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect :CGRectMake(x, y, defaultLegendSquare, defaultLegendSquare)
-                                                          cornerRadius: 5.0];
+                                                           cornerRadius: 5.0];
     
     UIColor* legendColor = [_dataSets[index] plotColor] ? [_dataSets[index] plotColor] : [UIColor gm_grayColor];
     CGContextSetStrokeColorWithColor(context, legendColor.CGColor);
@@ -661,7 +748,7 @@ const CGFloat defaultLegendSquare = 30.0f;
     [bezierPath fill];
     
     [[_dataSets[index] plotName] drawAtPoint: CGPointMake(x + chartPadding/2.0 + defaultLegendSquare, y + [[_dataSets[index] plotName] gm_heightForFont: textFont]/2.0)
-             withAttributes: attributes];
+                              withAttributes: attributes];
 }
 
 //=============================================================================

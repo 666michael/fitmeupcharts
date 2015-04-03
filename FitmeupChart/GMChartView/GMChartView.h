@@ -12,11 +12,6 @@
 #import "GMDataPoint.h"
 #import "GMDatePoint.h"
 
-typedef enum {
-    Grid18x10 = 0,
-    Grid16x10
-}ChartGridType;
-
 @interface GMChartView : UIView
 {
     NSArray* _dataSets;
@@ -41,7 +36,7 @@ typedef enum {
 @property (nonatomic, strong) UILabel* xAxisLabel;
 @property (nonatomic) BOOL showGrid;
 @property (nonatomic) BOOL showYValues;
-@property (nonatomic) ChartGridType gridType;
+@property (nonatomic) BOOL shouldUseBezier;
 
 - (void) plotChart;
 - (void) setDataSetsWithArray: (NSArray*) dataSets;
