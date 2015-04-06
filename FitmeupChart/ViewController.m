@@ -45,9 +45,9 @@
     GMDatePoint *pt6 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:2 * SECS_PER_DAY]  yValue:21];
     GMDatePoint *pt7 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:3 * SECS_PER_DAY]  yValue:4];
     GMDatePoint *pt8 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:4 * SECS_PER_DAY]  yValue:15];
-    [pt7 setShouldShowLabel:YES];
-    [pt7 setPointLabelText:@"4"];
-    [pt7 setPointStyle:GMPointUpperStyle];
+    [pt8 setShouldShowLabel:YES];
+    [pt8 setPointLabelText:@"15"];
+    [pt8 setPointStyle:GMPointUpperStyle];
     
     [dataSet addDataPoint:pt1];
     [dataSet addDataPoint:pt2];

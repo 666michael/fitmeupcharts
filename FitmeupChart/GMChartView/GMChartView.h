@@ -3,7 +3,7 @@
 //  FitmeupChart
 //
 //  Created by Anton Gubarenko on 12.03.15.
-//  Copyright (c) 2015CleverBits. All rights reserved.
+//  Copyright (c) 2015 CleverBits. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

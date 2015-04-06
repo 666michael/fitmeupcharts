@@ -23,6 +23,7 @@
 		338DAA321AB1975E00594ED0 /* GMDataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA311AB1975E00594ED0 /* GMDataPoint.m */; };
 		338DAA351AB199E900594ED0 /* GMDatePoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA341AB199E900594ED0 /* GMDatePoint.m */; };
 		338DAA381AB19A8600594ED0 /* GMChartFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA371AB19A8600594ED0 /* GMChartFactory.m */; };
+		33DC2A4E1AD2885F00D21199 /* GMChartUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 33DC2A4D1AD2885F00D21199 /* GMChartUtils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,8 @@
 		338DAA341AB199E900594ED0 /* GMDatePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMDatePoint.m; path = GMChartView/GMDatePoint.m; sourceTree = "<group>"; };
 		338DAA361AB19A8600594ED0 /* GMChartFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMChartFactory.h; path = GMChartView/GMChartFactory.h; sourceTree = "<group>"; };
 		338DAA371AB19A8600594ED0 /* GMChartFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMChartFactory.m; path = GMChartView/GMChartFactory.m; sourceTree = "<group>"; };
+		33DC2A4C1AD2885F00D21199 /* GMChartUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMChartUtils.h; path = GMChartView/GMChartUtils.h; sourceTree = "<group>"; };
+		33DC2A4D1AD2885F00D21199 /* GMChartUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMChartUtils.m; path = GMChartView/GMChartUtils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +181,8 @@
 				338DAA371AB19A8600594ED0 /* GMChartFactory.m */,
 				338DAA2A1AB186DC00594ED0 /* GMChartView.h */,
 				338DAA2B1AB186DC00594ED0 /* GMChartView.m */,
+				33DC2A4C1AD2885F00D21199 /* GMChartUtils.h */,
+				33DC2A4D1AD2885F00D21199 /* GMChartUtils.m */,
 				338DAA2D1AB193D800594ED0 /* GMDataSet.h */,
 				338DAA2E1AB193D800594ED0 /* GMDataSet.m */,
 				338DAA301AB1975E00594ED0 /* GMDataPoint.h */,
@@ -305,6 +310,7 @@
 				338C85501AB2EA100025D2E4 /* NSString+FitMeUp.m in Sources */,
 				338DAA091AB185AE00594ED0 /* ViewController.m in Sources */,
 				338DAA381AB19A8600594ED0 /* GMChartFactory.m in Sources */,
+				33DC2A4E1AD2885F00D21199 /* GMChartUtils.m in Sources */,
 				338DAA001AB185AE00594ED0 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
