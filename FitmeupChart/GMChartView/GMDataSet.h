@@ -36,5 +36,6 @@
 - (CGPoint) maxPoint;
 - (void) sortPoints;
 - (NSArray*) pointsArray;
+- (BOOL) hasDataForDate: (NSDate*) date;
 
 @end

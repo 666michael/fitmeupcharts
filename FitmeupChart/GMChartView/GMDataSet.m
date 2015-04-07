@@ -190,4 +190,18 @@
 
 //=============================================================================
 
+- (BOOL) hasDataForDate: (NSDate*) date
+{
+    for (GMDataPoint* dataPoint in _dataPoints)
+    {
+        if(dataPoint.xValue == [date timeIntervalSinceReferenceDate])
+        {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+//=============================================================================
+
 @end

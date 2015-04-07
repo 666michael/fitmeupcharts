@@ -733,9 +733,14 @@ const CGFloat defaultXSquaresCount = 14;
             CGRect rect = CGRectMake(x - defaultSmallCircleRadius, y - defaultSmallCircleRadius, 2 * defaultSmallCircleRadius, 2 * defaultSmallCircleRadius);
             CGContextAddEllipseInRect(context, rect);
             
+            UIColor *textColor = [UIColor gm_grayColor];
+            if(self.chartType == GMBarChart)
+            {
+                textColor = [_dataSets[0] hasDataForDate:[NSDate dateWithTimeIntervalSinceReferenceDate:_minX + i * amountPerLine]] ? [UIColor gm_greenColor] : [UIColor gm_grayColor];
+            }
             NSDictionary *attributes = @{
                                          NSFontAttributeName : textFont,
-                                         NSForegroundColorAttributeName : [UIColor gm_grayColor]};
+                                         NSForegroundColorAttributeName : textColor};
             NSString* legendText = [NSString stringWithFormat:@"%@", [[self defaultDateFormatter] stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:_minX + i * amountPerLine]]];
             
             CGFloat textHeight = [legendText gm_heightForFont: textFont];
