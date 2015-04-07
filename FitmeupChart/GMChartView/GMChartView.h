@@ -12,6 +12,12 @@
 #import "GMDataPoint.h"
 #import "GMDatePoint.h"
 
+typedef enum
+{
+    GMScatterChart = 0,
+    GMBarChart = 1
+}GMChartType;
+
 @interface GMChartView : UIView
 {
     NSArray* _dataSets;
@@ -39,6 +45,8 @@
 @property (nonatomic) BOOL showGrid;
 @property (nonatomic) BOOL showYValues;
 @property (nonatomic) BOOL shouldUseBezier;
+
+@property (nonatomic) GMChartType chartType;
 
 - (void) plotChart;
 - (void) setDataSetsWithArray: (NSArray*) dataSets;

@@ -15,11 +15,14 @@ typedef NS_OPTIONS(NSUInteger, GMPlotDirection)
     GMPlotDirectionRight = 1 << 1,
     GMPlotDirectionUp    = 1 << 2,
     GMPlotDirectionDown  = 1 << 3
-};;
+};
 
 @interface GMChartUtils : NSObject
 
-+ (GMPlotDirection) plotDirectionForPoint: (CGPoint) startPoint
-                                 endPoint: (CGPoint) endPoint;
++ (GMPlotDirection) gm_plotDirectionForPoint: (CGPoint) startPoint
+                                    endPoint: (CGPoint) endPoint;
+
++ (UIFont*) gm_defaultBoldFontWithSize: (CGFloat) size;
++ (UIFont*) gm_defaultLightFontWithSize: (CGFloat) size;
 
 @end

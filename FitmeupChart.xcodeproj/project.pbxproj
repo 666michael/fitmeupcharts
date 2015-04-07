@@ -177,12 +177,9 @@
 		338DAA291AB1869900594ED0 /* GMChartView */ = {
 			isa = PBXGroup;
 			children = (
-				338DAA361AB19A8600594ED0 /* GMChartFactory.h */,
-				338DAA371AB19A8600594ED0 /* GMChartFactory.m */,
+				33B1E0CB1AD402B80044E788 /* Util */,
 				338DAA2A1AB186DC00594ED0 /* GMChartView.h */,
 				338DAA2B1AB186DC00594ED0 /* GMChartView.m */,
-				33DC2A4C1AD2885F00D21199 /* GMChartUtils.h */,
-				33DC2A4D1AD2885F00D21199 /* GMChartUtils.m */,
 				338DAA2D1AB193D800594ED0 /* GMDataSet.h */,
 				338DAA2E1AB193D800594ED0 /* GMDataSet.m */,
 				338DAA301AB1975E00594ED0 /* GMDataPoint.h */,
@@ -197,6 +194,17 @@
 				3355055C1ABC50B600193BA2 /* NSDate+FitMeUp.m */,
 			);
 			name = GMChartView;
+			sourceTree = "<group>";
+		};
+		33B1E0CB1AD402B80044E788 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				338DAA361AB19A8600594ED0 /* GMChartFactory.h */,
+				338DAA371AB19A8600594ED0 /* GMChartFactory.m */,
+				33DC2A4C1AD2885F00D21199 /* GMChartUtils.h */,
+				33DC2A4D1AD2885F00D21199 /* GMChartUtils.m */,
+			);
+			name = Util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

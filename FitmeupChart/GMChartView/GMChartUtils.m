@@ -24,7 +24,7 @@ const CGFloat eps = 0.1;
 
 //=============================================================================
 
-+ (GMPlotDirection)plotDirectionForPoint: (CGPoint) startPoint
++ (GMPlotDirection) gm_plotDirectionForPoint: (CGPoint) startPoint
                                 endPoint: (CGPoint) endPoint
 {
     if(endPoint.y - startPoint.y < eps)
@@ -37,4 +37,17 @@ const CGFloat eps = 0.1;
 
 //=============================================================================
 
++ (UIFont*) gm_defaultBoldFontWithSize: (CGFloat) size
+{
+    return [UIFont fontWithName:@"HelveticaNeue-Bold" size:size];
+}
+
+//=============================================================================
+
++ (UIFont*) gm_defaultLightFontWithSize: (CGFloat) size
+{
+    return [UIFont fontWithName:@"HelveticaNeue-Light" size:size];
+}
+
+//=============================================================================
 @end

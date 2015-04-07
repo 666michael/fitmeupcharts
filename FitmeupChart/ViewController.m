@@ -83,11 +83,12 @@
     [dataSet1 setPlotName:@"calories"];
     
     self.chartView.xAxisLabel.text = @"";
-    self.chartView.yAxisLabel.text = @"weight";
+    self.chartView.yAxisLabel.text = @"our recommendations";
     
-    [self.chartView setDataSetsWithArray:@[dataSet, dataSet1]];
+    [self.chartView setDataSetsWithArray:@[dataSet]];
     [self.chartView setShowYValues:YES];
     [self.chartView setShouldUseBezier:YES];
+    [self.chartView setChartType:GMBarChart];
 }
 
 - (void)didReceiveMemoryWarning {

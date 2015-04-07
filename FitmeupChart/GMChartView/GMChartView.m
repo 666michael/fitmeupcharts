@@ -23,7 +23,7 @@ const CGFloat chartBottomPadding = 120.0f;
 const CGFloat defaultLineWidth = 2.0f;
 const CGFloat defaultGridLineWidth = 0.5f;
 const NSInteger defaultGridLines = 5;
-const CGFloat defaultFontSize = 21.0f;
+const CGFloat defaultFontSize = 10.5;
 const CGFloat defaultCircleRadius = 2.5;
 const CGFloat defaultSmallCircleRadius = 2.5;
 const NSString* defaultDateFormat = @"EEE";
@@ -93,6 +93,8 @@ const CGFloat defaultXSquaresCount = 14;
     
     self.showGrid = YES;
     
+    self.chartType = GMScatterChart;
+    
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -114,7 +116,7 @@ const CGFloat defaultXSquaresCount = 14;
 {
     _xAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_plotHeight + 10, chartPadding, _plotWidth, 0)];
     [_xAxisLabel setTextAlignment: NSTextAlignmentCenter];
-    [_xAxisLabel setFont: [UIFont systemFontOfSize:defaultFontSize]];
+    [_xAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
     UIViewAutoresizing mask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth
     | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
     [_xAxisLabel setAutoresizingMask: mask];
@@ -126,7 +128,7 @@ const CGFloat defaultXSquaresCount = 14;
 - (void) setupYLabel
 {
     _yAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(chartPadding, 10, _plotWidth, 0)];
-    [_yAxisLabel setFont: [UIFont systemFontOfSize:defaultFontSize]];
+    [_yAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
     [self addSubview: _yAxisLabel];
 }
 
@@ -164,6 +166,8 @@ const CGFloat defaultXSquaresCount = 14;
     {
         [self clearContext];
         
+        self.showYValues = self.chartType == GMBarChart ? NO : self.showYValues;
+        
         _leftPadding = self.showYValues ? ( ((CGRectGetWidth(self.frame) - 2 * chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
         
         _plotWidth = CGRectGetWidth(self.frame) - 2 * chartPadding - _leftPadding;
@@ -174,6 +178,7 @@ const CGFloat defaultXSquaresCount = 14;
         [self arrangeLabels];
         [self drawGrid];
     }
+    CGContextRelease(context);
 }
 
 //=============================================================================
@@ -200,8 +205,8 @@ const CGFloat defaultXSquaresCount = 14;
     [_xAxisLabel setTextColor:_xAxisColor];
     [_yAxisLabel setTextColor:_yAxisColor];
     
-    CGFloat xTextHeight = [_xAxisLabel.text gm_heightForFont: [UIFont systemFontOfSize:defaultFontSize]];
-    CGFloat yTextHeight = [_xAxisLabel.text gm_heightForFont: [UIFont systemFontOfSize:defaultFontSize]];
+    CGFloat xTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
+    CGFloat yTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
     
     [_xAxisLabel setFrame: CGRectMake(chartPadding, _plotHeight + chartTopPadding + xTextHeight/2.0, _plotWidth, xTextHeight)];
     [_yAxisLabel setFrame: CGRectMake(chartPadding, chartTopPadding - yTextHeight * 1.5, _plotWidth, yTextHeight)];
@@ -269,9 +274,8 @@ const CGFloat defaultXSquaresCount = 14;
           atPoint: (CGPoint) point
          andColor: (UIColor*) textColor
 {
-    UIFont *font = [UIFont systemFontOfSize:10.5];
     NSDictionary *textAttributes = @{
-                                     NSFontAttributeName : font,
+                                     NSFontAttributeName : [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize],
                                      NSForegroundColorAttributeName : textColor
                                      };
     [text drawAtPoint: point
@@ -409,41 +413,61 @@ const CGFloat defaultXSquaresCount = 14;
             CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
             CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
             
-            if(!self.shouldUseBezier)
+            if(self.chartType == GMScatterChart)
             {
+                if(!self.shouldUseBezier)
+                {
+                    for (NSInteger index = 0; index < [dataSet count]; index++)
+                    {
+                        GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
+                        CGFloat x = [self xCoordinatesForValue:dataPoint.xValue];
+                        CGFloat y = [self yCoordinatesForValue:dataPoint.yValue];
+                        if(index == 0)
+                        {
+                            CGContextBeginPath(context);
+                            CGContextMoveToPoint(context, x, y);
+                        }
+                        else
+                        {
+                            CGContextAddLineToPoint(context, x, y);
+                        }
+                    }
+                    CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
+                    CGContextDrawPath(context, kCGPathStroke);
+                }
+                else
+                {
+                    [dataSet setXCoordForValue:^CGFloat(CGFloat xValue) {
+                        return [self xCoordinatesForValue:xValue];
+                    }];
+                    [dataSet setYCoordForValue:^CGFloat(CGFloat yValue) {
+                        return [self yCoordinatesForValue:yValue];
+                    }];
+                    UIBezierPath *path = [self interpolateCGPointsWithHermiteForDataSet:[dataSet pointsArray]];
+                    if(path)
+                    {
+                        [path stroke];
+                        CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
+                        CGContextAddPath(context, [path CGPath]);
+                        CGContextDrawPath(context, kCGPathStroke);
+                    }
+                }
+            }
+            else
+            {
+                CGFloat step = _plotHeight/_yGridLines;
                 for (NSInteger index = 0; index < [dataSet count]; index++)
                 {
                     GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
                     CGFloat x = [self xCoordinatesForValue:dataPoint.xValue];
                     CGFloat y = [self yCoordinatesForValue:dataPoint.yValue];
-                    if(index == 0)
+                    if(x < _plotWidth+chartPadding+_leftPadding)
                     {
-                        CGContextBeginPath(context);
-                        CGContextMoveToPoint(context, x, y);
+                        [self drawRounedRectWithRect: CGRectMake(x + step/2.0, y, step, _plotHeight-y+chartTopPadding)
+                                        cornerRaduis: step/2.0
+                                               color: [UIColor gm_greenColor]
+                                          forContext: context];
                     }
-                    else
-                    {
-                        CGContextAddLineToPoint(context, x, y);
-                    }
-                }
-                CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
-                CGContextDrawPath(context, kCGPathStroke);
-            }
-            else
-            {
-                [dataSet setXCoordForValue:^CGFloat(CGFloat xValue) {
-                    return [self xCoordinatesForValue:xValue];
-                }];
-                [dataSet setYCoordForValue:^CGFloat(CGFloat yValue) {
-                    return [self yCoordinatesForValue:yValue];
-                }];
-                UIBezierPath *path = [self interpolateCGPointsWithHermiteForDataSet:[dataSet pointsArray]];
-                if(path)
-                {
-                    [path stroke];
-                    CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
-                    CGContextAddPath(context, [path CGPath]);
-                    CGContextDrawPath(context, kCGPathStroke);
                 }
             }
         }
@@ -525,7 +549,7 @@ const CGFloat defaultXSquaresCount = 14;
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (context)
     {
-        if(_dataSets.count)
+        if(_dataSets.count && self.chartType == GMScatterChart)
         {
             for (GMDataSet *dataSet in _dataSets)
             {
@@ -557,8 +581,8 @@ const CGFloat defaultXSquaresCount = 14;
                             NSInteger row1 = floorf((midX-_leftPadding-chartPadding) / (_plotWidth/_xGridLines));
                             NSInteger col1 = floorf((_plotHeight  - (midY)+chartTopPadding) / (_plotHeight/_yGridLines));
                             
-                            [self highlightCellInGridAtRow:row1 andColumn:col1 withIndex:[GMChartUtils plotDirectionForPoint:CGPointMake(x, y)
-                                                                                                                    endPoint:CGPointMake(x1, y1)]];
+                            [self highlightCellInGridAtRow:row1 andColumn:col1 withIndex:[GMChartUtils gm_plotDirectionForPoint:CGPointMake(x, y)
+                                                                                                                       endPoint:CGPointMake(x1, y1)]];
                         }
                         
                     }
@@ -636,15 +660,12 @@ const CGFloat defaultXSquaresCount = 14;
        pointStyle: (GMPointStyle) pointStyle
        andContext: (CGContextRef) context
 {
-    UIFont* textFont = [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.5];
-    
-    
     NSDictionary *attributes = @{
-                                 NSFontAttributeName : textFont,
+                                 NSFontAttributeName : [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize],
                                  NSForegroundColorAttributeName : color};
     
-    CGFloat textHeight = [text gm_heightForFont:textFont];
-    CGFloat textWidth = [text gm_widthForFont:textFont];
+    CGFloat textHeight = [text gm_heightForFont:[GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
+    CGFloat textWidth = [text gm_widthForFont:[GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
     
     if(pointStyle == GMPointUpperStyle)
     {
@@ -698,7 +719,7 @@ const CGFloat defaultXSquaresCount = 14;
     
     CGContextSetLineWidth(context, defaultGridLineWidth);
     
-    UIFont* textFont = [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.5];
+    UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize];
     
     NSInteger amountPerLine = SECS_PER_DAY/2;
     
@@ -736,7 +757,7 @@ const CGFloat defaultXSquaresCount = 14;
     
     CGContextSetLineWidth(context, defaultGridLineWidth);
     
-    UIFont* textFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:8.5];
+    UIFont* textFont = [GMChartUtils gm_defaultLightFontWithSize:defaultFontSize-2.0];
     
     CGFloat stepY = (_maxY -_minY) / _yGridLines;
     
@@ -797,22 +818,36 @@ const CGFloat defaultXSquaresCount = 14;
     }
     CGFloat y = _plotHeight + chartTopPadding + chartPadding;
     
-    UIFont* textFont = [UIFont boldSystemFontOfSize:defaultFontSize-10];
+    UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize];
     NSDictionary* attributes = @{
                                  NSFontAttributeName : textFont,
                                  NSForegroundColorAttributeName : [UIColor gm_grayColor]};
     
-    UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect :CGRectMake(x, y, defaultLegendSquare, defaultLegendSquare)
-                                                           cornerRadius: 5.0];
-    
     UIColor* legendColor = [_dataSets[index] plotColor] ? [_dataSets[index] plotColor] : [UIColor gm_grayColor];
+    [self drawRounedRectWithRect: CGRectMake(x, y, defaultLegendSquare, defaultLegendSquare)
+                    cornerRaduis: 5.0
+                           color: legendColor
+                      forContext: context];
+    
+    [[_dataSets[index] plotName] drawAtPoint: CGPointMake(x + chartPadding/2.0 + defaultLegendSquare, y + [[_dataSets[index] plotName] gm_heightForFont: textFont]/2.0)
+                              withAttributes: attributes];
+}
+
+//=============================================================================
+
+- (void) drawRounedRectWithRect: (CGRect) rect
+                   cornerRaduis: (CGFloat) cornerRadius
+                          color: (UIColor*) legendColor
+                     forContext: (CGContextRef) context
+{
+    UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect: rect
+                                                          cornerRadius: cornerRadius];
+    
+    
     CGContextSetStrokeColorWithColor(context, legendColor.CGColor);
     CGContextSetFillColorWithColor(context, legendColor.CGColor);
     [bezierPath stroke];
     [bezierPath fill];
-    
-    [[_dataSets[index] plotName] drawAtPoint: CGPointMake(x + chartPadding/2.0 + defaultLegendSquare, y + [[_dataSets[index] plotName] gm_heightForFont: textFont]/2.0)
-                              withAttributes: attributes];
 }
 
 //=============================================================================
@@ -822,7 +857,6 @@ const CGFloat defaultXSquaresCount = 14;
                         withIndex: (GMPlotDirection) direction
 {
     CGFloat stepY = _plotHeight/_yGridLines;
-    CGFloat stepX = _plotWidth / _xGridLines;
     
     if(row < 0 || row > _xGridLines)
         return;
@@ -832,25 +866,13 @@ const CGFloat defaultXSquaresCount = 14;
     
     _labelsGrid[_yGridLines - column-1][row] = [NSNumber numberWithInteger:direction];
     
-    CGFloat x = chartPadding + _leftPadding + row*stepY;
-    CGFloat y = _plotHeight + chartTopPadding - (column+1)*stepY;
-    
-    /*NSString *str = @"";
-    if(direction== (GMPlotDirectionLeft | GMPlotDirectionDown))
-        str= [str stringByAppendingString:@"LD"];
-    else
-        str= [str stringByAppendingString:@"LU"];
-    if(direction==0)
-        str = @"+";
-    [str drawAtPoint: CGPointMake(x, y)      withAttributes: @{
-                                                              NSFontAttributeName : [UIFont systemFontOfSize:7.0],
-                                                               NSForegroundColorAttributeName : [UIColor redColor]}];*/
-    
-    }
+}
+
+//=============================================================================
 
 - (CGPoint) highlightedCellInGridAtRow: (NSInteger) row
-                         atColumn: (NSInteger) column
-                    withDirection: (GMPlotDirection) direction
+                              atColumn: (NSInteger) column
+                         withDirection: (GMPlotDirection) direction
                                andText: (NSString*) text
 {
     CGFloat stepY = _plotHeight/_yGridLines;
@@ -860,8 +882,8 @@ const CGFloat defaultXSquaresCount = 14;
     CGFloat y = _plotHeight + chartTopPadding - (column+1)*stepY;
     
     
-    CGFloat xTextWidth = [text gm_widthForFont: [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.5]];
-    CGFloat xTextHeight = [text gm_heightForFont: [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.5]];
+    CGFloat xTextWidth = [text gm_widthForFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
+    CGFloat xTextHeight = [text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
     
     if(direction == (GMPlotDirectionUp| GMPlotDirectionLeft))
     {
@@ -884,6 +906,8 @@ const CGFloat defaultXSquaresCount = 14;
                 }
     return CGPointMake(x, y);
 }
+
+//=============================================================================
 
 - (CGPoint) closestFreeCellInGridAtRow: (NSInteger) row
                               atColumn: (NSInteger) column
@@ -940,5 +964,7 @@ const CGFloat defaultXSquaresCount = 14;
                 }
     return CGPointMake(0, 0);
 }
+
+//=============================================================================
 
 @end
