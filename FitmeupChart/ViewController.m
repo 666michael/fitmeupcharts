@@ -87,7 +87,7 @@
     
     [self.chartView setDataSetsWithArray:@[dataSet, dataSet1]];
     [self.chartView setShowYValues:YES];
-    [self.chartView setShouldUseBezier:NO];
+    [self.chartView setShouldUseBezier:YES];
 }
 
 - (void)didReceiveMemoryWarning {

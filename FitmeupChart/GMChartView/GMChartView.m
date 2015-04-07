@@ -24,7 +24,7 @@ const CGFloat defaultLineWidth = 2.0f;
 const CGFloat defaultGridLineWidth = 0.5f;
 const NSInteger defaultGridLines = 5;
 const CGFloat defaultFontSize = 21.0f;
-const CGFloat defaultCircleRadius = 5;
+const CGFloat defaultCircleRadius = 2.5;
 const CGFloat defaultSmallCircleRadius = 2.5;
 const NSString* defaultDateFormat = @"EEE";
 const CGFloat defaultLegendSquare = 30.0f;
@@ -269,7 +269,7 @@ const CGFloat defaultXSquaresCount = 14;
           atPoint: (CGPoint) point
          andColor: (UIColor*) textColor
 {
-    UIFont *font = [UIFont systemFontOfSize:defaultFontSize];
+    UIFont *font = [UIFont systemFontOfSize:10.5];
     NSDictionary *textAttributes = @{
                                      NSFontAttributeName : font,
                                      NSForegroundColorAttributeName : textColor
@@ -580,22 +580,28 @@ const CGFloat defaultXSquaresCount = 14;
                             str= [str stringByAppendingString:@"LU"];
                         
                         NSLog(@"%@ %@",dataPoint.pointLabelText, str);
+                        CGPoint textPoint;
                         if(row == 0)
                         {
                             if(direction == (GMPlotDirectionLeft | GMPlotDirectionDown))
-                                [self highlightCellInGridAtRow:row andColumn:col+1];
+                                textPoint = [self highlightedCellInGridAtRow:row atColumn:col+1 withDirection:(GMPlotDirectionRight|GMPlotDirectionUp) andText:dataPoint.pointLabelText];
                             else
-                                [self highlightCellInGridAtRow:row andColumn:col-1];
+                                textPoint = [self highlightedCellInGridAtRow:row-1 atColumn:col-1 withDirection:(GMPlotDirectionRight|GMPlotDirectionUp) andText:dataPoint.pointLabelText];
                         } else
                             if(row == _xGridLines)
                             {
                                 if(direction == (GMPlotDirectionLeft | GMPlotDirectionDown))
-                                    [self highlightCellInGridAtRow:row-1 andColumn:col-1];
+                                    textPoint = [self highlightedCellInGridAtRow:row-1 atColumn:col-1 withDirection:(GMPlotDirectionRight|GMPlotDirectionDown) andText:dataPoint.pointLabelText];
                                 else
-                                    [self highlightCellInGridAtRow:row-1 andColumn:col+1];
+                                    textPoint = [self highlightedCellInGridAtRow:row-1 atColumn:col+1 withDirection:(GMPlotDirectionRight|GMPlotDirectionDown) andText:dataPoint.pointLabelText];
                             }
+                            else
+                            {
+                                textPoint = [self highlightedCellInGridAtRow:row+1 atColumn:col withDirection:(GMPlotDirectionLeft|GMPlotDirectionDown) andText:dataPoint.pointLabelText];
+                            }
+                        
                         [self drawText:dataPoint.pointLabelText
-                           xCoordinate:x yCoordinate:y
+                           xCoordinate:textPoint.x yCoordinate:textPoint.y
                              fillColor:colorForText
                             pointStyle:dataPoint.pointStyle
                             andContext:context];
@@ -630,7 +636,7 @@ const CGFloat defaultXSquaresCount = 14;
        pointStyle: (GMPointStyle) pointStyle
        andContext: (CGContextRef) context
 {
-    UIFont* textFont = [UIFont boldSystemFontOfSize:10.5];
+    UIFont* textFont = [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.5];
     
     
     NSDictionary *attributes = @{
@@ -692,7 +698,7 @@ const CGFloat defaultXSquaresCount = 14;
     
     CGContextSetLineWidth(context, defaultGridLineWidth);
     
-    UIFont* textFont = [UIFont boldSystemFontOfSize:10.5];
+    UIFont* textFont = [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.5];
     
     NSInteger amountPerLine = SECS_PER_DAY/2;
     
@@ -730,7 +736,7 @@ const CGFloat defaultXSquaresCount = 14;
     
     CGContextSetLineWidth(context, defaultGridLineWidth);
     
-    UIFont* textFont = [UIFont boldSystemFontOfSize:8.5];
+    UIFont* textFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:8.5];
     
     CGFloat stepY = (_maxY -_minY) / _yGridLines;
     
@@ -826,41 +832,113 @@ const CGFloat defaultXSquaresCount = 14;
     
     _labelsGrid[_yGridLines - column-1][row] = [NSNumber numberWithInteger:direction];
     
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
-    CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
     CGFloat x = chartPadding + _leftPadding + row*stepY;
     CGFloat y = _plotHeight + chartTopPadding - (column+1)*stepY;
     
-    //CGContextAddRect(context, CGRectMake(x, y, stepX, stepX));
-    
-    NSString *str = @"";
+    /*NSString *str = @"";
     if(direction== (GMPlotDirectionLeft | GMPlotDirectionDown))
         str= [str stringByAppendingString:@"LD"];
     else
         str= [str stringByAppendingString:@"LU"];
+    if(direction==0)
+        str = @"+";
     [str drawAtPoint: CGPointMake(x, y)      withAttributes: @{
-                                                               NSFontAttributeName : [UIFont systemFontOfSize:7.0],
-                                                               NSForegroundColorAttributeName : [UIColor redColor]}];
+                                                              NSFontAttributeName : [UIFont systemFontOfSize:7.0],
+                                                               NSForegroundColorAttributeName : [UIColor redColor]}];*/
     
-    CGContextDrawPath(context, kCGPathFillStroke);
-}
+    }
 
-- (void) highlightCellInGridAtRow: (NSInteger) row
-                        andColumn: (NSInteger) column
+- (CGPoint) highlightedCellInGridAtRow: (NSInteger) row
+                         atColumn: (NSInteger) column
+                    withDirection: (GMPlotDirection) direction
+                               andText: (NSString*) text
 {
     CGFloat stepY = _plotHeight/_yGridLines;
     CGFloat stepX = _plotWidth / _xGridLines;
     
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
-    CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
     CGFloat x = chartPadding + _leftPadding + row*stepY;
     CGFloat y = _plotHeight + chartTopPadding - (column+1)*stepY;
     
-    CGContextAddRect(context, CGRectMake(x, y, stepX, stepX));
     
-    CGContextDrawPath(context, kCGPathFillStroke);
+    CGFloat xTextWidth = [text gm_widthForFont: [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.5]];
+    CGFloat xTextHeight = [text gm_heightForFont: [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.5]];
+    
+    if(direction == (GMPlotDirectionUp| GMPlotDirectionLeft))
+    {
+        return CGPointMake(x, y);
+    }
+    else
+        if(direction == (GMPlotDirectionUp| GMPlotDirectionRight))
+        {
+            return CGPointMake(x+stepX-xTextWidth, y);
+        }
+        else
+            if(direction == (GMPlotDirectionDown| GMPlotDirectionLeft))
+            {
+                return CGPointMake(x-5, y+stepX-xTextHeight/2.0);
+            }
+            else
+                if(direction == (GMPlotDirectionDown| GMPlotDirectionRight))
+                {
+                    return CGPointMake(x+stepX, y+stepX*2-xTextHeight/2.0);
+                }
+    return CGPointMake(x, y);
+}
+
+- (CGPoint) closestFreeCellInGridAtRow: (NSInteger) row
+                              atColumn: (NSInteger) column
+                   withSearchDirection: (NSInteger) searchDirection
+{
+    NSInteger c1 = [_labelsGrid[_yGridLines - column][row-1] integerValue];
+    NSInteger c2 = [_labelsGrid[_yGridLines - column][row] integerValue];
+    NSInteger c3 = [_labelsGrid[_yGridLines - column][row+1] integerValue];
+    
+    NSInteger c4 = [_labelsGrid[_yGridLines - column-1][row-1] integerValue];
+    NSInteger c5 = [_labelsGrid[_yGridLines - column-1][row+1] integerValue];
+    
+    NSInteger c6 = [_labelsGrid[_yGridLines - column-2][row-1] integerValue];
+    NSInteger c7 = [_labelsGrid[_yGridLines - column-2][row] integerValue];
+    NSInteger c8 = [_labelsGrid[_yGridLines - column-2][row+1] integerValue];
+    if(searchDirection == (GMPlotDirectionUp| GMPlotDirectionLeft))
+    {
+        if(c1 == 0)
+            return CGPointMake(row-1, column);
+        if(c2 == 0)
+            return CGPointMake(row, column);
+        if(c4 == 0)
+            return CGPointMake(row-1, column-1);
+    }
+    else
+        if(searchDirection == (GMPlotDirectionUp| GMPlotDirectionRight))
+        {
+            if(c2 == 0)
+                return CGPointMake(row, column);
+            if(c3 == 0)
+                return CGPointMake(row+1, column);
+            if(c5 == 0)
+                return CGPointMake(row+1, column-1);
+        }
+        else
+            if(searchDirection == (GMPlotDirectionDown| GMPlotDirectionLeft))
+            {
+                if(c4 == 0)
+                    return CGPointMake(row-1, column-1);
+                if(c6 == 0)
+                    return CGPointMake(row-1, column-2);
+                if(c7 == 0)
+                    return CGPointMake(row, column-2);
+            }
+            else
+                if(searchDirection == (GMPlotDirectionDown| GMPlotDirectionRight))
+                {
+                    if(c5 == 0)
+                        return CGPointMake(row+1, column-1);
+                    if(c7 == 0)
+                        return CGPointMake(row, column-2);
+                    if(c8 == 0)
+                        return CGPointMake(row+1, column-2);
+                }
+    return CGPointMake(0, 0);
 }
 
 @end
