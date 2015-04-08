@@ -390,6 +390,11 @@ const CGFloat defaultXSquaresCount = 14;
             CGFloat avgToAdd = fabs(_minY - _maxY) / 10.0f;
             _minY = _minY - floorf(avgToAdd);
             _maxY = _maxY + floorf(avgToAdd);
+            if(fabs(_minY - _maxY) < 0.1)
+            {
+                _minY -= floorf(_minY/2.0);
+                _maxY += floorf(_maxY/2.0);
+            }
             
             _minX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_minX] gm_startOfDay] timeIntervalSinceReferenceDate];
             _maxX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_maxX] gm_startOfDay] timeIntervalSinceReferenceDate];
@@ -770,7 +775,7 @@ const CGFloat defaultXSquaresCount = 14;
         if (i % 2 == 0 && [self yCoordinatesForValue:(i * stepY)]>=chartTopPadding)
         {
             CGFloat x = chartPadding;
-            CGFloat y = [self yCoordinatesForValue:(i * stepY)];
+            CGFloat y = [self yCoordinatesForValue:_minY + (i * stepY)];
             
             CGRect rect = CGRectMake(x - defaultSmallCircleRadius, y - defaultSmallCircleRadius, 2 * defaultSmallCircleRadius, 2 * defaultSmallCircleRadius);
             CGContextAddEllipseInRect(context, rect);
@@ -778,7 +783,7 @@ const CGFloat defaultXSquaresCount = 14;
             NSDictionary *attributes = @{
                                          NSFontAttributeName : textFont,
                                          NSForegroundColorAttributeName : [UIColor gm_grayColor]};
-            NSString* legendText = [NSString stringWithFormat:@"%.0f", (i * stepY) ];
+            NSString* legendText = [NSString stringWithFormat:@"%.0f", _minY +(i * stepY) ];
             
             x += fminf(5.0, [legendText gm_widthForFont: textFont]);
             [legendText drawAtPoint: CGPointMake(x, y + fminf( 5.0f, [legendText gm_heightForFont: textFont] / 2.0))

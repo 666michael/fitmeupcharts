@@ -24,11 +24,11 @@
 + (GMChartView*) plainChartWithFrame: (CGRect) frame
 {
     GMChartView *chartView = [[GMChartView alloc] initWithFrame:frame];
-    [chartView setShowYValues:YES];
-    [chartView setShouldUseBezier:YES];
-    [chartView setChartType:GMScatterChart];
-    [chartView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
-    [chartView setTranslatesAutoresizingMaskIntoConstraints:YES];
+    [chartView setShowYValues: YES];
+    [chartView setShouldUseBezier: NO];
+    [chartView setChartType: GMScatterChart];
+    [chartView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
+    [chartView setTranslatesAutoresizingMaskIntoConstraints: YES];
     return chartView;
 }
 
@@ -37,11 +37,11 @@
 + (GMChartView*) barChartWithFrame: (CGRect) frame
 {
     GMChartView *chartView = [[GMChartView alloc] initWithFrame:frame];
-    [chartView setShowYValues:YES];
-    [chartView setShouldUseBezier:YES];
-    [chartView setChartType:GMBarChart];
-    [chartView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
-    [chartView setTranslatesAutoresizingMaskIntoConstraints:YES];
+    [chartView setShowYValues: YES];
+    [chartView setShouldUseBezier: YES];
+    [chartView setChartType: GMBarChart];
+    [chartView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
+    [chartView setTranslatesAutoresizingMaskIntoConstraints: YES];
     return chartView;
 }
 
