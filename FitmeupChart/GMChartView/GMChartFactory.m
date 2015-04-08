@@ -21,26 +21,28 @@
 
 //=============================================================================
 
-- (GMChartView*) plainChart
++ (GMChartView*) plainChartWithFrame: (CGRect) frame
 {
-    //TO-DO: add data
-    return [[GMChartView alloc] initWithFrame:CGRectZero];
+    GMChartView *chartView = [[GMChartView alloc] initWithFrame:frame];
+    [chartView setShowYValues:YES];
+    [chartView setShouldUseBezier:YES];
+    [chartView setChartType:GMScatterChart];
+    [chartView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
+    [chartView setTranslatesAutoresizingMaskIntoConstraints:YES];
+    return chartView;
 }
 
 //=============================================================================
 
-- (GMChartView*) multipleChart
++ (GMChartView*) barChartWithFrame: (CGRect) frame
 {
-    //TO-DO: add data
-    return [[GMChartView alloc] initWithFrame:CGRectZero];
-}
-
-//=============================================================================
-
-- (GMChartView*) plainDateChart
-{
-    //TO-DO: add data
-    return [[GMChartView alloc] initWithFrame:CGRectZero];
+    GMChartView *chartView = [[GMChartView alloc] initWithFrame:frame];
+    [chartView setShowYValues:YES];
+    [chartView setShouldUseBezier:YES];
+    [chartView setChartType:GMBarChart];
+    [chartView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
+    [chartView setTranslatesAutoresizingMaskIntoConstraints:YES];
+    return chartView;
 }
 
 //=============================================================================

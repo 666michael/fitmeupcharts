@@ -6,14 +6,14 @@
 //  Copyright (c) 2015 CleverBits. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 
 @class GMChartView;
 
 @interface GMChartFactory : NSObject
 
-- (GMChartView*) plainChart;
-- (GMChartView*) multipleChart;
-- (GMChartView*) plainDateChart;
++ (GMChartView*) plainChartWithFrame: (CGRect) frame;
++ (GMChartView*) barChartWithFrame: (CGRect) frame;
 
 @end

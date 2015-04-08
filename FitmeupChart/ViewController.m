@@ -8,11 +8,12 @@
 
 #import "ViewController.h"
 #import "GMChartView.h"
+#import "GMChartFactory.h"
 #import "UIColor+FitMeUp.h"
 #define SECS_PER_DAY (86400)
 
 @interface ViewController ()
-@property (weak, nonatomic) IBOutlet GMChartView *chartView;
+@property (strong, nonatomic) IBOutlet GMChartView *chartView;
 
 @end
 
@@ -26,6 +27,8 @@
 
 - (void)initChart
 {
+    self.chartView = [GMChartFactory barChartWithFrame:CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.view.frame)-40)];
+    
     GMDataSet *dataSet = [GMDataSet new];
     
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
@@ -86,9 +89,7 @@
     self.chartView.yAxisLabel.text = @"our recommendations";
     
     [self.chartView setDataSetsWithArray:@[dataSet]];
-    [self.chartView setShowYValues:YES];
-    [self.chartView setShouldUseBezier:YES];
-    [self.chartView setChartType:GMBarChart];
+    [self.view addSubview:self.chartView];
 }
 
 - (void)didReceiveMemoryWarning {
