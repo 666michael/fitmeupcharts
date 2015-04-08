@@ -178,7 +178,6 @@ const CGFloat defaultXSquaresCount = 14;
         [self arrangeLabels];
         [self drawGrid];
     }
-    CGContextRelease(context);
 }
 
 //=============================================================================
