@@ -395,7 +395,10 @@ const CGFloat defaultXSquaresCount = 14;
                 _minY -= floorf(_minY/2.0);
                 _maxY += floorf(_maxY/2.0);
             }
-            
+            if(self.chartType == GMBarChart)
+            {
+                _minY = 0.0;
+            }
             _minX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_minX] gm_startOfDay] timeIntervalSinceReferenceDate];
             _maxX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_maxX] gm_startOfDay] timeIntervalSinceReferenceDate];
         }
@@ -426,6 +429,7 @@ const CGFloat defaultXSquaresCount = 14;
                         GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
                         CGFloat x = [self xCoordinatesForValue:dataPoint.xValue];
                         CGFloat y = [self yCoordinatesForValue:dataPoint.yValue];
+                        
                         if(index == 0)
                         {
                             CGContextBeginPath(context);
@@ -465,10 +469,11 @@ const CGFloat defaultXSquaresCount = 14;
                     GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
                     CGFloat x = [self xCoordinatesForValue:dataPoint.xValue];
                     CGFloat y = [self yCoordinatesForValue:dataPoint.yValue];
+                    
                     if(x < _plotWidth+chartPadding+_leftPadding)
                     {
-                        [self drawRounedRectWithRect: CGRectMake(x + step/2.0, y, step, _plotHeight-y+chartTopPadding)
-                                        cornerRaduis: step/2.0
+                        [self drawRounedRectWithRect: CGRectMake(x + step/2.0, y, step, _plotHeight +chartTopPadding-y)
+                                        cornerRaduis: step/2
                                                color: [UIColor gm_greenColor]
                                           forContext: context];
                     }
@@ -607,7 +612,6 @@ const CGFloat defaultXSquaresCount = 14;
                         else
                             str= [str stringByAppendingString:@"LU"];
                         
-                        NSLog(@"%@ %@",dataPoint.pointLabelText, str);
                         CGPoint textPoint;
                         if(row == 0)
                         {
@@ -849,14 +853,22 @@ const CGFloat defaultXSquaresCount = 14;
                           color: (UIColor*) legendColor
                      forContext: (CGContextRef) context
 {
-    UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect: rect
-                                                          cornerRadius: cornerRadius];
-    
-    
     CGContextSetStrokeColorWithColor(context, legendColor.CGColor);
     CGContextSetFillColorWithColor(context, legendColor.CGColor);
-    [bezierPath stroke];
-    [bezierPath fill];
+    
+    if(rect.size.height < rect.size.width)
+    {
+        CGRect circleRect = CGRectMake(rect.origin.x , rect.origin.y-rect.size.width, rect.size.width,  rect.size.width);
+        CGContextFillEllipseInRect(context, circleRect);
+    }
+    else
+    {
+        UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect: rect
+                                                              cornerRadius: cornerRadius];
+        [bezierPath stroke];
+        [bezierPath fill];
+    }
+    
 }
 
 //=============================================================================
