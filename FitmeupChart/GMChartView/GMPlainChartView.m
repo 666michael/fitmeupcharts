@@ -1,37 +1,34 @@
 //
-//  GMChartFactory.m
+//  GMPlainChartView.m
 //  FitmeupChart
 //
-//  Created by Anton Gubarenko on 12.03.15.
+//  Created by Anton Gubarenko on 10.04.15.
 //  Copyright (c) 2015 CleverBits. All rights reserved.
 //
 
 //=============================================================================
 
-#import "GMChartFactory.h"
 #import "GMPlainChartView.h"
-#import "GMBarChartView.h"
 
 //=============================================================================
 
-@implementation GMChartFactory
+@implementation GMPlainChartView
 
 //=============================================================================
 
-#pragma mark - Methods -
+#pragma mark - Init -
 
 //=============================================================================
 
-+ (GMChartView*) plainChartWithFrame: (CGRect) frame
+- (id) initWithFrame:(CGRect)frame
 {
-    return [[GMPlainChartView alloc] initWithFrame:frame];
-}
-
-//=============================================================================
-
-+ (GMChartView*) barChartWithFrame: (CGRect) frame
-{
-    return [[GMBarChartView alloc] initWithFrame:frame];
+    self = [super initWithFrame: frame];
+    if (self == nil)
+        return nil;
+    
+    self.chartType = GMScatterChart;
+    
+    return self;
 }
 
 //=============================================================================

@@ -9,6 +9,7 @@
 //=============================================================================
 
 #import "GMChartUtils.h"
+#import "GMChartView.h"
 
 //=============================================================================
 
@@ -101,7 +102,7 @@ const CGFloat eps = 0.1;
 {
     CGPoint controlPoint = [self midPointForPoint: p1
                                          andPoint: p2];
-    CGFloat diffY = abs(p2.y - controlPoint.y);
+    CGFloat diffY = fabs(p2.y - controlPoint.y);
     
     if (p1.y < p2.y)
         controlPoint.y += diffY;
@@ -110,4 +111,22 @@ const CGFloat eps = 0.1;
     
     return controlPoint;
 }
+//=============================================================================
++ (GMPlotDirection) invertedDirection: (GMPlotDirection) direction
+{
+    if(direction == (GMPlotDirectionUp|GMPlotDirectionRight))
+        return (GMPlotDirectionDown|GMPlotDirectionLeft);
+    
+    if(direction == (GMPlotDirectionUp|GMPlotDirectionLeft))
+        return (GMPlotDirectionDown|GMPlotDirectionRight);
+    
+    if(direction == (GMPlotDirectionDown|GMPlotDirectionRight))
+        return (GMPlotDirectionUp|GMPlotDirectionLeft);
+    
+    if(direction == (GMPlotDirectionDown|GMPlotDirectionLeft))
+        return (GMPlotDirectionUp|GMPlotDirectionRight);
+    
+    return direction;
+}
+//=============================================================================
 @end

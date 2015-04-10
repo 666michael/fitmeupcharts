@@ -101,6 +101,12 @@ const CGFloat defaultXSquaresCount = 14;
                                              selector: @selector(didRotateDeviceChangeNotification:)
                                                  name: UIDeviceOrientationDidChangeNotification
                                                object: nil];
+    
+    [self setShowYValues: YES];
+    [self setShouldUseBezier: NO];
+    [self setChartType: GMScatterChart];
+    [self setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
+    [self setTranslatesAutoresizingMaskIntoConstraints: YES];
 }
 
 //=============================================================================
@@ -241,7 +247,8 @@ const CGFloat defaultXSquaresCount = 14;
     _yGridLines = fixedCount;
     
     _labelsGrid = [NSMutableArray array];
-    for (short i = 0; i < _yGridLines; i++)
+    NSInteger count = self.showYValues? _yGridLines +1 : _yGridLines;
+    for (short i = 0; i < count; i++)
     {
         NSMutableArray* innerArr = [NSMutableArray arrayWithCapacity: _xGridLines];
         for (short i = 0; i <= _xGridLines; i++)
@@ -440,6 +447,28 @@ const CGFloat defaultXSquaresCount = 14;
                         {
                             CGContextAddLineToPoint(context, x, y);
                         }
+                        
+                        if(index+1 < [dataSet count])
+                        {
+                            GMDataPoint *dataPoint1 = [dataSet dataPointAtIndex:index+1];
+                            float x1 = [self xCoordinatesForValue:dataPoint1.xValue];
+                            float y1 = [self yCoordinatesForValue:dataPoint1.yValue];
+                            
+                            for (CGFloat t = 0; t <= 1.0; t+=0.01)
+                            {
+                                float midX = (1 - t) * x + t * x1;
+                                float midY = (1 - t) * y + t * y1;
+                                
+                                NSInteger row1 = (midX-_leftPadding-chartPadding) / (_plotWidth/_xGridLines);
+                                NSInteger col1 = (_plotHeight  - (midY)+chartTopPadding) / (_plotHeight/_yGridLines);
+                                                                
+                                [self highlightCellInGridAtRow: row1
+                                                     andColumn: _yGridLines - col1 -1
+                                                     withIndex: [GMChartUtils gm_plotDirectionForPoint: CGPointMake(x, y)
+                                                                                              endPoint: CGPointMake(x1, y1)]];
+                            }
+                        }
+                        
                     }
                     CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
                     CGContextDrawPath(context, kCGPathStroke);
@@ -500,7 +529,7 @@ const CGFloat defaultXSquaresCount = 14;
                 
                 CGContextSetLineWidth(context, defaultLineWidth);
                 
-                for (NSInteger index = 0; index < [dataSet count]; index++)
+                for (NSInteger index = 0; index < [dataSet count]-1; index++)
                 {
                     GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
                     float x = [self xCoordinatesForValue:dataPoint.xValue];
@@ -509,35 +538,28 @@ const CGFloat defaultXSquaresCount = 14;
                     NSInteger row = floorf((x-_leftPadding-chartPadding) / (_plotWidth/_xGridLines));
                     NSInteger col = floorf((_plotHeight  - (y)+chartTopPadding) / (_plotHeight/_yGridLines));
                     
-                    if(index+1 < [dataSet count])
-                    {
-                        GMDataPoint *dataPoint1 = [dataSet dataPointAtIndex:index+1];
-                        float x1 = [self xCoordinatesForValue:dataPoint1.xValue];
-                        float y1 = [self yCoordinatesForValue:dataPoint1.yValue];
-                        
-                        for (CGFloat t = 0; t <= 1.0; t+=0.05)
-                        {
-                            float midX = (1 - t) * x + t * x1;
-                            float midY = (1 - t) * y + t * y1;
-                            
-                            NSInteger row1 = floorf((midX-_leftPadding-chartPadding) / (_plotWidth/_xGridLines));
-                            NSInteger col1 = floorf((_plotHeight  - (midY)+chartTopPadding) / (_plotHeight/_yGridLines));
-                            
-                            [self highlightCellInGridAtRow: row1
-                                                 andColumn: _yGridLines - col1 -1
-                                                 withIndex: [GMChartUtils gm_plotDirectionForPoint: CGPointMake(x, y)
-                                                                                          endPoint: CGPointMake(x1, y1)]];
-                        }
-                    }
                     
                     if(dataPoint.shouldShowLabel)
                     {
                         UIColor* colorForText = dataPoint.pointStyle == GMPointUpperStyle ? [UIColor gm_redColor] : [UIColor gm_greenColor];
+                        [self drawCircleAtXCoordinate: x
+                                          yCoordinate: y
+                                            fillColor: colorForText
+                                           andContext: context];
                         
-                        [self drawCircleAtXCoordinate:x
-                                          yCoordinate:y
-                                            fillColor:colorForText
-                                           andContext:context];
+                        GMPlotDirection direction = [_labelsGrid[_yGridLines-col-1][row] integerValue];
+                        CGPoint textCell = [self closestFreeCellInGridAtRow: row
+                                                                   atColumn: _yGridLines - col -1
+                                                        withSearchDirection: [GMChartUtils invertedDirection:direction]];
+                        
+                        [self highlightCellInGridAtRow:textCell.x andColumn:textCell.y withIndex:-1];
+                        
+                        CGFloat stepY = _plotHeight/_yGridLines;
+                        x = chartPadding + _leftPadding + textCell.x*stepY;
+                        y = chartTopPadding + (textCell.y)*stepY;
+                        
+                        CGContextAddRect(context, CGRectMake(x, y, stepY, stepY));
+                        
                         
                         
                         [self drawText: dataPoint.pointLabelText
@@ -800,7 +822,8 @@ const CGFloat defaultXSquaresCount = 14;
     CGFloat x = chartPadding + _leftPadding + row*stepY;
     CGFloat y = chartTopPadding + (column)*stepY;
     
-    //CGContextAddRect(context, CGRectMake(x, y, stepY, stepY));
+    CGContextAddRect(context, CGRectMake(x, y, stepY, stepY));
+    
     
     _labelsGrid[column][row] = [NSNumber numberWithInteger:direction];
     
@@ -846,58 +869,68 @@ const CGFloat defaultXSquaresCount = 14;
 
 //=============================================================================
 
-- (CGPoint) closestFreeCellInGridAtRow: (NSInteger) row
-                              atColumn: (NSInteger) column
+- (CGPoint) closestFreeCellInGridAtRow: (NSInteger) x
+                              atColumn: (NSInteger) y
                    withSearchDirection: (NSInteger) searchDirection
 {
-    NSInteger c1 = [_labelsGrid[_yGridLines - column][row-1] integerValue];
-    NSInteger c2 = [_labelsGrid[_yGridLines - column][row] integerValue];
-    NSInteger c3 = [_labelsGrid[_yGridLines - column][row+1] integerValue];
+    if (self.showYValues)
+    {
+        if(x+1 < _xGridLines-1)
+            x++;
+    }
+    if(x+1 >= _xGridLines)
+        return CGPointMake(0, 0);
     
-    NSInteger c4 = [_labelsGrid[_yGridLines - column-1][row-1] integerValue];
-    NSInteger c5 = [_labelsGrid[_yGridLines - column-1][row+1] integerValue];
+    NSInteger c1 = [_labelsGrid[y-1][x-1] integerValue];
+    NSInteger c2 = [_labelsGrid[y-1][x] integerValue];
+    NSInteger c3 = [_labelsGrid[y-1][x+1] integerValue];
     
-    NSInteger c6 = [_labelsGrid[_yGridLines - column-2][row-1] integerValue];
-    NSInteger c7 = [_labelsGrid[_yGridLines - column-2][row] integerValue];
-    NSInteger c8 = [_labelsGrid[_yGridLines - column-2][row+1] integerValue];
+    NSInteger c4 = [_labelsGrid[y][x-1] integerValue];
+    NSInteger c5 = [_labelsGrid[y][x+1] integerValue];
+    
+    NSInteger c6 = [_labelsGrid[y+1][x-1] integerValue];
+    NSInteger c7 = [_labelsGrid[y+1][x] integerValue];
+    NSInteger c8 = [_labelsGrid[y+1][x+1] integerValue];
+    
+    
     if(searchDirection == (GMPlotDirectionUp| GMPlotDirectionLeft))
     {
         if(c1 == 0)
-            return CGPointMake(row-1, column);
+            return CGPointMake(x-1, y-1);
         if(c2 == 0)
-            return CGPointMake(row, column);
+            return CGPointMake(x, y-1);
         if(c4 == 0)
-            return CGPointMake(row-1, column-1);
+            return CGPointMake(x-1, y);
     }
     else
         if(searchDirection == (GMPlotDirectionUp| GMPlotDirectionRight))
         {
             if(c2 == 0)
-                return CGPointMake(row, column);
+                return CGPointMake(x, y-1);
             if(c3 == 0)
-                return CGPointMake(row+1, column);
+                return CGPointMake(x+1, y-1);
             if(c5 == 0)
-                return CGPointMake(row+1, column-1);
+                return CGPointMake(x+1, y);
         }
         else
             if(searchDirection == (GMPlotDirectionDown| GMPlotDirectionLeft))
             {
                 if(c4 == 0)
-                    return CGPointMake(row-1, column-1);
+                    return CGPointMake(x-1, y);
                 if(c6 == 0)
-                    return CGPointMake(row-1, column-2);
+                    return CGPointMake(x-1, y+1);
                 if(c7 == 0)
-                    return CGPointMake(row, column-2);
+                    return CGPointMake(x, y+1);
             }
             else
                 if(searchDirection == (GMPlotDirectionDown| GMPlotDirectionRight))
                 {
                     if(c5 == 0)
-                        return CGPointMake(row+1, column-1);
+                        return CGPointMake(x+1, y);
                     if(c7 == 0)
-                        return CGPointMake(row, column-2);
+                        return CGPointMake(x, y+1);
                     if(c8 == 0)
-                        return CGPointMake(row+1, column-2);
+                        return CGPointMake(x+1, y+1);
                 }
     return CGPointMake(0, 0);
 }
