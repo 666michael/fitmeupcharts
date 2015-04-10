@@ -30,6 +30,10 @@
     _xValue = xValue;
     _yValue = yValue;
     
+    [self setShouldShowLabel: YES];
+    [self setPointLabelText: [NSString stringWithFormat:@"%0.0f", _yValue]];
+    [self setPointStyle:GMPointLowerStyle];
+    
     return self;
 }
 

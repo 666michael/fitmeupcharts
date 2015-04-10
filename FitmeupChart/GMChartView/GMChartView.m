@@ -354,6 +354,7 @@ const CGFloat defaultXSquaresCount = 14;
         [self drawYLegend];
     }
     [self drawLowerLegend];
+    [self printGrid];
 }
 
 //=============================================================================
@@ -388,8 +389,8 @@ const CGFloat defaultXSquaresCount = 14;
             }
             
             CGFloat avgToAdd = fabs(_minY - _maxY) / 10.0f;
-            _minY = _minY - floorf(avgToAdd);
-            _maxY = _maxY + floorf(avgToAdd);
+            _minY = _minY - fmaxf(1.0, floorf(avgToAdd));
+            _maxY = _maxY + fmaxf(1.0, floorf(avgToAdd));
             if(fabs(_minY - _maxY) < 0.1)
             {
                 _minY -= floorf(_minY/2.0);
@@ -451,11 +452,11 @@ const CGFloat defaultXSquaresCount = 14;
                     [dataSet setYCoordForValue:^CGFloat(CGFloat yValue) {
                         return [self yCoordinatesForValue:yValue];
                     }];
-                    UIBezierPath *path = [self interpolateCGPointsWithHermiteForDataSet:[dataSet pointsArray]];
+                    UIBezierPath *path = [GMChartUtils gm_quadCurvedPathWithPoints: [dataSet pointsArray]];
                     if(path)
                     {
                         [path stroke];
-                        CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
+                        CGContextSetStrokeColorWithColor(context, dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
                         CGContextAddPath(context, [path CGPath]);
                         CGContextDrawPath(context, kCGPathStroke);
                     }
@@ -481,74 +482,6 @@ const CGFloat defaultXSquaresCount = 14;
             }
         }
     }
-}
-
-//=============================================================================
-
-- (UIBezierPath*) interpolateCGPointsWithHermiteForDataSet: (NSArray*) points
-{
-    if ([points count] < 2)
-        return nil;
-    
-    NSInteger nCurves = [points count] -1 ;
-    
-    UIBezierPath *path = [UIBezierPath bezierPath];
-    
-    for (NSInteger index = 0; index < nCurves; ++index)
-    {
-        CGPoint curPoint  = [points[index] CGPointValue];
-        CGPoint prevPt, nextPt, endPt;
-        
-        if (index == 0)
-            [path moveToPoint:curPoint];
-        
-        NSInteger nextIndex = (index+1) % [points count];
-        NSInteger prevIndex = (index-1 < 0 ? [points count]-1 : index - 1);
-        
-        prevPt = [points[prevIndex] CGPointValue];
-        nextPt = [points[nextIndex] CGPointValue];
-        endPt = nextPt;
-        
-        float mx, my;
-        if (index > 0)
-        {
-            mx = (nextPt.x - curPoint.x)*0.5 + (curPoint.x - prevPt.x)*0.5;
-            my = (nextPt.y - curPoint.y)*0.5 + (curPoint.y - prevPt.y)*0.5;
-        }
-        else
-        {
-            mx = (nextPt.x - curPoint.x)*0.5;
-            my = (nextPt.y - curPoint.y)*0.5;
-        }
-        
-        CGPoint ctrlPt1;
-        ctrlPt1.x = curPoint.x + mx / 3.0;
-        ctrlPt1.y = curPoint.y + my / 3.0;
-        
-        curPoint = [points[nextIndex] CGPointValue];
-        
-        nextIndex = (nextIndex+1)%[points count];
-        prevIndex = index;
-        
-        prevPt = [points[prevIndex] CGPointValue];
-        nextPt = [points[nextIndex] CGPointValue];
-        
-        if (index < nCurves-1) {
-            mx = (nextPt.x - curPoint.x)*0.5 + (curPoint.x - prevPt.x)*0.5;
-            my = (nextPt.y - curPoint.y)*0.5 + (curPoint.y - prevPt.y)*0.5;
-        }
-        else {
-            mx = (curPoint.x - prevPt.x)*0.5;
-            my = (curPoint.y - prevPt.y)*0.5;
-        }
-        
-        CGPoint ctrlPt2;
-        ctrlPt2.x = curPoint.x - mx / 3.0;
-        ctrlPt2.y = curPoint.y - my / 3.0;
-        
-        [path addCurveToPoint:endPt controlPoint1:ctrlPt1 controlPoint2:ctrlPt2];
-    }
-    return path;
 }
 
 //=============================================================================
@@ -582,7 +515,7 @@ const CGFloat defaultXSquaresCount = 14;
                         float x1 = [self xCoordinatesForValue:dataPoint1.xValue];
                         float y1 = [self yCoordinatesForValue:dataPoint1.yValue];
                         
-                        for (CGFloat t = 0; t<=1.0; t+=0.05)
+                        for (CGFloat t = 0; t <= 1.0; t+=0.05)
                         {
                             float midX = (1 - t) * x + t * x1;
                             float midY = (1 - t) * y + t * y1;
@@ -590,10 +523,11 @@ const CGFloat defaultXSquaresCount = 14;
                             NSInteger row1 = floorf((midX-_leftPadding-chartPadding) / (_plotWidth/_xGridLines));
                             NSInteger col1 = floorf((_plotHeight  - (midY)+chartTopPadding) / (_plotHeight/_yGridLines));
                             
-                            [self highlightCellInGridAtRow:row1 andColumn:col1 withIndex:[GMChartUtils gm_plotDirectionForPoint:CGPointMake(x, y)
-                                                                                                                       endPoint:CGPointMake(x1, y1)]];
+                            [self highlightCellInGridAtRow: row1
+                                                 andColumn: _yGridLines - col1 -1
+                                                 withIndex: [GMChartUtils gm_plotDirectionForPoint: CGPointMake(x, y)
+                                                                                          endPoint: CGPointMake(x1, y1)]];
                         }
-                        
                     }
                     
                     if(dataPoint.shouldShowLabel)
@@ -605,38 +539,13 @@ const CGFloat defaultXSquaresCount = 14;
                                             fillColor:colorForText
                                            andContext:context];
                         
-                        NSString *str = @"";
-                        NSInteger direction = [_labelsGrid[_yGridLines - col-1][row] integerValue];
-                        if(direction == (GMPlotDirectionLeft | GMPlotDirectionDown))
-                            str= [str stringByAppendingString:@"LD"];
-                        else
-                            str= [str stringByAppendingString:@"LU"];
                         
-                        CGPoint textPoint;
-                        if(row == 0)
-                        {
-                            if(direction == (GMPlotDirectionLeft | GMPlotDirectionDown))
-                                textPoint = [self highlightedCellInGridAtRow:row atColumn:col+1 withDirection:(GMPlotDirectionRight|GMPlotDirectionUp) andText:dataPoint.pointLabelText];
-                            else
-                                textPoint = [self highlightedCellInGridAtRow:row-1 atColumn:col-1 withDirection:(GMPlotDirectionRight|GMPlotDirectionUp) andText:dataPoint.pointLabelText];
-                        } else
-                            if(row == _xGridLines)
-                            {
-                                if(direction == (GMPlotDirectionLeft | GMPlotDirectionDown))
-                                    textPoint = [self highlightedCellInGridAtRow:row-1 atColumn:col-1 withDirection:(GMPlotDirectionRight|GMPlotDirectionDown) andText:dataPoint.pointLabelText];
-                                else
-                                    textPoint = [self highlightedCellInGridAtRow:row-1 atColumn:col+1 withDirection:(GMPlotDirectionRight|GMPlotDirectionDown) andText:dataPoint.pointLabelText];
-                            }
-                            else
-                            {
-                                textPoint = [self highlightedCellInGridAtRow:row+1 atColumn:col withDirection:(GMPlotDirectionLeft|GMPlotDirectionDown) andText:dataPoint.pointLabelText];
-                            }
-                        
-                        [self drawText:dataPoint.pointLabelText
-                           xCoordinate:textPoint.x yCoordinate:textPoint.y
-                             fillColor:colorForText
-                            pointStyle:dataPoint.pointStyle
-                            andContext:context];
+                        [self drawText: dataPoint.pointLabelText
+                           xCoordinate: x
+                           yCoordinate: y
+                             fillColor: colorForText
+                            pointStyle: dataPoint.pointStyle
+                            andContext: context];
                         
                         CGContextDrawPath(context, kCGPathFillStroke);
                     }
@@ -882,10 +791,18 @@ const CGFloat defaultXSquaresCount = 14;
     if(row < 0 || row > _xGridLines)
         return;
     
-    if(column+1 < 0 || column+1 > _yGridLines)
+    if(column < 0 || column+1 > _yGridLines)
         return;
     
-    _labelsGrid[_yGridLines - column-1][row] = [NSNumber numberWithInteger:direction];
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
+    CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
+    CGFloat x = chartPadding + _leftPadding + row*stepY;
+    CGFloat y = chartTopPadding + (column)*stepY;
+    
+    //CGContextAddRect(context, CGRectMake(x, y, stepY, stepY));
+    
+    _labelsGrid[column][row] = [NSNumber numberWithInteger:direction];
     
 }
 
@@ -901,7 +818,6 @@ const CGFloat defaultXSquaresCount = 14;
     
     CGFloat x = chartPadding + _leftPadding + row*stepY;
     CGFloat y = _plotHeight + chartTopPadding - (column+1)*stepY;
-    
     
     CGFloat xTextWidth = [text gm_widthForFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
     CGFloat xTextHeight = [text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
@@ -987,5 +903,20 @@ const CGFloat defaultXSquaresCount = 14;
 }
 
 //=============================================================================
+
+- (void) printGrid
+{
+    NSString* str = @"";
+    for (NSInteger i =0; i<[_labelsGrid count]; i++)
+    {
+        for (NSInteger j =0; j<[_labelsGrid[i] count]; j++)
+        {
+            str = [str stringByAppendingFormat:@"%@ ", _labelsGrid[i][j]];
+        }
+        str = [str stringByAppendingString:@"\n"];
+        NSLog(@"%@", str);
+        str = @"";
+    }
+}
 
 @end

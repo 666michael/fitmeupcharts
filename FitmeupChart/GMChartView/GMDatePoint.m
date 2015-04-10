@@ -24,13 +24,11 @@
 - (id) initWithDate: (NSDate*) date
              yValue: (CGFloat) yValue
 {
-    self = [self init];
+    self = [super initWithXValue: [[date gm_startOfDay] timeIntervalSinceReferenceDate]
+                          yValue: yValue];
     if (self == nil)
         return nil;
-    
-    self.xValue = [[date gm_startOfDay] timeIntervalSinceReferenceDate];
-    self.yValue = yValue;
-    
+        
     return self;
 }
 

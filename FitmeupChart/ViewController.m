@@ -27,37 +27,33 @@
 
 - (void)initChart
 {
-    self.chartView = [GMChartFactory barChartWithFrame:CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.view.frame)-40)];
+    self.chartView = [GMChartFactory plainChartWithFrame:CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.view.frame)-40)];
     
     GMDataSet *dataSet = [GMDataSet new];
     
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     [dateFormatter setDateFormat:@"dd/ HH:mm"];
     
-    GMDatePoint *pt1 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-3 * SECS_PER_DAY]  yValue:10];
+    GMDatePoint *pt1 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-3 * SECS_PER_DAY] yValue:5000];
     [pt1 setShouldShowLabel:YES];
     [pt1 setPointLabelText:@"10"];
     [pt1 setPointStyle:GMPointLowerStyle];
-    GMDatePoint *pt2 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-2 * SECS_PER_DAY]  yValue:15];
-    //GMDatePoint *pt3 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-1 * SECS_PER_DAY]  yValue:9];
-    GMDatePoint *pt4 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:0]  yValue:26];
-    GMDatePoint *pt5 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:1 * SECS_PER_DAY]  yValue:28];
+    GMDatePoint *pt4 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:0] yValue:26];
+    [pt4 setShouldShowLabel:YES];
+    [pt4 setPointLabelText:@"26"];
+    [pt4 setPointStyle:GMPointLowerStyle];
+    GMDatePoint *pt5 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:1 * SECS_PER_DAY] yValue:1];
     [pt5 setShouldShowLabel:YES];
     [pt5 setPointLabelText:@"28"];
     [pt5 setPointStyle:GMPointUpperStyle];
-    //GMDatePoint *pt6 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:2 * SECS_PER_DAY]  yValue:21];
-    GMDatePoint *pt7 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:3 * SECS_PER_DAY]  yValue:4];
-    GMDatePoint *pt8 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:4 * SECS_PER_DAY]  yValue:15];
+    GMDatePoint *pt7 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:3 * SECS_PER_DAY] yValue:2];
+    GMDatePoint *pt8 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:4 * SECS_PER_DAY] yValue:1];
     [pt8 setShouldShowLabel:YES];
     [pt8 setPointLabelText:@"15"];
     [pt8 setPointStyle:GMPointUpperStyle];
-    
     [dataSet addDataPoint:pt1];
-    [dataSet addDataPoint:pt2];
-    //[dataSet addDataPoint:pt3];
     [dataSet addDataPoint:pt4];
     [dataSet addDataPoint:pt5];
-    //[dataSet addDataPoint:pt6];
     [dataSet addDataPoint:pt7];
     [dataSet addDataPoint:pt8];
     [dataSet setPlotColor:[UIColor gm_greenColor]];

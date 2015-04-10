@@ -25,7 +25,7 @@
 {
     GMChartView *chartView = [[GMChartView alloc] initWithFrame:frame];
     [chartView setShowYValues: YES];
-    [chartView setShouldUseBezier: NO];
+    [chartView setShouldUseBezier: YES];
     [chartView setChartType: GMScatterChart];
     [chartView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
     [chartView setTranslatesAutoresizingMaskIntoConstraints: YES];
