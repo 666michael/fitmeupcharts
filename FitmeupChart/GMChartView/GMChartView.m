@@ -131,7 +131,7 @@ const CGFloat defaultXSquaresCount = 14;
 - (void) setupYLabel
 {
     _yAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(chartPadding, 10, _plotWidth, 0)];
-    [_yAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
+    [_yAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
     [self addSubview: _yAxisLabel];
 }
 
@@ -205,8 +205,8 @@ const CGFloat defaultXSquaresCount = 14;
     [_xAxisLabel setTextColor:_xAxisColor];
     [_yAxisLabel setTextColor:_yAxisColor];
     
-    CGFloat xTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
-    CGFloat yTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
+    CGFloat xTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
+    CGFloat yTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
     
     [_xAxisLabel setFrame: CGRectMake(chartPadding, _plotHeight + chartTopPadding + xTextHeight/2.0, _plotWidth, xTextHeight)];
     [_yAxisLabel setFrame: CGRectMake(chartPadding, chartTopPadding - yTextHeight * 1.5, _plotWidth, yTextHeight)];
@@ -235,14 +235,14 @@ const CGFloat defaultXSquaresCount = 14;
     
     CGFloat stepX = _plotWidth / defaultXSquaresCount;
     NSInteger fixedCount = _plotHeight / stepX;
-    fixedCount = fixedCount -( fixedCount%2);
-    _plotHeight -= (_plotHeight - stepX*fixedCount);
+    fixedCount = fixedCount - (fixedCount % 2);
+    _plotHeight -= (_plotHeight - stepX * fixedCount);
     
     _xGridLines = defaultXSquaresCount;
     _yGridLines = fixedCount;
     
     _labelsGrid = [NSMutableArray array];
-    NSInteger count = self.showYValues? _yGridLines +1 : _yGridLines;
+    NSInteger count = self.showYValues ? _yGridLines + 1 : _yGridLines;
     for (short i = 0; i < count; i++)
     {
         NSMutableArray* innerArr = [NSMutableArray arrayWithCapacity: _xGridLines];
@@ -276,7 +276,7 @@ const CGFloat defaultXSquaresCount = 14;
          andColor: (UIColor*) textColor
 {
     NSDictionary *textAttributes = @{
-                                     NSFontAttributeName : [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize],
+                                     NSFontAttributeName : [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize],
                                      NSForegroundColorAttributeName : textColor
                                      };
     [text drawAtPoint: point
@@ -399,8 +399,8 @@ const CGFloat defaultXSquaresCount = 14;
                 _maxY += floorf(_maxY/2.0);
             }
             
-            _minX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_minX] gm_startOfDay] timeIntervalSinceReferenceDate];
-            _maxX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_maxX] gm_startOfDay] timeIntervalSinceReferenceDate];
+            _minX = [[[NSDate dateWithTimeIntervalSinceReferenceDate: _minX] gm_startOfDay] timeIntervalSinceReferenceDate];
+            _maxX = [[[NSDate dateWithTimeIntervalSinceReferenceDate: _maxX] gm_startOfDay] timeIntervalSinceReferenceDate];
         }
     }
 }
@@ -447,14 +447,14 @@ const CGFloat defaultXSquaresCount = 14;
                 
                 CGContextSetLineWidth(context, defaultLineWidth);
                 
-                for (NSInteger index = 0; index < [dataSet count]-1; index++)
+                for (NSInteger index = 0; index < [dataSet count] - 1; index++)
                 {
-                    GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
-                    float x = [self xCoordinatesForValue:dataPoint.xValue];
-                    float y = [self yCoordinatesForValue:dataPoint.yValue];
+                    GMDataPoint *dataPoint = [dataSet dataPointAtIndex: index];
+                    float x = [self xCoordinatesForValue: dataPoint.xValue];
+                    float y = [self yCoordinatesForValue: dataPoint.yValue];
                     
-                    NSInteger row = floorf((x-_leftPadding-chartPadding) / (_plotWidth/_xGridLines));
-                    NSInteger col = floorf((_plotHeight  - (y)+chartTopPadding) / (_plotHeight/_yGridLines));
+                    NSInteger row = floorf((x - _leftPadding - chartPadding) / (_plotWidth / _xGridLines));
+                    NSInteger col = floorf((_plotHeight - y + chartTopPadding) / (_plotHeight / _yGridLines));
                     
                     
                     if(dataPoint.shouldShowLabel)
@@ -465,16 +465,18 @@ const CGFloat defaultXSquaresCount = 14;
                                             fillColor: colorForText
                                            andContext: context];
                         
-                        GMPlotDirection direction = [_labelsGrid[_yGridLines-col-1][row] integerValue];
+                        GMPlotDirection direction = [_labelsGrid[_yGridLines - col - 1][row] integerValue];
                         CGPoint textCell = [self closestFreeCellInGridAtRow: row
                                                                    atColumn: _yGridLines - col -1
-                                                        withSearchDirection: [GMChartUtils invertedDirection:direction]];
+                                                        withSearchDirection: [GMChartUtils invertedDirection: direction]];
                         
-                        [self highlightCellInGridAtRow:textCell.x andColumn:textCell.y withIndex:-1];
+                        [self highlightCellInGridAtRow: textCell.x
+                                             andColumn: textCell.y
+                                             withIndex: -1];
                         
                         CGFloat stepY = _plotHeight/_yGridLines;
                         x = chartPadding + _leftPadding + textCell.x*stepY;
-                        y = chartTopPadding + (textCell.y)*stepY;
+                        y = chartTopPadding + (textCell.y) * stepY;
                         
                         CGContextAddRect(context, CGRectMake(x, y, stepY, stepY));
                         
@@ -518,11 +520,11 @@ const CGFloat defaultXSquaresCount = 14;
        andContext: (CGContextRef) context
 {
     NSDictionary *attributes = @{
-                                 NSFontAttributeName : [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize],
+                                 NSFontAttributeName : [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize],
                                  NSForegroundColorAttributeName : color};
     
-    CGFloat textHeight = [text gm_heightForFont:[GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
-    CGFloat textWidth = [text gm_widthForFont:[GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
+    CGFloat textHeight = [text gm_heightForFont:[GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
+    CGFloat textWidth = [text gm_widthForFont:[GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
     
     if(pointStyle == GMPointUpperStyle)
     {
@@ -541,15 +543,8 @@ const CGFloat defaultXSquaresCount = 14;
 
 - (CGFloat) xCoordinatesForValue: (CGFloat) xValue
 {
-    /*CGFloat xOld = (xValue * _plotWidth) / _maxX;
-     CGFloat xMinOffset = (_minX * _plotWidth) / _maxX;
-     
-     CGFloat scaleX = _plotWidth / (_plotWidth - xMinOffset);
-     
-     CGFloat res = (xOld - xMinOffset) * scaleX;*/
-    
     CGFloat stepX = (_plotWidth / _xGridLines) * 2;
-    CGFloat res = stepX * ((xValue - _minX)/SECS_PER_DAY);
+    CGFloat res = stepX * ((xValue - _minX) / SECS_PER_DAY);
     
     return chartPadding + res + _leftPadding;
 }
@@ -576,7 +571,7 @@ const CGFloat defaultXSquaresCount = 14;
     
     CGContextSetLineWidth(context, defaultGridLineWidth);
     
-    UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize];
+    UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize];
     
     NSInteger amountPerLine = SECS_PER_DAY/2;
     
@@ -596,12 +591,12 @@ const CGFloat defaultXSquaresCount = 14;
             NSDictionary *attributes = @{
                                          NSFontAttributeName : textFont,
                                          NSForegroundColorAttributeName : textColor};
-            NSString* legendText = [NSString stringWithFormat:@"%@", [[self defaultDateFormatter] stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:_minX + i * amountPerLine]]];
+            NSString* legendText = [NSString stringWithFormat:@"%@", [[self defaultDateFormatter] stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate: _minX + i * amountPerLine]]];
             
             CGFloat textHeight = [legendText gm_heightForFont: textFont];
             x -= [legendText gm_widthForFont: textFont] / 2.0;
             
-            [legendText drawAtPoint: CGPointMake(x, y + textHeight/2.0)
+            [legendText drawAtPoint: CGPointMake(x, y + textHeight / 2.0)
                      withAttributes: attributes];
             
             CGContextDrawPath(context, kCGPathFillStroke);
@@ -623,13 +618,13 @@ const CGFloat defaultXSquaresCount = 14;
     
     CGContextSetLineWidth(context, defaultGridLineWidth);
     
-    UIFont* textFont = [GMChartUtils gm_defaultLightFontWithSize:defaultFontSize-2.0];
+    UIFont* textFont = [GMChartUtils gm_defaultLightFontWithSize:defaultFontSize - 2.0];
     
     CGFloat stepY = (_maxY -_minY) / _yGridLines;
     
     for (NSInteger i = 1; i <= _yGridLines; i++)
     {
-        if (i % 2 == 0 && [self yCoordinatesForValue:(i * stepY)]>=chartTopPadding)
+        if (i % 2 == 0 && [self yCoordinatesForValue:(i * stepY)] >= chartTopPadding)
         {
             CGFloat x = chartPadding;
             CGFloat y = [self yCoordinatesForValue:_minY + (i * stepY)];
@@ -695,7 +690,7 @@ const CGFloat defaultXSquaresCount = 14;
                            color: legendColor
                       forContext: context];
     
-    [[_dataSets[index] plotName] drawAtPoint: CGPointMake(x + chartPadding/2.0 + defaultLegendSquare, y + [[_dataSets[index] plotName] gm_heightForFont: textFont]/2.0)
+    [[_dataSets[index] plotName] drawAtPoint: CGPointMake(x + chartPadding/2.0 + defaultLegendSquare, y + [[_dataSets[index] plotName] gm_heightForFont: textFont] / 2.0)
                               withAttributes: attributes];
 }
 
@@ -711,7 +706,7 @@ const CGFloat defaultXSquaresCount = 14;
     
     if(rect.size.height < rect.size.width)
     {
-        CGRect circleRect = CGRectMake(rect.origin.x , rect.origin.y-rect.size.width, rect.size.width,  rect.size.width);
+        CGRect circleRect = CGRectMake(rect.origin.x , rect.origin.y - rect.size.width, rect.size.width,  rect.size.width);
         CGContextFillEllipseInRect(context, circleRect);
     }
     else
@@ -750,6 +745,8 @@ const CGFloat defaultXSquaresCount = 14;
     _labelsGrid[column][row] = [NSNumber numberWithInteger:direction];
     
 }
+
+#pragma mark - TEST -
 
 //=============================================================================
 

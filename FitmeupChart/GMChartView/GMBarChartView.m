@@ -59,14 +59,14 @@
     CGFloat step = _plotHeight/_yGridLines;
     for (NSInteger index = 0; index < [dataSet count]; index++)
     {
-        GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
-        CGFloat x = [self xCoordinatesForValue:dataPoint.xValue];
-        CGFloat y = [self yCoordinatesForValue:dataPoint.yValue];
+        GMDataPoint *dataPoint = [dataSet dataPointAtIndex: index];
+        CGFloat x = [self xCoordinatesForValue: dataPoint.xValue];
+        CGFloat y = [self yCoordinatesForValue: dataPoint.yValue];
         
         if(x < _plotWidth+chartPadding+_leftPadding)
         {
-            [self drawRounedRectWithRect: CGRectMake(x + step/2.0, y, step, _plotHeight +chartTopPadding-y)
-                            cornerRaduis: step/2
+            [self drawRounedRectWithRect: CGRectMake(x + step/2.0, y, step, _plotHeight + chartTopPadding - y)
+                            cornerRaduis: step / 2
                                    color: [UIColor gm_greenColor]
                               forContext: context];
         }
@@ -78,6 +78,6 @@
 - (UIColor*) colorForDataSet: (GMDataSet*) dataSet
                     withDate: (NSDate*) date
 {
-    return [dataSet hasDataForDate:date] ? [UIColor gm_greenColor] : [UIColor gm_grayColor];
+    return [dataSet hasDataForDate: date] ? [UIColor gm_greenColor] : [UIColor gm_grayColor];
 }
 @end

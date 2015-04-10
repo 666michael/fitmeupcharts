@@ -39,9 +39,9 @@
     {
         for (NSInteger index = 0; index < [dataSet count]; index++)
         {
-            GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
-            CGFloat x = [self xCoordinatesForValue:dataPoint.xValue];
-            CGFloat y = [self yCoordinatesForValue:dataPoint.yValue];
+            GMDataPoint *dataPoint = [dataSet dataPointAtIndex: index];
+            CGFloat x = [self xCoordinatesForValue: dataPoint.xValue];
+            CGFloat y = [self yCoordinatesForValue: dataPoint.yValue];
             
             if(index == 0)
             {
@@ -55,17 +55,17 @@
             
             if(index+1 < [dataSet count])
             {
-                GMDataPoint *dataPoint1 = [dataSet dataPointAtIndex:index+1];
-                float x1 = [self xCoordinatesForValue:dataPoint1.xValue];
-                float y1 = [self yCoordinatesForValue:dataPoint1.yValue];
+                GMDataPoint *dataPoint1 = [dataSet dataPointAtIndex: index+1];
+                float x1 = [self xCoordinatesForValue: dataPoint1.xValue];
+                float y1 = [self yCoordinatesForValue: dataPoint1.yValue];
                 
-                for (CGFloat t = 0; t <= 1.0; t+=0.01)
+                for (CGFloat t = 0; t <= 1.0; t += 0.01)
                 {
                     float midX = (1 - t) * x + t * x1;
                     float midY = (1 - t) * y + t * y1;
                     
                     NSInteger row1 = (midX-_leftPadding-chartPadding) / (_plotWidth/_xGridLines);
-                    NSInteger col1 = (_plotHeight  - (midY)+chartTopPadding) / (_plotHeight/_yGridLines);
+                    NSInteger col1 = (_plotHeight  - (midY) + chartTopPadding) / (_plotHeight / _yGridLines);
                     
                     [self highlightCellInGridAtRow: row1
                                          andColumn: _yGridLines - col1 -1
@@ -75,7 +75,7 @@
             }
             
         }
-        CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
+        CGContextSetStrokeColorWithColor(context, dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
         CGContextDrawPath(context, kCGPathStroke);
     }
     else
