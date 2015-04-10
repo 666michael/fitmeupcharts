@@ -11,12 +11,14 @@
 #import "GMDataSet.h"
 #import "GMDataPoint.h"
 #import "GMDatePoint.h"
+#import "NSString+FitMeUp.h"
+#import "UIColor+FitMeUp.h"
+#import "GMDataSet.h"
+#import "NSDate+FitMeUp.h"
+#import "GMChartUtils.h"
 
-typedef enum
-{
-    GMScatterChart = 0,
-    GMBarChart = 1
-}GMChartType;
+#define chartPadding 30.0f
+#define chartTopPadding 60.0f
 
 @interface GMChartView : UIView
 {
@@ -46,10 +48,21 @@ typedef enum
 @property (nonatomic) BOOL showYValues;
 @property (nonatomic) BOOL shouldUseBezier;
 
-@property (nonatomic) GMChartType chartType;
-
 - (void) plotChart;
 - (void) setDataSetsWithArray: (NSArray*) dataSets;
 - (void) plotChartData;
+- (void) calcScale;
+- (void) plotDataSet: (GMDataSet*) dataSet
+          withContet: (CGContextRef) context;
 
+- (CGFloat) xCoordinatesForValue: (CGFloat) xValue;
+- (CGFloat) yCoordinatesForValue: (CGFloat) xValue;
+- (void) highlightCellInGridAtRow: (NSInteger) row
+                        andColumn: (NSInteger) column
+                        withIndex: (GMPlotDirection) direction;
+
+- (void) drawRounedRectWithRect: (CGRect) rect
+                   cornerRaduis: (CGFloat) cornerRadius
+                          color: (UIColor*) legendColor
+                     forContext: (CGContextRef) context;
 @end

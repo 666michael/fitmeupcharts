@@ -17,8 +17,8 @@
 
 //=============================================================================
 
-const CGFloat chartPadding = 30.0f;
-const CGFloat chartTopPadding = 60.0f;
+//const CGFloat chartPadding = 30.0f;
+//const CGFloat chartTopPadding = 60.0f;
 const CGFloat chartBottomPadding = 120.0f;
 const CGFloat defaultLineWidth = 2.0f;
 const CGFloat defaultGridLineWidth = 0.5f;
@@ -93,8 +93,6 @@ const CGFloat defaultXSquaresCount = 14;
     
     self.showGrid = YES;
     
-    self.chartType = GMScatterChart;
-    
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -104,7 +102,6 @@ const CGFloat defaultXSquaresCount = 14;
     
     [self setShowYValues: YES];
     [self setShouldUseBezier: NO];
-    [self setChartType: GMScatterChart];
     [self setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
     [self setTranslatesAutoresizingMaskIntoConstraints: YES];
 }
@@ -171,8 +168,6 @@ const CGFloat defaultXSquaresCount = 14;
     if (context)
     {
         [self clearContext];
-        
-        self.showYValues = self.chartType == GMBarChart ? NO : self.showYValues;
         
         _leftPadding = self.showYValues ? ( ((CGRectGetWidth(self.frame) - 2 * chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
         
@@ -403,10 +398,7 @@ const CGFloat defaultXSquaresCount = 14;
                 _minY -= floorf(_minY/2.0);
                 _maxY += floorf(_maxY/2.0);
             }
-            if(self.chartType == GMBarChart)
-            {
-                _minY = 0.0;
-            }
+            
             _minX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_minX] gm_startOfDay] timeIntervalSinceReferenceDate];
             _maxX = [[[NSDate dateWithTimeIntervalSinceReferenceDate:_maxX] gm_startOfDay] timeIntervalSinceReferenceDate];
         }
@@ -428,89 +420,15 @@ const CGFloat defaultXSquaresCount = 14;
             CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
             CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
             
-            if(self.chartType == GMScatterChart)
-            {
-                if(!self.shouldUseBezier)
-                {
-                    for (NSInteger index = 0; index < [dataSet count]; index++)
-                    {
-                        GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
-                        CGFloat x = [self xCoordinatesForValue:dataPoint.xValue];
-                        CGFloat y = [self yCoordinatesForValue:dataPoint.yValue];
-                        
-                        if(index == 0)
-                        {
-                            CGContextBeginPath(context);
-                            CGContextMoveToPoint(context, x, y);
-                        }
-                        else
-                        {
-                            CGContextAddLineToPoint(context, x, y);
-                        }
-                        
-                        if(index+1 < [dataSet count])
-                        {
-                            GMDataPoint *dataPoint1 = [dataSet dataPointAtIndex:index+1];
-                            float x1 = [self xCoordinatesForValue:dataPoint1.xValue];
-                            float y1 = [self yCoordinatesForValue:dataPoint1.yValue];
-                            
-                            for (CGFloat t = 0; t <= 1.0; t+=0.01)
-                            {
-                                float midX = (1 - t) * x + t * x1;
-                                float midY = (1 - t) * y + t * y1;
-                                
-                                NSInteger row1 = (midX-_leftPadding-chartPadding) / (_plotWidth/_xGridLines);
-                                NSInteger col1 = (_plotHeight  - (midY)+chartTopPadding) / (_plotHeight/_yGridLines);
-                                                                
-                                [self highlightCellInGridAtRow: row1
-                                                     andColumn: _yGridLines - col1 -1
-                                                     withIndex: [GMChartUtils gm_plotDirectionForPoint: CGPointMake(x, y)
-                                                                                              endPoint: CGPointMake(x1, y1)]];
-                            }
-                        }
-                        
-                    }
-                    CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
-                    CGContextDrawPath(context, kCGPathStroke);
-                }
-                else
-                {
-                    [dataSet setXCoordForValue:^CGFloat(CGFloat xValue) {
-                        return [self xCoordinatesForValue:xValue];
-                    }];
-                    [dataSet setYCoordForValue:^CGFloat(CGFloat yValue) {
-                        return [self yCoordinatesForValue:yValue];
-                    }];
-                    UIBezierPath *path = [GMChartUtils gm_quadCurvedPathWithPoints: [dataSet pointsArray]];
-                    if(path)
-                    {
-                        [path stroke];
-                        CGContextSetStrokeColorWithColor(context, dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
-                        CGContextAddPath(context, [path CGPath]);
-                        CGContextDrawPath(context, kCGPathStroke);
-                    }
-                }
-            }
-            else
-            {
-                CGFloat step = _plotHeight/_yGridLines;
-                for (NSInteger index = 0; index < [dataSet count]; index++)
-                {
-                    GMDataPoint *dataPoint = [dataSet dataPointAtIndex:index];
-                    CGFloat x = [self xCoordinatesForValue:dataPoint.xValue];
-                    CGFloat y = [self yCoordinatesForValue:dataPoint.yValue];
-                    
-                    if(x < _plotWidth+chartPadding+_leftPadding)
-                    {
-                        [self drawRounedRectWithRect: CGRectMake(x + step/2.0, y, step, _plotHeight +chartTopPadding-y)
-                                        cornerRaduis: step/2
-                                               color: [UIColor gm_greenColor]
-                                          forContext: context];
-                    }
-                }
-            }
+            [self plotDataSet: dataSet
+                   withContet: context];
         }
     }
+}
+
+- (void) plotDataSet: (GMDataSet*) dataSet
+          withContet: (CGContextRef) context
+{
 }
 
 //=============================================================================
@@ -520,7 +438,7 @@ const CGFloat defaultXSquaresCount = 14;
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (context)
     {
-        if(_dataSets.count && self.chartType == GMScatterChart)
+        if(_dataSets.count)
         {
             for (GMDataSet *dataSet in _dataSets)
             {
@@ -672,11 +590,9 @@ const CGFloat defaultXSquaresCount = 14;
             CGRect rect = CGRectMake(x - defaultSmallCircleRadius, y - defaultSmallCircleRadius, 2 * defaultSmallCircleRadius, 2 * defaultSmallCircleRadius);
             CGContextAddEllipseInRect(context, rect);
             
-            UIColor *textColor = [UIColor gm_grayColor];
-            if(self.chartType == GMBarChart)
-            {
-                textColor = [_dataSets[0] hasDataForDate:[NSDate dateWithTimeIntervalSinceReferenceDate:_minX + i * amountPerLine]] ? [UIColor gm_greenColor] : [UIColor gm_grayColor];
-            }
+            UIColor *textColor = [self colorForDataSet: _dataSets[0]
+                                              withDate: [NSDate dateWithTimeIntervalSinceReferenceDate:_minX + i * amountPerLine]];
+            
             NSDictionary *attributes = @{
                                          NSFontAttributeName : textFont,
                                          NSForegroundColorAttributeName : textColor};
@@ -691,6 +607,12 @@ const CGFloat defaultXSquaresCount = 14;
             CGContextDrawPath(context, kCGPathFillStroke);
         }
     }
+}
+
+- (UIColor*) colorForDataSet: (GMDataSet*) dataSet
+                    withDate: (NSDate*) date
+{
+    return [UIColor gm_grayColor];
 }
 
 //=============================================================================
