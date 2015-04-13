@@ -61,14 +61,14 @@
     
     GMDataSet *dataSet1 = [[GMDataSet alloc] init];
 
-    GMDatePoint *pt12 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-3 * SECS_PER_DAY]  yValue:25];
-    GMDatePoint *pt13 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-2 * SECS_PER_DAY]  yValue:31];
+    GMDatePoint *pt12 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-3 * SECS_PER_DAY]  yValue:31];
+    GMDatePoint *pt13 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-2 * SECS_PER_DAY]  yValue:25];
     GMDatePoint *pt14 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-1 * SECS_PER_DAY]  yValue:20];
     GMDatePoint *pt15 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:0]  yValue:45];
-    GMDataPoint *pt16 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:3 * SECS_PER_DAY]  yValue:51];
-    [pt16 setShouldShowLabel:YES];
-    [pt16 setPointLabelText:@"51"];
-    [pt16 setPointStyle:GMPointUpperStyle];
+    GMDataPoint *pt16 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:1 * SECS_PER_DAY]  yValue:51];
+    GMDataPoint *pt17 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:2 * SECS_PER_DAY]  yValue:48];
+    GMDataPoint *pt18 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:3 * SECS_PER_DAY]  yValue:45];
+    GMDataPoint *pt19 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:4 * SECS_PER_DAY]  yValue:41];
     
     //[dataSet1 addDataPoint:pt11];
     [dataSet1 addDataPoint:pt12];
@@ -76,7 +76,9 @@
     [dataSet1 addDataPoint:pt14];
     [dataSet1 addDataPoint:pt15];
     [dataSet1 addDataPoint:pt16];
-    //[dataSet1 addDataPoint:pt17];
+    [dataSet1 addDataPoint:pt17];
+    [dataSet1 addDataPoint:pt18];
+    [dataSet1 addDataPoint:pt19];
     
     [dataSet1 setPlotColor:[UIColor gm_redColor]];
     [dataSet1 setPlotName:@"calories"];
@@ -84,7 +86,7 @@
     self.chartView.xAxisLabel.text = @"";
     self.chartView.yAxisLabel.text = @"our recommendations";
     
-    [self.chartView setDataSetsWithArray:@[dataSet]];
+    [self.chartView setDataSetsWithArray:@[dataSet1]];
     [self.view addSubview:self.chartView];
 }
 
