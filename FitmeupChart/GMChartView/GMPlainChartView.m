@@ -64,12 +64,12 @@
                     float midX = (1 - t) * x + t * x1;
                     float midY = (1 - t) * y + t * y1;
                     
-                    NSInteger row1 = (midX-_leftPadding-chartPadding) / (_plotWidth/_xGridLines);
-                    NSInteger col1 = (_plotHeight  - (midY) + chartTopPadding) / (_plotHeight / _yGridLines);
+                    NSInteger row1 = (midX-_leftPadding-  self.chartPadding) / (_plotWidth/_xGridLines);
+                    NSInteger col1 = (_plotHeight  - (midY) + self.chartTopPadding) / (_plotHeight / _yGridLines);
                     
                     [self highlightCellInGridAtRow: row1
                                          andColumn: _yGridLines - col1 -1
-                                         withIndex: [GMChartUtils gm_plotDirectionForPoint: CGPointMake(x, y)
+                                        withIndex: [GMChartUtils gm_plotDirectionForPoint: CGPointMake(x, y)
                                                                                   endPoint: CGPointMake(x1, y1)]];
                 }
             }

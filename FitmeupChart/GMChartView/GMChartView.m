@@ -449,15 +449,15 @@ const CGFloat defaultXSquaresCount = 14;
                                                                    atColumn: _yGridLines - col -1
                                                         withSearchDirection: [GMChartUtils invertedDirection: direction]];
                         
-                        [self highlightCellInGridAtRow: textCell.x
-                                             andColumn: textCell.y
-                                             withIndex: -1];
+                        //[self highlightCellInGridAtRow: textCell.x
+                        //                     andColumn: textCell.y
+                        //                     withIndex: -1];
                         
                         CGFloat stepY = _plotHeight/_yGridLines;
                         x = _chartPadding + _leftPadding + textCell.x*stepY;
                         y = _chartTopPadding + (textCell.y) * stepY;
                         
-                        CGContextAddRect(context, CGRectMake(x, y, stepY, stepY));
+                        //CGContextAddRect(context, CGRectMake(x, y, stepY, stepY));
                         
                         
                         
@@ -718,7 +718,7 @@ const CGFloat defaultXSquaresCount = 14;
     CGFloat x = _chartPadding + _leftPadding + row*stepY;
     CGFloat y = _chartTopPadding + (column)*stepY;
     
-    CGContextAddRect(context, CGRectMake(x, y, stepY, stepY));
+    //CGContextAddRect(context, CGRectMake(x, y, stepY, stepY));
     
     
     _labelsGrid[column][row] = [NSNumber numberWithInteger:direction];
