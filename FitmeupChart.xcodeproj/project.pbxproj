@@ -26,6 +26,9 @@
 		3395FD111AD7FCC20045C7A0 /* GMBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3395FD101AD7FCC20045C7A0 /* GMBarChartView.m */; };
 		3395FD151AD7FCE80045C7A0 /* GMPlainChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3395FD141AD7FCE80045C7A0 /* GMPlainChartView.m */; };
 		33DC2A4E1AD2885F00D21199 /* GMChartUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 33DC2A4D1AD2885F00D21199 /* GMChartUtils.m */; };
+		33EEABD61ADBA9420045DAB1 /* GMPlainChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33EEABD41ADBA9420045DAB1 /* GMPlainChartViewController.m */; };
+		33EEABD71ADBA9420045DAB1 /* GMPlainChartViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33EEABD51ADBA9420045DAB1 /* GMPlainChartViewController.xib */; };
+		33EEABDA1ADBBB920045DAB1 /* GMChartMidget.m in Sources */ = {isa = PBXBuildFile; fileRef = 33EEABD91ADBBB920045DAB1 /* GMChartMidget.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +78,11 @@
 		3395FD141AD7FCE80045C7A0 /* GMPlainChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMPlainChartView.m; path = GMChartView/GMPlainChartView.m; sourceTree = "<group>"; };
 		33DC2A4C1AD2885F00D21199 /* GMChartUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMChartUtils.h; path = GMChartView/GMChartUtils.h; sourceTree = "<group>"; };
 		33DC2A4D1AD2885F00D21199 /* GMChartUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMChartUtils.m; path = GMChartView/GMChartUtils.m; sourceTree = "<group>"; };
+		33EEABD31ADBA9420045DAB1 /* GMPlainChartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMPlainChartViewController.h; path = GMChartView/GMPlainChartViewController.h; sourceTree = "<group>"; };
+		33EEABD41ADBA9420045DAB1 /* GMPlainChartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMPlainChartViewController.m; path = GMChartView/GMPlainChartViewController.m; sourceTree = "<group>"; };
+		33EEABD51ADBA9420045DAB1 /* GMPlainChartViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GMPlainChartViewController.xib; path = GMChartView/GMPlainChartViewController.xib; sourceTree = "<group>"; };
+		33EEABD81ADBBB920045DAB1 /* GMChartMidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMChartMidget.h; path = GMChartView/GMChartMidget.h; sourceTree = "<group>"; };
+		33EEABD91ADBBB920045DAB1 /* GMChartMidget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMChartMidget.m; path = GMChartView/GMChartMidget.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +193,7 @@
 			children = (
 				33B1E0CB1AD402B80044E788 /* Util */,
 				3395FD121AD7FCC90045C7A0 /* Charts */,
+				33EEABD21ADBA8A50045DAB1 /* Controllers */,
 				338DAA2D1AB193D800594ED0 /* GMDataSet.h */,
 				338DAA2E1AB193D800594ED0 /* GMDataSet.m */,
 				338DAA301AB1975E00594ED0 /* GMDataPoint.h */,
@@ -210,6 +219,8 @@
 				3395FD141AD7FCE80045C7A0 /* GMPlainChartView.m */,
 				3395FD0F1AD7FCC20045C7A0 /* GMBarChartView.h */,
 				3395FD101AD7FCC20045C7A0 /* GMBarChartView.m */,
+				33EEABD81ADBBB920045DAB1 /* GMChartMidget.h */,
+				33EEABD91ADBBB920045DAB1 /* GMChartMidget.m */,
 			);
 			name = Charts;
 			sourceTree = "<group>";
@@ -223,6 +234,16 @@
 				33DC2A4D1AD2885F00D21199 /* GMChartUtils.m */,
 			);
 			name = Util;
+			sourceTree = "<group>";
+		};
+		33EEABD21ADBA8A50045DAB1 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				33EEABD31ADBA9420045DAB1 /* GMPlainChartViewController.h */,
+				33EEABD41ADBA9420045DAB1 /* GMPlainChartViewController.m */,
+				33EEABD51ADBA9420045DAB1 /* GMPlainChartViewController.xib */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -305,6 +326,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33EEABD71ADBA9420045DAB1 /* GMPlainChartViewController.xib in Resources */,
 				338DAA0C1AB185AE00594ED0 /* Main.storyboard in Resources */,
 				338DAA111AB185AE00594ED0 /* LaunchScreen.xib in Resources */,
 				338DAA0E1AB185AE00594ED0 /* Images.xcassets in Resources */,
@@ -325,10 +347,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33EEABD61ADBA9420045DAB1 /* GMPlainChartViewController.m in Sources */,
 				338DAA321AB1975E00594ED0 /* GMDataPoint.m in Sources */,
 				3395FD111AD7FCC20045C7A0 /* GMBarChartView.m in Sources */,
 				331503701AB6CE1800F2FC79 /* UIColor+FitMeUp.m in Sources */,
 				338DAA2F1AB193D800594ED0 /* GMDataSet.m in Sources */,
+				33EEABDA1ADBBB920045DAB1 /* GMChartMidget.m in Sources */,
 				3355055D1ABC50B600193BA2 /* NSDate+FitMeUp.m in Sources */,
 				338DAA061AB185AE00594ED0 /* FitmeupChart.xcdatamodeld in Sources */,
 				338DAA031AB185AE00594ED0 /* AppDelegate.m in Sources */,

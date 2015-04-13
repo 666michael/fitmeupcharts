@@ -7,6 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+
+typedef enum
+{
+    GMData7Days = 0,
+    GMData7Weeks = 1,
+    GMData7Month = 2,
+    GMData7Years = 3
+}GMDataAggregation;
+
 @class GMDataPoint;
 
 @interface GMDataSet : NSObject
@@ -37,5 +46,8 @@
 - (void) sortPoints;
 - (NSArray*) pointsArray;
 - (BOOL) hasDataForDate: (NSDate*) date;
+
+- (void) aggregateByType: (GMDataAggregation) type
+              ForEndDate: (NSDate*) endDate;
 
 @end

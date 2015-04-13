@@ -17,8 +17,6 @@
 #import "NSDate+FitMeUp.h"
 #import "GMChartUtils.h"
 
-#define chartPadding 30.0f
-#define chartTopPadding 60.0f
 
 @interface GMChartView : UIView
 {
@@ -65,4 +63,9 @@
                    cornerRaduis: (CGFloat) cornerRadius
                           color: (UIColor*) legendColor
                      forContext: (CGContextRef) context;
+
+@property (nonatomic) CGFloat chartPadding;
+@property (nonatomic) CGFloat chartTopPadding;
+@property (nonatomic) CGFloat chartBottomPadding;
+
 @end

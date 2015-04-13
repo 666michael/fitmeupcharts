@@ -204,4 +204,15 @@
 
 //=============================================================================
 
+- (void) aggregateByType: (GMDataAggregation) type
+              ForEndDate: (NSDate*) endDate
+{
+    for (GMDataPoint* dataPoint in _dataPoints)
+    {
+        
+    }
+}
+
+//=============================================================================
+
 @end
