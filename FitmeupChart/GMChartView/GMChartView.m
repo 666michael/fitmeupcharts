@@ -553,15 +553,16 @@ const CGFloat defaultXSquaresCount = 14;
     {
         if (col == 0)
         {
-            x -= textWidth;
-            y -= textHeight;
+            x -= step;
+            y -= step;
         }
         else
         {
             if (col == _xGridLines)
             {
                 x -= textWidth;
-                y += (step - colLeft);
+                if (fabs(colLeft - step)<1.0)
+                  y += (step - colLeft);
             }
             else
             {
