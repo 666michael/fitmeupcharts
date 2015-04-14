@@ -335,7 +335,7 @@ const CGFloat defaultXSquaresCount = 14;
         [self drawYLegend];
     }
     [self drawLowerLegend];
-    [self printGrid];
+    //[self printGrid];
 }
 
 //=============================================================================
@@ -447,11 +447,6 @@ const CGFloat defaultXSquaresCount = 14;
                                            andContext: context];
                         
                         GMPlotDirection direction = [_labelsGrid[col][row] integerValue];
-                        NSLog(@"direction %ld", direction);
-                        CGPoint textCell = [self closestFreeCellInGridAtRow: row
-                                                                   atColumn: _yGridLines - col -1
-                                                        withSearchDirection: [GMChartUtils invertedDirection: direction]];
-                        
                         
                         [self drawText: dataPoint.pointLabelText
                            xCoordinate: x
@@ -506,7 +501,7 @@ const CGFloat defaultXSquaresCount = 14;
     NSInteger row = (y - _chartTopPadding) / step;
     
     CGFloat colLeft = fmodf(rawY, step);
-    
+    //NSLog(@"%ld - %ld", (long)row, (long)col);
     if(colLeft < step / 2.0)
     {
         //[self drawCircleAtXCoordinate:x yCoordinate:y - colLeft fillColor:[UIColor blueColor] andContext:UIGraphicsGetCurrentContext()];
@@ -514,10 +509,17 @@ const CGFloat defaultXSquaresCount = 14;
     }
     else
     {
-        if(fabs(colLeft - step) > 1)
+        if(fabs(colLeft - step / 2.0) < 1.0)
         {
+            NSLog(@"%f", fabs(colLeft - step/2.0));
             //[self drawCircleAtXCoordinate:x yCoordinate:y + ((_plotHeight / _yGridLines) - colLeft) fillColor:[UIColor blueColor] andContext:UIGraphicsGetCurrentContext()];
-            y += ((_plotHeight / _yGridLines) - colLeft);
+            y -= step ;
+            y += (step - colLeft);
+            
+        }
+        else
+        {
+            y += (step - colLeft);
         }
     }
     
@@ -534,6 +536,17 @@ const CGFloat defaultXSquaresCount = 14;
                 x -= step;
                 y -= colLeft + textHeight;
             }
+            else
+            {
+                NSString *directionStr = [self directionCellInGridAtRow: row
+                                                               atColumn: col];
+                
+                //NSLog(@"direction %@", directionStr);
+                y = [self adjustY: y
+                      basedOnPath: directionStr];
+                x = [self adjustX: x
+                      basedOnPath: directionStr];
+            }
         }
     }
     else
@@ -549,6 +562,15 @@ const CGFloat defaultXSquaresCount = 14;
             {
                 x -= textWidth;
                 y += (step - colLeft);
+            }
+            else
+            {
+                NSString *directionStr = [self directionCellInGridAtRow: row
+                                                               atColumn: col];
+                y = [self adjustY: y
+                      basedOnPath: directionStr];
+                x = [self adjustX: x
+                      basedOnPath: directionStr];
             }
         }
         
@@ -806,70 +828,107 @@ const CGFloat defaultXSquaresCount = 14;
 
 //=============================================================================
 
-- (CGPoint) closestFreeCellInGridAtRow: (NSInteger) x
+- (NSString*) directionCellInGridAtRow: (NSInteger) x
                               atColumn: (NSInteger) y
-                   withSearchDirection: (NSInteger) searchDirection
 {
-    if (self.showYValues)
+    if(x+1 >= _yGridLines)
+        return @"";
+    
+    NSInteger c1 = [_labelsGrid[x-1][y-1] integerValue];
+    //NSInteger c2 = [_labelsGrid[x][y-1] integerValue];
+    NSInteger c3 = [_labelsGrid[x+1][y-1] integerValue];
+    
+    NSInteger center = [_labelsGrid[x][y] integerValue];
+    
+    if (c1==c3 && c1==0)
     {
-        if(x+1 < _xGridLines-1)
-            x++;
+        c1 = center;
     }
-    if(x+1 >= _xGridLines)
-        return CGPointMake(0, 0);
     
-    NSInteger c1 = [_labelsGrid[y-1][x-1] integerValue];
-    NSInteger c2 = [_labelsGrid[y-1][x] integerValue];
-    NSInteger c3 = [_labelsGrid[y-1][x+1] integerValue];
+    NSInteger c4 = [_labelsGrid[x-1][y+1] integerValue];
+    //NSInteger c5 = [_labelsGrid[x][y+1] integerValue];
+    NSInteger c6 = [_labelsGrid[x+1][y+1] integerValue];
     
-    NSInteger c4 = [_labelsGrid[y][x-1] integerValue];
-    NSInteger c5 = [_labelsGrid[y][x+1] integerValue];
-    
-    NSInteger c6 = [_labelsGrid[y+1][x-1] integerValue];
-    NSInteger c7 = [_labelsGrid[y+1][x] integerValue];
-    NSInteger c8 = [_labelsGrid[y+1][x+1] integerValue];
-    
-    
-    if(searchDirection == (GMPlotDirectionUp| GMPlotDirectionLeft))
+    if(c1 !=0 || c4 != 0)
     {
-        if(c1 == 0)
-            return CGPointMake(x-1, y-1);
-        if(c2 == 0)
-            return CGPointMake(x, y-1);
-        if(c4 == 0)
-            return CGPointMake(x-1, y);
-    }
-    else
-        if(searchDirection == (GMPlotDirectionUp| GMPlotDirectionRight))
+        if(c1 == (GMPlotDirectionUp| GMPlotDirectionLeft) && (c4 ==  (GMPlotDirectionUp| GMPlotDirectionLeft) || center ==  (GMPlotDirectionUp| GMPlotDirectionLeft)))
         {
-            if(c2 == 0)
-                return CGPointMake(x, y-1);
-            if(c3 == 0)
-                return CGPointMake(x+1, y-1);
-            if(c5 == 0)
-                return CGPointMake(x+1, y);
+            return @"UU";
         }
         else
-            if(searchDirection == (GMPlotDirectionDown| GMPlotDirectionLeft))
+            if(c1 == (GMPlotDirectionDown| GMPlotDirectionLeft) && (c4 ==  (GMPlotDirectionUp| GMPlotDirectionLeft) || center ==  (GMPlotDirectionUp| GMPlotDirectionLeft)))
             {
-                if(c4 == 0)
-                    return CGPointMake(x-1, y);
-                if(c6 == 0)
-                    return CGPointMake(x-1, y+1);
-                if(c7 == 0)
-                    return CGPointMake(x, y+1);
+                return @"DU";
             }
             else
-                if(searchDirection == (GMPlotDirectionDown| GMPlotDirectionRight))
+                if(c1 == (GMPlotDirectionUp| GMPlotDirectionLeft) && (c4 ==  (GMPlotDirectionDown| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionDown| GMPlotDirectionLeft)))
                 {
-                    if(c5 == 0)
-                        return CGPointMake(x+1, y);
-                    if(c7 == 0)
-                        return CGPointMake(x, y+1);
-                    if(c8 == 0)
-                        return CGPointMake(x+1, y+1);
+                    return @"UD";
                 }
-    return CGPointMake(0, 0);
+                else
+                    if(c1 == (GMPlotDirectionDown| GMPlotDirectionLeft) && (c4 ==  (GMPlotDirectionDown| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionDown| GMPlotDirectionLeft)))
+                    {
+                        return @"DD";
+                    }
+    }
+    else
+    {
+        if(c3 == (GMPlotDirectionUp| GMPlotDirectionLeft) && (c6 ==  (GMPlotDirectionUp| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionUp| GMPlotDirectionLeft)))
+        {
+            return @"UU";
+        }
+        else
+            if(c3 == (GMPlotDirectionDown| GMPlotDirectionLeft) && (c6 ==  (GMPlotDirectionUp| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionUp| GMPlotDirectionLeft)))
+            {
+                return @"DU";
+            }
+            else
+                if(c3 == (GMPlotDirectionUp| GMPlotDirectionLeft) && (c6 ==  (GMPlotDirectionDown| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionDown| GMPlotDirectionLeft)))
+                {
+                    return @"UD";
+                }
+                else
+                    if(c3 == (GMPlotDirectionDown| GMPlotDirectionLeft) && (c6 ==  (GMPlotDirectionDown| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionDown| GMPlotDirectionLeft)))
+                    {
+                        return @"DD";
+                    }
+    }
+    
+    return @"";
+}
+
+- (CGFloat) adjustY: (CGFloat) y
+        basedOnPath: (NSString*) path
+{
+    CGFloat stepY = _plotHeight/_yGridLines;
+    if([path isEqualToString:@"DD"])
+    {
+        return y - stepY;
+    }
+    if([path isEqualToString:@"UD"])
+    {
+        return y - stepY;
+    }
+    return y;
+}
+
+- (CGFloat) adjustX: (CGFloat) x
+        basedOnPath: (NSString*) path
+{
+    CGFloat stepY = _plotHeight/_yGridLines;
+    if([path isEqualToString:@"DD"])
+    {
+        return x + 3;
+    }
+    if([path isEqualToString:@"UU"])
+    {
+        return x + 3;
+    }
+    if([path isEqualToString:@"UD"])
+    {
+        return x + 3;
+    }
+    return x;
 }
 
 //=============================================================================
