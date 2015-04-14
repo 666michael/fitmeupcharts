@@ -378,8 +378,8 @@ const CGFloat defaultXSquaresCount = 14;
                 _maxY += floorf(_maxY/2.0);
             }
             
-            _minX = [[[NSDate dateWithTimeIntervalSinceReferenceDate: _minX] gm_startOfDay] timeIntervalSinceReferenceDate];
-            _maxX = [[[NSDate dateWithTimeIntervalSinceReferenceDate: _maxX] gm_startOfDay] timeIntervalSinceReferenceDate];
+            //_minX = [[NSDate dateWithTimeIntervalSinceReferenceDate: _minX] timeIntervalSinceReferenceDate];
+            //_maxX = [[NSDate dateWithTimeIntervalSinceReferenceDate: _maxX] timeIntervalSinceReferenceDate];
         }
     }
 }
@@ -432,8 +432,8 @@ const CGFloat defaultXSquaresCount = 14;
                     float x = [self xCoordinatesForValue: dataPoint.xValue];
                     float y = [self yCoordinatesForValue: dataPoint.yValue];
                     
-                    NSInteger row = floorf((x - _leftPadding - _chartPadding) / (_plotWidth / _xGridLines));
-                    NSInteger col = floorf((y - _chartTopPadding) / (_plotHeight / _yGridLines));
+                    NSInteger row = ceilf((x - _leftPadding - _chartPadding) / (_plotWidth / _xGridLines));
+                    NSInteger col = ceilf((y - _chartTopPadding) / (_plotHeight / _yGridLines));
                     
                     if (row == _xGridLines)
                         row--;
