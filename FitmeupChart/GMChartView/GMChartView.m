@@ -445,17 +445,18 @@ const CGFloat defaultXSquaresCount = 14;
                                           yCoordinate: y
                                             fillColor: colorForText
                                            andContext: context];
-                        
-                        GMPlotDirection direction = [_labelsGrid[col][row] integerValue];
-                        
-                        [self drawText: dataPoint.pointLabelText
-                           xCoordinate: x
-                           yCoordinate: y
-                             fillColor: colorForText
-                            pointStyle: dataPoint.pointStyle
-                             direction: direction
-                            andContext: context];
-                        
+                        if(col< _yGridLines && row < _xGridLines)
+                        {
+                            GMPlotDirection direction = [_labelsGrid[col][row] integerValue];
+                            
+                            [self drawText: dataPoint.pointLabelText
+                               xCoordinate: x
+                               yCoordinate: y
+                                 fillColor: colorForText
+                                pointStyle: dataPoint.pointStyle
+                                 direction: direction
+                                andContext: context];
+                        }
                         CGContextDrawPath(context, kCGPathFillStroke);
                     }
                 }
@@ -562,7 +563,7 @@ const CGFloat defaultXSquaresCount = 14;
             {
                 x -= textWidth;
                 if (fabs(colLeft - step)<1.0)
-                  y += (step - colLeft);
+                    y += (step - colLeft);
             }
             else
             {
@@ -832,9 +833,10 @@ const CGFloat defaultXSquaresCount = 14;
 - (NSString*) directionCellInGridAtRow: (NSInteger) x
                               atColumn: (NSInteger) y
 {
-    if(x+1 >= _yGridLines)
+    if(y+1 >= _yGridLines)
         return @"";
-    
+    if(x+1 >= _xGridLines)
+        return @"";
     NSInteger c1 = [_labelsGrid[x-1][y-1] integerValue];
     //NSInteger c2 = [_labelsGrid[x][y-1] integerValue];
     NSInteger c3 = [_labelsGrid[x+1][y-1] integerValue];
