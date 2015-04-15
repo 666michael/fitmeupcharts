@@ -17,11 +17,10 @@
 
 //=============================================================================
 
-const CGFloat defaultLineWidth = 2.0f;
+
 const CGFloat defaultGridLineWidth = 0.5f;
 const NSInteger defaultGridLines = 5;
-const CGFloat defaultFontSize = 10.5;
-const CGFloat defaultCircleRadius = 2.5;
+
 const CGFloat defaultSmallCircleRadius = 2.5;
 const NSString* defaultDateFormat = @"EEE";
 const CGFloat defaultLegendSquare = 30.0f;
@@ -98,6 +97,19 @@ const CGFloat defaultXSquaresCount = 14;
     [self setShouldUseBezier: NO];
     [self setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
     [self setTranslatesAutoresizingMaskIntoConstraints: YES];
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(didRotateDeviceChangeNotification:)
+                                                 name: UIDeviceOrientationDidChangeNotification
+                                               object: nil];
+}
+
+//=============================================================================
+
+-(void)didRotateDeviceChangeNotification:(NSNotification *)notification
+{
+    [self setNeedsDisplay];
 }
 
 //=============================================================================
@@ -127,6 +139,14 @@ const CGFloat defaultXSquaresCount = 14;
 - (void) setDataSetsWithArray: (NSArray*) dataSets
 {
     _dataSets = [dataSets copy];
+}
+
+//=============================================================================
+
+- (void) dealloc
+{
+    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 //=============================================================================
@@ -377,9 +397,6 @@ const CGFloat defaultXSquaresCount = 14;
                 _minY -= floorf(_minY/2.0);
                 _maxY += floorf(_maxY/2.0);
             }
-            
-            //_minX = [[NSDate dateWithTimeIntervalSinceReferenceDate: _minX] timeIntervalSinceReferenceDate];
-            //_maxX = [[NSDate dateWithTimeIntervalSinceReferenceDate: _maxX] timeIntervalSinceReferenceDate];
         }
     }
 }
@@ -414,171 +431,7 @@ const CGFloat defaultXSquaresCount = 14;
 
 - (void) plotLabels
 {
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    if (context)
-    {
-        if(_dataSets.count)
-        {
-            for (GMDataSet *dataSet in _dataSets)
-            {
-                [dataSet sortPoints];
-                CGContextRef context = UIGraphicsGetCurrentContext();
-                
-                CGContextSetLineWidth(context, defaultLineWidth);
-                
-                for (NSInteger index = 0; index < [dataSet count]; index++)
-                {
-                    GMDataPoint *dataPoint = [dataSet dataPointAtIndex: index];
-                    float x = [self xCoordinatesForValue: dataPoint.xValue];
-                    float y = [self yCoordinatesForValue: dataPoint.yValue];
-                    
-                    NSInteger row = ceilf((x - _leftPadding - _chartPadding) / (_plotWidth / _xGridLines));
-                    NSInteger col = ceilf((y - _chartTopPadding) / (_plotHeight / _yGridLines));
-                    
-                    if (row == _xGridLines)
-                        row--;
-                    
-                    if(dataPoint.shouldShowLabel)
-                    {
-                        UIColor* colorForText = dataPoint.pointStyle == GMPointUpperStyle ? [UIColor gm_redColor] : [UIColor gm_greenColor];
-                        [self drawCircleAtXCoordinate: x
-                                          yCoordinate: y
-                                            fillColor: colorForText
-                                           andContext: context];
-                        if(col< _yGridLines && row < _xGridLines)
-                        {
-                            GMPlotDirection direction = [_labelsGrid[col][row] integerValue];
-                            
-                            [self drawText: dataPoint.pointLabelText
-                               xCoordinate: x
-                               yCoordinate: y
-                                 fillColor: colorForText
-                                pointStyle: dataPoint.pointStyle
-                                 direction: direction
-                                andContext: context];
-                        }
-                        CGContextDrawPath(context, kCGPathFillStroke);
-                    }
-                }
-            }
-        }
-    }
-}
 
-//=============================================================================
-
-- (void) drawCircleAtXCoordinate: (CGFloat) x
-                     yCoordinate: (CGFloat) y
-                       fillColor: (UIColor*) color
-                      andContext: (CGContextRef) context
-
-{
-    CGContextSetFillColorWithColor(context, color.CGColor);
-    CGRect rect = CGRectMake(x - defaultCircleRadius, y - defaultCircleRadius, 2 * defaultCircleRadius, 2 * defaultCircleRadius);
-    CGContextAddEllipseInRect(context, rect);
-}
-
-//=============================================================================
-
-- (void) drawText: (NSString*) text
-      xCoordinate: (CGFloat) x
-      yCoordinate: (CGFloat) y
-        fillColor: (UIColor*) color
-       pointStyle: (GMPointStyle) pointStyle
-        direction: (GMPlotDirection) direction
-       andContext: (CGContextRef) context
-{
-    NSDictionary *attributes = @{
-                                 NSFontAttributeName : [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize],
-                                 NSForegroundColorAttributeName : color};
-    
-    CGFloat textHeight = [text gm_heightForFont:[GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
-    CGFloat textWidth = [text gm_widthForFont:[GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
-    
-    CGFloat step = (_plotHeight / _yGridLines);
-    CGFloat rawY = y - _chartTopPadding;
-    
-    NSInteger col = (x - _leftPadding - _chartPadding) / step;
-    NSInteger row = (y - _chartTopPadding) / step;
-    
-    CGFloat colLeft = fmodf(rawY, step);
-    //NSLog(@"%ld - %ld", (long)row, (long)col);
-    if(colLeft < step / 2.0)
-    {
-        //[self drawCircleAtXCoordinate:x yCoordinate:y - colLeft fillColor:[UIColor blueColor] andContext:UIGraphicsGetCurrentContext()];
-        y -= colLeft;
-    }
-    else
-    {
-        if(fabs(colLeft - step / 2.0) < 1.0)
-        {
-            NSLog(@"%f", fabs(colLeft - step/2.0));
-            //[self drawCircleAtXCoordinate:x yCoordinate:y + ((_plotHeight / _yGridLines) - colLeft) fillColor:[UIColor blueColor] andContext:UIGraphicsGetCurrentContext()];
-            y -= step ;
-            y += (step - colLeft);
-            
-        }
-        else
-        {
-            y += (step - colLeft);
-        }
-    }
-    
-    if(direction == (GMPlotDirectionLeft | GMPlotDirectionUp))
-    {
-        if (col == 0)
-        {
-            y += (step - colLeft);
-        }
-        else
-        {
-            if (col == _xGridLines)
-            {
-                x -= step;
-                y -= colLeft + textHeight;
-            }
-            else
-            {
-                NSString *directionStr = [self directionCellInGridAtRow: row
-                                                               atColumn: col];
-                
-                //NSLog(@"direction %@", directionStr);
-                y = [self adjustY: y
-                      basedOnPath: directionStr];
-                x = [self adjustX: x
-                      basedOnPath: directionStr];
-            }
-        }
-    }
-    else
-    {
-        if (col == 0)
-        {
-            x -= step;
-            y -= step;
-        }
-        else
-        {
-            if (col == _xGridLines)
-            {
-                x -= textWidth;
-                if (fabs(colLeft - step)<1.0)
-                    y += (step - colLeft);
-            }
-            else
-            {
-                NSString *directionStr = [self directionCellInGridAtRow: row
-                                                               atColumn: col];
-                y = [self adjustY: y
-                      basedOnPath: directionStr];
-                x = [self adjustX: x
-                      basedOnPath: directionStr];
-            }
-        }
-        
-    }
-    [text drawAtPoint: CGPointMake(x, y)
-       withAttributes: attributes];
 }
 
 //=============================================================================
@@ -766,9 +619,7 @@ const CGFloat defaultXSquaresCount = 14;
 - (void) highlightCellInGridAtRow: (NSInteger) row
                         andColumn: (NSInteger) column
                         withIndex: (GMPlotDirection) direction
-{
-    CGFloat stepY = _plotHeight/_yGridLines;
-    
+{    
     if(row < 0 || row > _xGridLines)
         return;
     
@@ -778,177 +629,10 @@ const CGFloat defaultXSquaresCount = 14;
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
     CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
-    CGFloat x = _chartPadding + _leftPadding + row*stepY;
-    CGFloat y = _chartTopPadding + (column)*stepY;
-    
-    //CGContextAddRect(context, CGRectMake(x, y, stepY, stepY));
-    
-    
     _labelsGrid[column][row] = [NSNumber numberWithInteger:direction];
     
 }
 
-#pragma mark - TEST -
-
 //=============================================================================
-
-- (CGPoint) highlightedCellInGridAtRow: (NSInteger) row
-                              atColumn: (NSInteger) column
-                         withDirection: (GMPlotDirection) direction
-                               andText: (NSString*) text
-{
-    CGFloat stepY = _plotHeight/_yGridLines;
-    CGFloat stepX = _plotWidth / _xGridLines;
-    
-    CGFloat x = _chartPadding + _leftPadding + row*stepY;
-    CGFloat y = _plotHeight + _chartTopPadding - (column+1)*stepY;
-    
-    CGFloat xTextWidth = [text gm_widthForFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
-    CGFloat xTextHeight = [text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
-    
-    if(direction == (GMPlotDirectionUp| GMPlotDirectionLeft))
-    {
-        return CGPointMake(x, y);
-    }
-    else
-        if(direction == (GMPlotDirectionUp| GMPlotDirectionRight))
-        {
-            return CGPointMake(x+stepX-xTextWidth, y);
-        }
-        else
-            if(direction == (GMPlotDirectionDown| GMPlotDirectionLeft))
-            {
-                return CGPointMake(x-5, y+stepX-xTextHeight/2.0);
-            }
-            else
-                if(direction == (GMPlotDirectionDown| GMPlotDirectionRight))
-                {
-                    return CGPointMake(x+stepX, y+stepX*2-xTextHeight/2.0);
-                }
-    return CGPointMake(x, y);
-}
-
-//=============================================================================
-
-- (NSString*) directionCellInGridAtRow: (NSInteger) x
-                              atColumn: (NSInteger) y
-{
-    if(y+1 >= _yGridLines)
-        return @"";
-    if(x+1 >= _xGridLines)
-        return @"";
-    NSInteger c1 = [_labelsGrid[x-1][y-1] integerValue];
-    //NSInteger c2 = [_labelsGrid[x][y-1] integerValue];
-    NSInteger c3 = [_labelsGrid[x+1][y-1] integerValue];
-    
-    NSInteger center = [_labelsGrid[x][y] integerValue];
-    
-    if (c1==c3 && c1==0)
-    {
-        c1 = center;
-    }
-    
-    NSInteger c4 = [_labelsGrid[x-1][y+1] integerValue];
-    //NSInteger c5 = [_labelsGrid[x][y+1] integerValue];
-    NSInteger c6 = [_labelsGrid[x+1][y+1] integerValue];
-    
-    if(c1 !=0 || c4 != 0)
-    {
-        if(c1 == (GMPlotDirectionUp| GMPlotDirectionLeft) && (c4 ==  (GMPlotDirectionUp| GMPlotDirectionLeft) || center ==  (GMPlotDirectionUp| GMPlotDirectionLeft)))
-        {
-            return @"UU";
-        }
-        else
-            if(c1 == (GMPlotDirectionDown| GMPlotDirectionLeft) && (c4 ==  (GMPlotDirectionUp| GMPlotDirectionLeft) || center ==  (GMPlotDirectionUp| GMPlotDirectionLeft)))
-            {
-                return @"DU";
-            }
-            else
-                if(c1 == (GMPlotDirectionUp| GMPlotDirectionLeft) && (c4 ==  (GMPlotDirectionDown| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionDown| GMPlotDirectionLeft)))
-                {
-                    return @"UD";
-                }
-                else
-                    if(c1 == (GMPlotDirectionDown| GMPlotDirectionLeft) && (c4 ==  (GMPlotDirectionDown| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionDown| GMPlotDirectionLeft)))
-                    {
-                        return @"DD";
-                    }
-    }
-    else
-    {
-        if(c3 == (GMPlotDirectionUp| GMPlotDirectionLeft) && (c6 ==  (GMPlotDirectionUp| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionUp| GMPlotDirectionLeft)))
-        {
-            return @"UU";
-        }
-        else
-            if(c3 == (GMPlotDirectionDown| GMPlotDirectionLeft) && (c6 ==  (GMPlotDirectionUp| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionUp| GMPlotDirectionLeft)))
-            {
-                return @"DU";
-            }
-            else
-                if(c3 == (GMPlotDirectionUp| GMPlotDirectionLeft) && (c6 ==  (GMPlotDirectionDown| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionDown| GMPlotDirectionLeft)))
-                {
-                    return @"UD";
-                }
-                else
-                    if(c3 == (GMPlotDirectionDown| GMPlotDirectionLeft) && (c6 ==  (GMPlotDirectionDown| GMPlotDirectionLeft)|| center ==  (GMPlotDirectionDown| GMPlotDirectionLeft)))
-                    {
-                        return @"DD";
-                    }
-    }
-    
-    return @"";
-}
-
-- (CGFloat) adjustY: (CGFloat) y
-        basedOnPath: (NSString*) path
-{
-    CGFloat stepY = _plotHeight/_yGridLines;
-    if([path isEqualToString:@"DD"])
-    {
-        return y - stepY;
-    }
-    if([path isEqualToString:@"UD"])
-    {
-        return y - stepY;
-    }
-    return y;
-}
-
-- (CGFloat) adjustX: (CGFloat) x
-        basedOnPath: (NSString*) path
-{
-    CGFloat stepY = _plotHeight/_yGridLines;
-    if([path isEqualToString:@"DD"])
-    {
-        return x + 3;
-    }
-    if([path isEqualToString:@"UU"])
-    {
-        return x + 3;
-    }
-    if([path isEqualToString:@"UD"])
-    {
-        return x + 3;
-    }
-    return x;
-}
-
-//=============================================================================
-
-- (void) printGrid
-{
-    NSString* str = @"";
-    for (NSInteger i =0; i<[_labelsGrid count]; i++)
-    {
-        for (NSInteger j =0; j<[_labelsGrid[i] count]; j++)
-        {
-            str = [str stringByAppendingFormat:@"%@ ", _labelsGrid[i][j]];
-        }
-        str = [str stringByAppendingString:@"\n"];
-        NSLog(@"%@", str);
-        str = @"";
-    }
-}
 
 @end

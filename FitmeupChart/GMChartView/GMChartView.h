@@ -17,6 +17,9 @@
 #import "NSDate+FitMeUp.h"
 #import "GMChartUtils.h"
 
+#define defaultFontSize  10.5f
+#define defaultCircleRadius 2.5f
+#define defaultLineWidth  2.0f
 
 @interface GMChartView : UIView
 {
