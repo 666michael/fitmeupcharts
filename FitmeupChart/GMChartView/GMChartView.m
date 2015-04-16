@@ -93,7 +93,7 @@ const CGFloat defaultXSquaresCount = 14;
     self.chartTopPadding = 60.0f;
     self.chartBottomPadding = 120.0f;
     
-    [self setShowYValues: YES];
+    [self setGridSize: GMGridSize16];
     [self setShouldUseBezier: NO];
     [self setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
     [self setTranslatesAutoresizingMaskIntoConstraints: YES];
@@ -168,7 +168,7 @@ const CGFloat defaultXSquaresCount = 14;
     {
         [self clearContext];
         
-        _leftPadding = self.showYValues ? ( ((CGRectGetWidth(self.frame) - 2 * _chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
+        _leftPadding = self.gridSize == GMGridSize18 ? ( ((CGRectGetWidth(self.frame) - 2 * _chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
         
         _plotWidth = CGRectGetWidth(self.frame) - 2 * _chartPadding - _leftPadding;
         _plotHeight = CGRectGetHeight(self.frame) - _chartTopPadding - _chartBottomPadding;
@@ -241,7 +241,7 @@ const CGFloat defaultXSquaresCount = 14;
     _yGridLines = fixedCount;
     
     _labelsGrid = [NSMutableArray array];
-    NSInteger count = self.showYValues ? _yGridLines + 1 : _yGridLines;
+    NSInteger count = self.gridSize == GMGridSize18 ? _yGridLines + 1 : _yGridLines;
     for (short i = 0; i < count; i++)
     {
         NSMutableArray* innerArr = [NSMutableArray arrayWithCapacity: _xGridLines];
@@ -309,7 +309,7 @@ const CGFloat defaultXSquaresCount = 14;
     CGFloat stepX = _plotWidth / _xGridLines;
     NSInteger howMany = _plotWidth/ stepX;
     
-    for (NSInteger i = self.showYValues ? -1 : 0; i <= howMany; i++)
+    for (NSInteger i = self.gridSize == GMGridSize18 ? -1 : 0; i <= howMany; i++)
     {
         CGContextMoveToPoint(context, _chartPadding + i * stepX + _leftPadding, _chartTopPadding);
         CGContextAddLineToPoint(context, _chartPadding + i * stepX + _leftPadding, _plotHeight + _chartTopPadding);
@@ -350,7 +350,7 @@ const CGFloat defaultXSquaresCount = 14;
     [self plotLabels];
     if(!_xAxisLabel.text.length)
         [self drawXLegend];
-    if (self.showYValues)
+    if (self.gridSize == GMGridSize18)
     {
         [self drawYLegend];
     }

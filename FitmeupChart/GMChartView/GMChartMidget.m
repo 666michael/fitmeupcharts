@@ -57,7 +57,7 @@
     [self addSubview: self.chartView];
     
     [self.chartView setShowGrid: NO];
-    [self.chartView setShowYValues: YES];
+    [self.chartView setGridSize: GMGridSize18];
     
     [self.chartView setXAxisColor: [UIColor greenColor]];
     [self.chartView setYAxisColor: [UIColor lightGrayColor]];

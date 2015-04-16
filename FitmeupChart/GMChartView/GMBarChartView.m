@@ -27,7 +27,7 @@
     if (self == nil)
         return nil;
     
-    self.showYValues = NO;
+    [self setGridSize: GMGridSize16];
     
     return self;
 }
