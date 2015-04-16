@@ -48,6 +48,8 @@
 @property (nonatomic) BOOL showGrid;
 @property (nonatomic) BOOL showYValues;
 @property (nonatomic) BOOL shouldUseBezier;
+@property (nonatomic) BOOL shouldPlotLabels;
+@property (nonatomic) BOOL isStepUsed;
 
 - (void) plotChart;
 - (void) setDataSetsWithArray: (NSArray*) dataSets;

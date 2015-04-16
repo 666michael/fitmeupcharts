@@ -85,9 +85,9 @@
     
     self.chartView.xAxisLabel.text = @"";
     self.chartView.yAxisLabel.text = @"our recommendations";
-    
+    [self.chartView setShouldUseBezier: YES];
     [self.chartView setDataSetsWithArray:@[dataSet1]];
-    [self.view addSubview:self.chartView];
+    //[self.view addSubview:self.chartView];
 }
 
 - (void)didReceiveMemoryWarning {

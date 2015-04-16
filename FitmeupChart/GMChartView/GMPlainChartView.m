@@ -120,6 +120,9 @@ typedef enum
 
 - (void) plotLabels
 {
+    if (!self.shouldPlotLabels)
+        return;
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (context)
     {

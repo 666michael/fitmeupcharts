@@ -95,6 +95,8 @@ const CGFloat defaultXSquaresCount = 14;
     
     [self setShowYValues: YES];
     [self setShouldUseBezier: NO];
+    [self setShouldPlotLabels: YES];
+    
     [self setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
     [self setTranslatesAutoresizingMaskIntoConstraints: YES];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
@@ -354,7 +356,10 @@ const CGFloat defaultXSquaresCount = 14;
     {
         [self drawYLegend];
     }
-    [self drawLowerLegend];
+    if (self.isStepUsed)
+    {
+        [self drawLowerLegend];
+    }
     //[self printGrid];
 }
 
@@ -431,15 +436,26 @@ const CGFloat defaultXSquaresCount = 14;
 
 - (void) plotLabels
 {
-
+    
 }
 
 //=============================================================================
 
 - (CGFloat) xCoordinatesForValue: (CGFloat) xValue
 {
-    CGFloat stepX = (_plotWidth / _xGridLines) * 2;
-    CGFloat res = stepX * ((xValue - _minX) / SECS_PER_DAY);
+    CGFloat res = 0.0f;
+    if (self.isStepUsed)
+    {
+        CGFloat stepX = (_plotWidth / _xGridLines) * 2;
+        res = stepX * ((xValue - _minX) / SECS_PER_DAY);
+    }
+    else
+    {
+        CGFloat xOld = (xValue * _plotWidth) / _maxX;
+        CGFloat xMinOffset = (_minX * _plotWidth) / _maxX;
+        CGFloat scaleX = _plotWidth / (_plotWidth - xMinOffset);
+        res = (xOld - xMinOffset) * scaleX;
+    }
     
     return _chartPadding + res + _leftPadding;
 }
@@ -462,6 +478,9 @@ const CGFloat defaultXSquaresCount = 14;
 
 - (void) drawXLegend
 {
+    if (!self.isStepUsed)
+        return;
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGContextSetLineWidth(context, defaultGridLineWidth);
@@ -619,7 +638,7 @@ const CGFloat defaultXSquaresCount = 14;
 - (void) highlightCellInGridAtRow: (NSInteger) row
                         andColumn: (NSInteger) column
                         withIndex: (GMPlotDirection) direction
-{    
+{
     if(row < 0 || row > _xGridLines)
         return;
     
