@@ -67,7 +67,7 @@
         {
             [self drawRounedRectWithRect: CGRectMake(x + step/2.0, y, step, _plotHeight + self.chartTopPadding - y)
                             cornerRaduis: step / 2
-                                   color: [UIColor gm_greenColor]
+                                   color: [dataSet plotColor]
                               forContext: context];
         }
     }
