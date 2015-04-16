@@ -253,8 +253,15 @@ typedef enum
             if (col == _xGridLines)
             {
                 x -= textWidth;
-                if (fabs(colLeft - step)<1.0)
-                    y += (step - colLeft);
+                if (colLeft < 1.0)
+                {
+                    y += step;
+                    y -= textHeight;
+                }
+                else
+                {
+                    y -= step;
+                }
             }
             else
             {
@@ -342,6 +349,10 @@ typedef enum
         return x + defaultCircleRadius;
     }
     if(path == GMPointUpToDown)
+    {
+        return x + defaultCircleRadius*2;
+    }
+    if(path == GMPointDownToUp)
     {
         return x + defaultCircleRadius;
     }
