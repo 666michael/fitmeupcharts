@@ -122,7 +122,7 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 {
     if (!self.shouldPlotLabels)
         return;
-    
+   
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (context)
     {

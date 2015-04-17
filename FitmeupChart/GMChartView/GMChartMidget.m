@@ -72,7 +72,6 @@
     [self.chartView setXAxisColor: [UIColor lightGrayColor]];
     [self.chartView setYAxisColor: [UIColor lightGrayColor]];
     [self.chartView setShouldDrawCirclesOnAxis: YES];
-    
     GMDataSet *dataSet1 = [[GMDataSet alloc] init];
     
     //TEST

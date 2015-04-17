@@ -80,7 +80,7 @@ typedef NS_ENUM(NSUInteger, GMGridSize)
                      yCoordinate: (CGFloat) y
                        fillColor: (UIColor*) color
                       andContext: (CGContextRef) context;
-
+- (void) drawCirclesOnAxisWithContext: (CGContextRef) context;
 @property (nonatomic) CGFloat chartPadding;
 @property (nonatomic) CGFloat chartTopPadding;
 @property (nonatomic) CGFloat chartBottomPadding;

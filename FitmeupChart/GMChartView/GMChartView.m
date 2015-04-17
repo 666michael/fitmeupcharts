@@ -162,10 +162,6 @@ const CGFloat averageMinMaxDelimeter = 10;
 {
     [self plotChart];
     [self plotChartData];
-    if (self.shouldDrawCirclesOnAxis)
-    {
-        [self drawCirclesOnAxis];
-    }
 }
 
 //=============================================================================
@@ -367,6 +363,10 @@ const CGFloat averageMinMaxDelimeter = 10;
     {
         [self drawLowerLegend];
     }
+    if (self.shouldDrawCirclesOnAxis)
+    {
+        [self drawCirclesOnAxisWithContext: UIGraphicsGetCurrentContext()];
+    }
     //[self printGrid];
 }
 
@@ -525,7 +525,7 @@ const CGFloat averageMinMaxDelimeter = 10;
             CGContextDrawPath(context, kCGPathFillStroke);
         }
     }
-    [self drawCirclesOnAxis];
+    
 }
 
 - (UIColor*) colorForDataSet: (GMDataSet*) dataSet
@@ -664,20 +664,21 @@ const CGFloat averageMinMaxDelimeter = 10;
 
 //=============================================================================
 
-- (void) drawCirclesOnAxis
+- (void) drawCirclesOnAxisWithContext: (CGContextRef) context;
 {
     [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding
                       yCoordinate: self.chartTopPadding
-                        fillColor: [UIColor redColor]
-                       andContext: UIGraphicsGetCurrentContext()];
+                        fillColor: [UIColor whiteColor]
+                       andContext: context];
     [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding
                       yCoordinate: _plotHeight + self.chartTopPadding
-                        fillColor: [UIColor redColor]
-                       andContext: UIGraphicsGetCurrentContext()];
+                        fillColor: [UIColor whiteColor]
+                       andContext: context];
     [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding + _plotWidth
                       yCoordinate: _plotHeight + self.chartTopPadding
-                        fillColor: [UIColor redColor]
-                       andContext: UIGraphicsGetCurrentContext()];
+                        fillColor: [UIColor whiteColor]
+                       andContext: context];
+    CGContextFillPath(context);
 }
 
 //=============================================================================
