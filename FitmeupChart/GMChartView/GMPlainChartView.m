@@ -13,14 +13,14 @@
 
 //=============================================================================
 
-typedef enum
+typedef NS_ENUM(NSUInteger, GMPointDirection)
 {
     GMPointUpToUp = 0,
     GMPointUpToDown = 1,
     GMPointDownToUp = 2,
     GMPointDownToDown = 3,
     GMPointNone = 4
-} GMPointDirection;
+};
 
 //=============================================================================
 
@@ -37,7 +37,7 @@ typedef enum
     self = [super initWithFrame: frame];
     if (self == nil)
         return nil;
-        
+    
     return self;
 }
 
@@ -80,7 +80,7 @@ typedef enum
                     
                     [self highlightCellInGridAtRow: row1
                                          andColumn: _yGridLines - col1 -1
-                                        withIndex: [GMChartUtils gm_plotDirectionForPoint: CGPointMake(x, y)
+                                         withIndex: [GMChartUtils gm_plotDirectionForPoint: CGPointMake(x, y)
                                                                                   endPoint: CGPointMake(x1, y1)]];
                 }
             }
@@ -97,7 +97,7 @@ typedef enum
         [dataSet setYCoordForValue:^CGFloat(CGFloat yValue) {
             return [self yCoordinatesForValue:yValue];
         }];
-        UIBezierPath *path = [GMChartUtils gm_quadCurvedPathWithPoints: [dataSet pointsArray]];
+        UIBezierPath *path = [GMChartUtils gm_interpolateCGPointsWithHermiteForDataSet: [dataSet pointsArray]];
         if(path)
         {
             [path stroke];
@@ -210,8 +210,7 @@ typedef enum
     NSInteger row = (y - self.chartTopPadding) / step;
     
     CGFloat colLeft = fmodf(rawY, step);
-    NSLog(@"%ld - %ld", (long)row, (long)col);
-    NSLog(@"direction %d", direction);
+    
     if(colLeft < step / 2.0)
     {
         y -= colLeft;
@@ -232,7 +231,7 @@ typedef enum
             if (col == _xGridLines)
             {
                 x -= step;
-                y -= colLeft + textHeight;
+                y -= step;
             }
             else
             {
@@ -256,8 +255,15 @@ typedef enum
             if (col == _xGridLines)
             {
                 x -= textWidth;
-                if (fabs(colLeft - step)<1.0)
-                    y += (step - colLeft);
+                if (colLeft < 1.0)
+                {
+                    y += step;
+                    y -= textHeight;
+                }
+                else
+                {
+                    y -= step;
+                }
             }
             else
             {
@@ -278,34 +284,58 @@ typedef enum
 //=============================================================================
 
 - (GMPointDirection) directionOfPointAtIndex: (NSInteger) index
-                                inSet: (GMDataSet*) dataSet
+                                       inSet: (GMDataSet*) dataSet
 {
-    if(index==0 || index == [dataSet count]-1 || [dataSet count] < 3 )
+    if([dataSet count] < 3)
         return GMPointNone;
     
-    CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
-    CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
-    CGFloat rightPt = [[dataSet dataPointAtIndex: index + 1] yValue];
-    
-    if (leftPt < curPt && curPt < rightPt)
+    if(index==0)
     {
-        return GMPointUpToUp;
+        CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
+        CGFloat rightPt = [[dataSet dataPointAtIndex: index + 1] yValue];
+        if(curPt < rightPt)
+            return GMPointUpToUp;
+        else
+            return GMPointDownToDown;
     }
     else
-        if (leftPt < curPt && curPt > rightPt)
+        if(index == [dataSet count]-1)
         {
-            return GMPointUpToDown;
+            CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
+            CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
+            if(leftPt < curPt)
+                return GMPointUpToUp;
+            else
+                return GMPointDownToDown;
         }
+    
         else
-            if (leftPt > curPt && curPt < rightPt)
+        {
+            
+            CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
+            CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
+            CGFloat rightPt = [[dataSet dataPointAtIndex: index + 1] yValue];
+            
+            if (leftPt < curPt && curPt < rightPt)
             {
-                return GMPointDownToUp;
+                return GMPointUpToUp;
             }
             else
-                if (leftPt > curPt && curPt > rightPt)
+                if (leftPt < curPt && curPt > rightPt)
                 {
-                    return GMPointDownToDown;
+                    return GMPointUpToDown;
                 }
+                else
+                    if (leftPt > curPt && curPt < rightPt)
+                    {
+                        return GMPointDownToUp;
+                    }
+                    else
+                        if (leftPt > curPt && curPt > rightPt)
+                        {
+                            return GMPointDownToDown;
+                        }
+        }
     return GMPointNone;
 }
 
@@ -345,6 +375,10 @@ typedef enum
         return x + defaultCircleRadius;
     }
     if(path == GMPointUpToDown)
+    {
+        return x + defaultCircleRadius*2;
+    }
+    if(path == GMPointDownToUp)
     {
         return x + defaultCircleRadius;
     }

@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum
+typedef NS_ENUM(NSUInteger, GMDataAggregation)
 {
     GMData7Days = 0,
     GMData7Weeks = 1,
     GMData7Month = 2,
     GMData7Years = 3
-}GMDataAggregation;
+};
 
 @class GMDataPoint;
 

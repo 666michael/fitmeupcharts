@@ -60,15 +60,15 @@
     [dataSet setPlotName:@"proteins"];
     
     GMDataSet *dataSet1 = [[GMDataSet alloc] init];
-
+    
     GMDatePoint *pt12 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-3 * SECS_PER_DAY]  yValue:66.5];
     GMDatePoint *pt13 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-2 * SECS_PER_DAY]  yValue:65.9];
-    GMDatePoint *pt14 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-1 * SECS_PER_DAY]  yValue:66.1];
+    GMDatePoint *pt14 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-1  *SECS_PER_DAY]  yValue:66.1];
     GMDatePoint *pt15 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:0]  yValue:64.9];
     GMDataPoint *pt16 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:1 * SECS_PER_DAY]  yValue:64.8];
-    GMDataPoint *pt17 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:2 * SECS_PER_DAY]  yValue:65.1];
+    GMDataPoint *pt17 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:2  *SECS_PER_DAY]  yValue:65.1];
     GMDataPoint *pt18 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:3 * SECS_PER_DAY]  yValue:64.0];
-    GMDataPoint *pt19 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:4 * SECS_PER_DAY]  yValue:61.5];
+    GMDataPoint *pt19 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:4 * SECS_PER_DAY]  yValue:65.5];
     
     //[dataSet1 addDataPoint:pt11];
     [dataSet1 addDataPoint:pt12];
@@ -83,9 +83,13 @@
     [dataSet1 setPlotColor:[UIColor gm_redColor]];
     [dataSet1 setPlotName:@"calories"];
     
+    [dataSet1 setPlotColor:[UIColor gm_redColor]];
+    [dataSet1 setPlotName:@"calories"];
+    
     self.chartView.xAxisLabel.text = @"";
     self.chartView.yAxisLabel.text = @"our recommendations";
-    [self.chartView setShouldUseBezier: YES];
+    [self.chartView setGridSize: GMGridSize18];
+    
     [self.chartView setDataSetsWithArray:@[dataSet1]];
     //[self.view addSubview:self.chartView];
 }

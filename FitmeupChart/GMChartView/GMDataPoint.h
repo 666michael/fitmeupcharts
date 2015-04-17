@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum
+typedef NS_ENUM(NSUInteger, GMPointStyle)
 {
     GMPointUpperStyle = 0,
     GMPointLowerStyle = 1
-}GMPointStyle;
+};
 
 @interface GMDataPoint : NSObject
 

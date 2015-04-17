@@ -60,12 +60,14 @@
     [self.chartView.yAxisLabel setText: @""];
     
     [self.chartView setShowGrid: NO];
-    [self.chartView setShowYValues: NO];
+
     [self.chartView setShouldPlotLabels: NO];
     [self.chartView setShouldUseBezier: YES];
     
     [self.chartView setChartTopPadding: 20.0f];
     [self.chartView setChartBottomPadding: 0.0f];
+
+    [self.chartView setGridSize: GMGridSize18];
     
     [self.chartView setXAxisColor: [UIColor lightGrayColor]];
     [self.chartView setYAxisColor: [UIColor lightGrayColor]];

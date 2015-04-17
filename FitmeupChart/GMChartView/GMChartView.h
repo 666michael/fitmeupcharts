@@ -21,6 +21,12 @@
 #define defaultCircleRadius 2.5f
 #define defaultLineWidth  2.0f
 
+typedef NS_ENUM(NSUInteger, GMGridSize)
+{
+    GMGridSize16 = 0,
+    GMGridSize18 = 1
+};
+
 @interface GMChartView : UIView
 {
     NSArray* _dataSets;
@@ -46,7 +52,7 @@
 @property (nonatomic, strong) UILabel* yAxisLabel;
 @property (nonatomic, strong) UILabel* xAxisLabel;
 @property (nonatomic) BOOL showGrid;
-@property (nonatomic) BOOL showYValues;
+@property (nonatomic) GMGridSize gridSize;
 @property (nonatomic) BOOL shouldUseBezier;
 @property (nonatomic) BOOL shouldPlotLabels;
 @property (nonatomic) BOOL isStepUsed;

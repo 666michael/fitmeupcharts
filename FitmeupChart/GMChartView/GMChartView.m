@@ -20,11 +20,12 @@
 
 const CGFloat defaultGridLineWidth = 0.5f;
 const NSInteger defaultGridLines = 5;
-
 const CGFloat defaultSmallCircleRadius = 2.5;
 const NSString* defaultDateFormat = @"EEE";
 const CGFloat defaultLegendSquare = 30.0f;
 const CGFloat defaultXSquaresCount = 14;
+const CGFloat axisLabelsPadding = 10;
+const CGFloat averageMinMaxDelimeter = 10;
 
 //=============================================================================
 
@@ -93,9 +94,11 @@ const CGFloat defaultXSquaresCount = 14;
     self.chartTopPadding = 60.0f;
     self.chartBottomPadding = 120.0f;
     
-    [self setShowYValues: YES];
-    [self setShouldUseBezier: NO];
+    [self setShouldUseBezier: YES];
     [self setShouldPlotLabels: YES];
+
+    [self setGridSize: GMGridSize16];
+    [self setShouldUseBezier: YES];
     
     [self setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
     [self setTranslatesAutoresizingMaskIntoConstraints: YES];
@@ -118,7 +121,7 @@ const CGFloat defaultXSquaresCount = 14;
 
 - (void) setupXLabel
 {
-    _xAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_plotHeight + 10, _chartPadding, _plotWidth, 0)];
+    _xAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_plotHeight + axisLabelsPadding, _chartPadding, _plotWidth, 0)];
     [_xAxisLabel setTextAlignment: NSTextAlignmentCenter];
     [_xAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
     UIViewAutoresizing mask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth
@@ -131,7 +134,7 @@ const CGFloat defaultXSquaresCount = 14;
 
 - (void) setupYLabel
 {
-    _yAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_chartPadding, 10, _plotWidth, 0)];
+    _yAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_chartPadding, axisLabelsPadding, _plotWidth, 0)];
     [_yAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
     [self addSubview: _yAxisLabel];
 }
@@ -170,7 +173,7 @@ const CGFloat defaultXSquaresCount = 14;
     {
         [self clearContext];
         
-        _leftPadding = self.showYValues ? ( ((CGRectGetWidth(self.frame) - 2 * _chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
+        _leftPadding = self.gridSize == GMGridSize18 ? ( ((CGRectGetWidth(self.frame) - 2 * _chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
         
         _plotWidth = CGRectGetWidth(self.frame) - 2 * _chartPadding - _leftPadding;
         _plotHeight = CGRectGetHeight(self.frame) - _chartTopPadding - _chartBottomPadding;
@@ -209,7 +212,7 @@ const CGFloat defaultXSquaresCount = 14;
     CGFloat xTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
     CGFloat yTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
     
-    [_xAxisLabel setFrame: CGRectMake(_chartPadding, _plotHeight + _chartTopPadding + xTextHeight/2.0, _plotWidth, xTextHeight)];
+    [_xAxisLabel setFrame: CGRectMake(_chartPadding, _plotHeight + _chartTopPadding + xTextHeight / 2.0, _plotWidth, xTextHeight)];
     [_yAxisLabel setFrame: CGRectMake(_chartPadding, _chartTopPadding - yTextHeight * 1.5, _plotWidth, yTextHeight)];
 }
 
@@ -243,7 +246,7 @@ const CGFloat defaultXSquaresCount = 14;
     _yGridLines = fixedCount;
     
     _labelsGrid = [NSMutableArray array];
-    NSInteger count = self.showYValues ? _yGridLines + 1 : _yGridLines;
+    NSInteger count = self.gridSize == GMGridSize18 ? _yGridLines + 1 : _yGridLines;
     for (short i = 0; i < count; i++)
     {
         NSMutableArray* innerArr = [NSMutableArray arrayWithCapacity: _xGridLines];
@@ -311,7 +314,7 @@ const CGFloat defaultXSquaresCount = 14;
     CGFloat stepX = _plotWidth / _xGridLines;
     NSInteger howMany = _plotWidth/ stepX;
     
-    for (NSInteger i = self.showYValues ? -1 : 0; i <= howMany; i++)
+    for (NSInteger i = self.gridSize == GMGridSize18 ? -1 : 0; i <= howMany; i++)
     {
         CGContextMoveToPoint(context, _chartPadding + i * stepX + _leftPadding, _chartTopPadding);
         CGContextAddLineToPoint(context, _chartPadding + i * stepX + _leftPadding, _plotHeight + _chartTopPadding);
@@ -352,7 +355,7 @@ const CGFloat defaultXSquaresCount = 14;
     [self plotLabels];
     if(!_xAxisLabel.text.length)
         [self drawXLegend];
-    if (self.showYValues)
+    if (self.gridSize == GMGridSize18)
     {
         [self drawYLegend];
     }
@@ -394,7 +397,7 @@ const CGFloat defaultXSquaresCount = 14;
                     _minY = dataSet.minPoint.y;
             }
             
-            CGFloat avgToAdd = fabs(_minY - _maxY) / 10.0f;
+            CGFloat avgToAdd = fabs(_minY - _maxY) / averageMinMaxDelimeter;
             _minY = _minY - fmaxf(1.0, floorf(avgToAdd));
             _maxY = _maxY + fmaxf(1.0, floorf(avgToAdd));
             if(fabs(_minY - _maxY) < 0.1)
@@ -426,6 +429,8 @@ const CGFloat defaultXSquaresCount = 14;
         }
     }
 }
+
+//=============================================================================
 
 - (void) plotDataSet: (GMDataSet*) dataSet
           withContet: (CGContextRef) context
@@ -600,7 +605,7 @@ const CGFloat defaultXSquaresCount = 14;
     
     UIColor* legendColor = [_dataSets[index] plotColor] ? [_dataSets[index] plotColor] : [UIColor gm_grayColor];
     [self drawRounedRectWithRect: CGRectMake(x, y, defaultLegendSquare, defaultLegendSquare)
-                    cornerRaduis: 5.0
+                    cornerRaduis: defaultSmallCircleRadius * 2
                            color: legendColor
                       forContext: context];
     
@@ -642,7 +647,7 @@ const CGFloat defaultXSquaresCount = 14;
     if(row < 0 || row > _xGridLines)
         return;
     
-    if(column < 0 || column+1 > _yGridLines)
+    if(column < 0 || column + 1 > _yGridLines)
         return;
     
     CGContextRef context = UIGraphicsGetCurrentContext();
