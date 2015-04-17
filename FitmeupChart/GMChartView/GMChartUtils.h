@@ -25,5 +25,6 @@ typedef NS_OPTIONS(NSUInteger, GMPlotDirection)
 + (UIFont*) gm_defaultBoldFontWithSize: (CGFloat) size;
 + (UIFont*) gm_defaultLightFontWithSize: (CGFloat) size;
 + (UIBezierPath *) gm_quadCurvedPathWithPoints: (NSArray *) points;
++ (UIBezierPath*) gm_interpolateCGPointsWithHermiteForDataSet: (NSArray*) points;
 + (GMPlotDirection) invertedDirection: (GMPlotDirection) direction;
 @end

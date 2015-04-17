@@ -26,7 +26,7 @@ const CGFloat eps = 0.1;
 //=============================================================================
 
 + (GMPlotDirection) gm_plotDirectionForPoint: (CGPoint) startPoint
-                                endPoint: (CGPoint) endPoint
+                                    endPoint: (CGPoint) endPoint
 {
     if(endPoint.y - startPoint.y < eps)
     {
@@ -89,6 +89,83 @@ const CGFloat eps = 0.1;
 
 //=============================================================================
 
++ (UIBezierPath*) gm_interpolateCGPointsWithHermiteForDataSet: (NSArray*) points
+{
+    if ([points count] < 2)
+        return nil;
+    
+    NSInteger nCurves = [points count] -1 ;
+    
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    
+    for (NSInteger index = 0; index < nCurves; ++index)
+    {
+        CGPoint curPoint  = [points[index] CGPointValue];
+        CGPoint prevPt, nextPt, endPt;
+        
+        if (index == 0)
+            [path moveToPoint:curPoint];
+        
+        NSInteger nextIndex = (index+1) % [points count];
+        NSInteger prevIndex = (index-1 < 0 ? [points count]-1 : index - 1);
+        
+        
+        prevPt = [points[prevIndex] CGPointValue];
+        nextPt = [points[nextIndex] CGPointValue];
+        endPt = nextPt;
+        
+        if ( fabs(curPoint.y - nextPt.y) < 1.0)
+        {
+            [path addLineToPoint: nextPt];
+        }
+        else
+        {            
+            float mx, my;
+            if (index > 0)
+            {
+                mx = (nextPt.x - curPoint.x)*0.5 + (curPoint.x - prevPt.x)*0.5;
+                my = (nextPt.y - curPoint.y)*0.5 + (curPoint.y - prevPt.y)*0.5;
+            }
+            else
+            {
+                mx = (nextPt.x - curPoint.x)*0.5;
+                my = (nextPt.y - curPoint.y)*0.5;
+            }
+            
+            CGPoint ctrlPt1;
+            ctrlPt1.x = curPoint.x + mx / 3.0;
+            ctrlPt1.y = curPoint.y + my / 3.0;
+            
+            curPoint = [points[nextIndex] CGPointValue];
+            
+            nextIndex = (nextIndex+1)%[points count];
+            prevIndex = index;
+            
+            prevPt = [points[prevIndex] CGPointValue];
+            nextPt = [points[nextIndex] CGPointValue];
+            
+            if (index < nCurves-1) {
+                mx = (nextPt.x - curPoint.x)*0.5 + (curPoint.x - prevPt.x)*0.5;
+                my = (nextPt.y - curPoint.y)*0.5 + (curPoint.y - prevPt.y)*0.5;
+            }
+            else {
+                mx = (curPoint.x - prevPt.x)*0.5;
+                my = (curPoint.y - prevPt.y)*0.5;
+            }
+            
+            CGPoint ctrlPt2;
+            ctrlPt2.x = curPoint.x - mx / 3.0;
+            ctrlPt2.y = curPoint.y - my / 3.0;
+            
+            [path addCurveToPoint:endPt controlPoint1:ctrlPt1 controlPoint2:ctrlPt2];
+        }
+    }
+    return path;
+}
+
+
+//=============================================================================
+
 + (CGPoint) midPointForPoint: (CGPoint) p1
                     andPoint:  (CGPoint) p2
 {
@@ -98,7 +175,7 @@ const CGFloat eps = 0.1;
 //=============================================================================
 
 + (CGPoint) controlPointForPoint: (CGPoint) p1
-                            andPoint:  (CGPoint) p2
+                        andPoint:  (CGPoint) p2
 {
     CGPoint controlPoint = [self midPointForPoint: p1
                                          andPoint: p2];

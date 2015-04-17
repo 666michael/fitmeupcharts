@@ -94,7 +94,7 @@ const CGFloat defaultXSquaresCount = 14;
     self.chartBottomPadding = 120.0f;
     
     [self setGridSize: GMGridSize16];
-    [self setShouldUseBezier: NO];
+    [self setShouldUseBezier: YES];
     [self setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
     [self setTranslatesAutoresizingMaskIntoConstraints: YES];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];

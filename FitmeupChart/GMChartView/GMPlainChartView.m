@@ -97,7 +97,7 @@ typedef enum
         [dataSet setYCoordForValue:^CGFloat(CGFloat yValue) {
             return [self yCoordinatesForValue:yValue];
         }];
-        UIBezierPath *path = [GMChartUtils gm_quadCurvedPathWithPoints: [dataSet pointsArray]];
+        UIBezierPath *path = [GMChartUtils gm_interpolateCGPointsWithHermiteForDataSet: [dataSet pointsArray]];
         if(path)
         {
             [path stroke];
