@@ -21,11 +21,11 @@
 #define defaultCircleRadius 2.5f
 #define defaultLineWidth  2.0f
 
-typedef enum
+typedef NS_ENUM(NSUInteger, GMGridSize)
 {
     GMGridSize16 = 0,
     GMGridSize18 = 1
-}GMGridSize;
+};
 
 @interface GMChartView : UIView
 {

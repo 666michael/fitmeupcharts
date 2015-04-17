@@ -13,14 +13,14 @@
 
 //=============================================================================
 
-typedef enum
+typedef NS_ENUM(NSUInteger, GMPointDirection)
 {
     GMPointUpToUp = 0,
     GMPointUpToDown = 1,
     GMPointDownToUp = 2,
     GMPointDownToDown = 3,
     GMPointNone = 4
-} GMPointDirection;
+};
 
 //=============================================================================
 
@@ -207,8 +207,7 @@ typedef enum
     NSInteger row = (y - self.chartTopPadding) / step;
     
     CGFloat colLeft = fmodf(rawY, step);
-    NSLog(@"%ld - %ld", (long)row, (long)col);
-    NSLog(@"direction %d", direction);
+    
     if(colLeft < step / 2.0)
     {
         y -= colLeft;
