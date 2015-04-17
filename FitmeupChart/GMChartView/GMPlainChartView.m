@@ -37,7 +37,7 @@ typedef enum
     self = [super initWithFrame: frame];
     if (self == nil)
         return nil;
-        
+    
     return self;
 }
 
@@ -80,7 +80,7 @@ typedef enum
                     
                     [self highlightCellInGridAtRow: row1
                                          andColumn: _yGridLines - col1 -1
-                                        withIndex: [GMChartUtils gm_plotDirectionForPoint: CGPointMake(x, y)
+                                         withIndex: [GMChartUtils gm_plotDirectionForPoint: CGPointMake(x, y)
                                                                                   endPoint: CGPointMake(x1, y1)]];
                 }
             }
@@ -229,7 +229,7 @@ typedef enum
             if (col == _xGridLines)
             {
                 x -= step;
-                y -= colLeft + textHeight;
+                y -= step;
             }
             else
             {
@@ -282,34 +282,58 @@ typedef enum
 //=============================================================================
 
 - (GMPointDirection) directionOfPointAtIndex: (NSInteger) index
-                                inSet: (GMDataSet*) dataSet
+                                       inSet: (GMDataSet*) dataSet
 {
-    if(index==0 || index == [dataSet count]-1 || [dataSet count] < 3 )
+    if([dataSet count] < 3)
         return GMPointNone;
     
-    CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
-    CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
-    CGFloat rightPt = [[dataSet dataPointAtIndex: index + 1] yValue];
-    
-    if (leftPt < curPt && curPt < rightPt)
+    if(index==0)
     {
-        return GMPointUpToUp;
+        CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
+        CGFloat rightPt = [[dataSet dataPointAtIndex: index + 1] yValue];
+        if(curPt < rightPt)
+            return GMPointUpToUp;
+        else
+            return GMPointDownToDown;
     }
     else
-        if (leftPt < curPt && curPt > rightPt)
+        if(index == [dataSet count]-1)
         {
-            return GMPointUpToDown;
+            CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
+            CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
+            if(leftPt < curPt)
+                return GMPointUpToUp;
+            else
+                return GMPointDownToDown;
         }
+    
         else
-            if (leftPt > curPt && curPt < rightPt)
+        {
+            
+            CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
+            CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
+            CGFloat rightPt = [[dataSet dataPointAtIndex: index + 1] yValue];
+            
+            if (leftPt < curPt && curPt < rightPt)
             {
-                return GMPointDownToUp;
+                return GMPointUpToUp;
             }
             else
-                if (leftPt > curPt && curPt > rightPt)
+                if (leftPt < curPt && curPt > rightPt)
                 {
-                    return GMPointDownToDown;
+                    return GMPointUpToDown;
                 }
+                else
+                    if (leftPt > curPt && curPt < rightPt)
+                    {
+                        return GMPointDownToUp;
+                    }
+                    else
+                        if (leftPt > curPt && curPt > rightPt)
+                        {
+                            return GMPointDownToDown;
+                        }
+        }
     return GMPointNone;
 }
 
