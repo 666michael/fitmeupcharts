@@ -56,6 +56,7 @@ typedef NS_ENUM(NSUInteger, GMGridSize)
 @property (nonatomic) BOOL shouldUseBezier;
 @property (nonatomic) BOOL shouldPlotLabels;
 @property (nonatomic) BOOL isStepUsed;
+@property (nonatomic) BOOL shouldDrawCirclesOnAxis;
 
 - (void) plotChart;
 - (void) setDataSetsWithArray: (NSArray*) dataSets;
@@ -74,6 +75,11 @@ typedef NS_ENUM(NSUInteger, GMGridSize)
                    cornerRaduis: (CGFloat) cornerRadius
                           color: (UIColor*) legendColor
                      forContext: (CGContextRef) context;
+
+- (void) drawCircleAtXCoordinate: (CGFloat) x
+                     yCoordinate: (CGFloat) y
+                       fillColor: (UIColor*) color
+                      andContext: (CGContextRef) context;
 
 @property (nonatomic) CGFloat chartPadding;
 @property (nonatomic) CGFloat chartTopPadding;

@@ -175,19 +175,6 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 
 //=============================================================================
 
-- (void) drawCircleAtXCoordinate: (CGFloat) x
-                     yCoordinate: (CGFloat) y
-                       fillColor: (UIColor*) color
-                      andContext: (CGContextRef) context
-
-{
-    CGContextSetFillColorWithColor(context, color.CGColor);
-    CGRect rect = CGRectMake(x - defaultCircleRadius, y - defaultCircleRadius, 2 * defaultCircleRadius, 2 * defaultCircleRadius);
-    CGContextAddEllipseInRect(context, rect);
-}
-
-//=============================================================================
-
 - (void) drawText: (NSString*) text
       xCoordinate: (CGFloat) x
       yCoordinate: (CGFloat) y

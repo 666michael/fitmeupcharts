@@ -54,7 +54,7 @@
 - (void) setupDefaultViewLayout
 {
     self.chartView = [[GMPlainChartView alloc] initWithFrame: self.bounds];
-    [self addSubview: self.chartView];
+    
     
     [self.chartView.xAxisLabel setText: @""];
     [self.chartView.yAxisLabel setText: @""];
@@ -67,10 +67,11 @@
     [self.chartView setChartTopPadding: 20.0f];
     [self.chartView setChartBottomPadding: 0.0f];
 
-    [self.chartView setGridSize: GMGridSize18];
+    [self.chartView setGridSize: GMGridSize16];
     
     [self.chartView setXAxisColor: [UIColor lightGrayColor]];
     [self.chartView setYAxisColor: [UIColor lightGrayColor]];
+    [self.chartView setShouldDrawCirclesOnAxis: YES];
     
     GMDataSet *dataSet1 = [[GMDataSet alloc] init];
     
@@ -82,6 +83,7 @@
     }
     [dataSet1 setPlotColor: [UIColor lightGrayColor]];
     [self.chartView setDataSetsWithArray: @[dataSet1]];
+    [self addSubview: self.chartView];
 }
 
 //=============================================================================

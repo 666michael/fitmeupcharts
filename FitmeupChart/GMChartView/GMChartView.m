@@ -162,6 +162,10 @@ const CGFloat averageMinMaxDelimeter = 10;
 {
     [self plotChart];
     [self plotChartData];
+    if (self.shouldDrawCirclesOnAxis)
+    {
+        [self drawCirclesOnAxis];
+    }
 }
 
 //=============================================================================
@@ -198,7 +202,7 @@ const CGFloat averageMinMaxDelimeter = 10;
     CGContextAddLineToPoint(context, CGRectGetWidth(self.frame), 0);
     CGContextAddLineToPoint(context, 0, 0);
     
-    CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+    CGContextSetFillColorWithColor(context, [UIColor darkGrayColor].CGColor);
     CGContextFillPath(context);
 }
 
@@ -353,7 +357,7 @@ const CGFloat averageMinMaxDelimeter = 10;
 {
     [self plotGraph];
     [self plotLabels];
-    if(!_xAxisLabel.text.length)
+    if (!_xAxisLabel.text.length)
         [self drawXLegend];
     if (self.gridSize == GMGridSize18)
     {
@@ -521,6 +525,7 @@ const CGFloat averageMinMaxDelimeter = 10;
             CGContextDrawPath(context, kCGPathFillStroke);
         }
     }
+    [self drawCirclesOnAxis];
 }
 
 - (UIColor*) colorForDataSet: (GMDataSet*) dataSet
@@ -655,6 +660,37 @@ const CGFloat averageMinMaxDelimeter = 10;
     CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
     _labelsGrid[column][row] = [NSNumber numberWithInteger:direction];
     
+}
+
+//=============================================================================
+
+- (void) drawCirclesOnAxis
+{
+    [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding
+                      yCoordinate: self.chartTopPadding
+                        fillColor: [UIColor redColor]
+                       andContext: UIGraphicsGetCurrentContext()];
+    [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding
+                      yCoordinate: _plotHeight + self.chartTopPadding
+                        fillColor: [UIColor redColor]
+                       andContext: UIGraphicsGetCurrentContext()];
+    [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding + _plotWidth
+                      yCoordinate: _plotHeight + self.chartTopPadding
+                        fillColor: [UIColor redColor]
+                       andContext: UIGraphicsGetCurrentContext()];
+}
+
+//=============================================================================
+
+- (void) drawCircleAtXCoordinate: (CGFloat) x
+                     yCoordinate: (CGFloat) y
+                       fillColor: (UIColor*) color
+                      andContext: (CGContextRef) context
+
+{
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGRect rect = CGRectMake(x - defaultCircleRadius, y - defaultCircleRadius, 2 * defaultCircleRadius, 2 * defaultCircleRadius);
+    CGContextAddEllipseInRect(context, rect);
 }
 
 //=============================================================================
