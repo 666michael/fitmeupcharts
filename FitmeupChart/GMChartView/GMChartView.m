@@ -70,7 +70,7 @@ const CGFloat averageMinMaxDelimeter = 10;
     
     _plotWidth = CGRectGetWidth(self.frame) - 2 * _chartPadding - _leftPadding;
     _plotHeight = CGRectGetHeight(self.frame) - _chartTopPadding - _chartBottomPadding;
-    
+
     [self setupXLabel];
     [self setupYLabel];
     _xAxisLabel.text = @"month / january";
@@ -162,6 +162,10 @@ const CGFloat averageMinMaxDelimeter = 10;
 {
     [self plotChart];
     [self plotChartData];
+    if(self.frameSize)
+    {
+        self.frameSize (_plotWidth, _plotHeight);
+    }
 }
 
 //=============================================================================
@@ -176,8 +180,7 @@ const CGFloat averageMinMaxDelimeter = 10;
         _leftPadding = self.gridSize == GMGridSize18 ? ( ((CGRectGetWidth(self.frame) - 2 * _chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
         
         _plotWidth = CGRectGetWidth(self.frame) - 2 * _chartPadding - _leftPadding;
-        _plotHeight = CGRectGetHeight(self.frame) - _chartTopPadding - _chartBottomPadding;
-        
+        _plotHeight = CGRectGetHeight(self.frame) - _chartTopPadding - _chartBottomPadding;        
         [self calcScale];
         [self calculateLinesNumber];
         [self arrangeLabels];
@@ -239,8 +242,11 @@ const CGFloat averageMinMaxDelimeter = 10;
     
     CGFloat stepX = _plotWidth / defaultXSquaresCount;
     NSInteger fixedCount = _plotHeight / stepX;
+    
     fixedCount = fixedCount - (fixedCount % 2);
+    
     _plotHeight -= (_plotHeight - stepX * fixedCount);
+        NSLog(@"height %f", _plotHeight);
     
     _xGridLines = defaultXSquaresCount;
     _yGridLines = fixedCount;
@@ -256,6 +262,7 @@ const CGFloat averageMinMaxDelimeter = 10;
         }
         [_labelsGrid addObject: innerArr];
     }
+    NSLog(@"w: %0.0f", _plotWidth);
 }
 
 //=============================================================================
@@ -692,6 +699,22 @@ const CGFloat averageMinMaxDelimeter = 10;
     CGContextSetFillColorWithColor(context, color.CGColor);
     CGRect rect = CGRectMake(x - defaultCircleRadius, y - defaultCircleRadius, 2 * defaultCircleRadius, 2 * defaultCircleRadius);
     CGContextAddEllipseInRect(context, rect);
+}
+
+//=============================================================================
+
+- (CGFloat) height
+{
+    _leftPadding = self.gridSize == GMGridSize18 ? ( ((CGRectGetWidth(self.frame) - 2 * _chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
+    [self calculateLinesNumber];
+    return _plotHeight - self.chartTopPadding;
+}
+
+//=============================================================================
+
+- (CGFloat) width
+{
+    return _plotWidth;
 }
 
 //=============================================================================

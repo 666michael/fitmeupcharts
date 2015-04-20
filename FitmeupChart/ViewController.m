@@ -27,7 +27,7 @@
 
 - (void)initChart
 {
-    self.chartView = [GMChartFactory plainChartWithFrame: CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.view.frame)-40)];
+    /*self.chartView = [GMChartFactory plainChartWithFrame: CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.view.frame)-40)];
     
     GMDataSet *dataSet = [GMDataSet new];
     
@@ -91,7 +91,7 @@
     [self.chartView setGridSize: GMGridSize18];
     
     [self.chartView setDataSetsWithArray:@[dataSet1]];
-    //[self.view addSubview:self.chartView];
+    //[self.view addSubview:self.chartView];*/
 }
 
 - (void)didReceiveMemoryWarning {

@@ -10,7 +10,16 @@
 #import "GMPlainChartView.h"
 
 @interface GMChartMidget : UIView
+{
+    CGPoint _touchStart;
+    CGFloat _widthStart;
+    BOOL _isResizing;
+    CGFloat _maxWidth;
+}
 
-@property (strong, nonatomic) GMPlainChartView *chartView;
+@property (nonatomic) GMDataSet *totalDataSet;
+@property (nonatomic) UIView *timeFlagView;
+@property (nonatomic) GMPlainChartView *chartView;
 
+@property (nonatomic) NSDate *startDate;
 @end

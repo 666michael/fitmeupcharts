@@ -57,6 +57,10 @@ typedef NS_ENUM(NSUInteger, GMGridSize)
 @property (nonatomic) BOOL shouldPlotLabels;
 @property (nonatomic) BOOL isStepUsed;
 @property (nonatomic) BOOL shouldDrawCirclesOnAxis;
+@property (nonatomic) CGFloat chartPadding;
+@property (nonatomic) CGFloat chartTopPadding;
+@property (nonatomic) CGFloat chartBottomPadding;
+@property (nonatomic, copy) void (^frameSize)(CGFloat width, CGFloat height);
 
 - (void) plotChart;
 - (void) setDataSetsWithArray: (NSArray*) dataSets;
@@ -81,8 +85,6 @@ typedef NS_ENUM(NSUInteger, GMGridSize)
                        fillColor: (UIColor*) color
                       andContext: (CGContextRef) context;
 - (void) drawCirclesOnAxisWithContext: (CGContextRef) context;
-@property (nonatomic) CGFloat chartPadding;
-@property (nonatomic) CGFloat chartTopPadding;
-@property (nonatomic) CGFloat chartBottomPadding;
-
+- (CGFloat) height;
+- (CGFloat) width;
 @end
