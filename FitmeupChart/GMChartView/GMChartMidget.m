@@ -74,7 +74,13 @@ const CGFloat lineWidth = 2;
     self.totalDataSet = [[GMDataSet alloc] init];
     
     //TEST
-    for (NSInteger ind = 0; ind < 30; ind++)
+    for (NSInteger ind = 0; ind < 7; ind++)
+    {
+        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:ind * SECS_PER_DAY]  yValue:66.5 + arc4random()%4];
+        [self.totalDataSet addDataPoint:pt];
+    }
+    
+    for (NSInteger ind = -14; ind < 0; ind++)
     {
         GMDatePoint *pt = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:ind * SECS_PER_DAY]  yValue:66.5 + arc4random()%4];
         [self.totalDataSet addDataPoint:pt];
@@ -190,13 +196,24 @@ const CGFloat lineWidth = 2;
     if (_isResizing)
     {
         UITouch *touch = [touches anyObject];
-        if ([self touchIsInChart: touch])
-        {
-            CGFloat countOfSteps = [touch locationInView: self].x / [self stepWidth];
+        //if ([self touchIsInChart: touch])
+        //{
+            if([touch locationInView: self].x >=  self.chartView.chartPadding + _maxWidth)
+            {
+                [self setWidthForTimeFlagWithValue: _maxWidth];
+            }
+            else
+                if([touch locationInView: self].x <=  self.chartView.chartPadding)
+                {
+                    [self setWidthForTimeFlagWithValue: 0];
+                } else
+            {
+            CGFloat countOfSteps = [touch locationInView: self].x / [self stepWidth] - 1;
             
             [self setWidthForTimeFlagWithValue: countOfSteps * [self stepWidth]];
+            }
             _isResizing = NO;
-        }
+        //}
     }
 }
 
