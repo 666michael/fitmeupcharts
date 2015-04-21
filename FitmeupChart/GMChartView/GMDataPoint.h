@@ -25,6 +25,4 @@ typedef NS_ENUM (NSUInteger, GMPointStyle)
 
 - (id) initWithXValue: (CGFloat) xValue
                yValue: (CGFloat) yValue;
-
-
 @end

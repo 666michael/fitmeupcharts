@@ -58,7 +58,7 @@ const CGFloat lineWidth = 2;
     [self.chartView.xAxisLabel setText: @""];
     [self.chartView.yAxisLabel setText: @""];
     
-    [self.chartView setShowGrid: YES];
+    [self.chartView setShowGrid: NO];
     
     [self.chartView setShouldPlotLabels: NO];
     [self.chartView setShouldUseBezier: YES];
@@ -68,28 +68,31 @@ const CGFloat lineWidth = 2;
     
     [self.chartView setGridSize: GMGridSize16];
     
-    [self.chartView setXAxisColor: [UIColor whiteColor]];
-    [self.chartView setYAxisColor: [UIColor gm_greenColor]];
+    [self.chartView setXAxisColor: [UIColor gm_greenColor]];
+    [self.chartView setYAxisColor: [UIColor whiteColor]];
     [self.chartView setShouldDrawCirclesOnAxis: YES];
     self.totalDataSet = [[GMDataSet alloc] init];
     
     //TEST
     for (NSInteger ind = 7; ind <= 14; ind++)
     {
-        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate:[[NSDate dateWithTimeIntervalSinceNow:ind * SECS_PER_DAY] gm_startOfDay]  yValue:76.5 + arc4random()%4];
-        [self.totalDataSet addDataPoint:pt];
+        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate: [[NSDate dateWithTimeIntervalSinceNow: ind * SECS_PER_DAY] gm_startOfDay]
+                                                     yValue: 76.5 + arc4random()%4];
+        [self.totalDataSet addDataPoint: pt];
     }
     
     for (NSInteger ind = -7; ind <= 0; ind++)
     {
-        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate:[[NSDate dateWithTimeIntervalSinceNow:ind * SECS_PER_DAY] gm_startOfDay]  yValue:66.5 + arc4random()%4];
-        [self.totalDataSet addDataPoint:pt];
+        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate: [[NSDate dateWithTimeIntervalSinceNow: ind * SECS_PER_DAY] gm_startOfDay]
+                                                     yValue: 66.5 + arc4random()%4];
+        [self.totalDataSet addDataPoint: pt];
     }
     
     for (NSInteger ind = -21; ind <= -14; ind++)
     {
-        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate:[[NSDate dateWithTimeIntervalSinceNow:ind * SECS_PER_DAY] gm_startOfDay]  yValue:70.5 + arc4random()%4];
-        [self.totalDataSet addDataPoint:pt];
+        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate: [[NSDate dateWithTimeIntervalSinceNow: ind * SECS_PER_DAY] gm_startOfDay]
+                                                     yValue: 70.5 + arc4random()%4];
+        [self.totalDataSet addDataPoint: pt];
     }
     [self.totalDataSet sortPoints];
     [self.totalDataSet setPlotColor: [UIColor gm_greenColor]];
