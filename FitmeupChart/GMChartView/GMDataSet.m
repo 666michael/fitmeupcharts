@@ -11,6 +11,7 @@
 #import "GMDataSet.h"
 #import "GMDataPoint.h"
 #import "GMDatePoint.h"
+#import "NSDate+FitMeUp.h"
 
 //=============================================================================
 
@@ -200,6 +201,13 @@
         }
     }
     return NO;
+}
+
+//=============================================================================
+
+- (NSInteger) daysInSet
+{
+    return [[NSDate dateWithTimeIntervalSinceReferenceDate: [[_dataPoints firstObject] xValue]] gm_daysBetweenDate: [NSDate dateWithTimeIntervalSinceReferenceDate: [[_dataPoints lastObject] xValue]]];
 }
 
 //=============================================================================

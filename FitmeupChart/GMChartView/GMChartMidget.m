@@ -74,17 +74,24 @@ const CGFloat lineWidth = 2;
     self.totalDataSet = [[GMDataSet alloc] init];
     
     //TEST
-    for (NSInteger ind = 0; ind < 7; ind++)
+    for (NSInteger ind = 7; ind <= 14; ind++)
     {
-        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:ind * SECS_PER_DAY]  yValue:66.5 + arc4random()%4];
+        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate:[[NSDate dateWithTimeIntervalSinceNow:ind * SECS_PER_DAY] gm_startOfDay]  yValue:76.5 + arc4random()%4];
         [self.totalDataSet addDataPoint:pt];
     }
     
-    for (NSInteger ind = -14; ind < 0; ind++)
+    for (NSInteger ind = -7; ind <= 0; ind++)
     {
-        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:ind * SECS_PER_DAY]  yValue:66.5 + arc4random()%4];
+        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate:[[NSDate dateWithTimeIntervalSinceNow:ind * SECS_PER_DAY] gm_startOfDay]  yValue:66.5 + arc4random()%4];
         [self.totalDataSet addDataPoint:pt];
     }
+    
+    for (NSInteger ind = -21; ind <= -14; ind++)
+    {
+        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate:[[NSDate dateWithTimeIntervalSinceNow:ind * SECS_PER_DAY] gm_startOfDay]  yValue:70.5 + arc4random()%4];
+        [self.totalDataSet addDataPoint:pt];
+    }
+    [self.totalDataSet sortPoints];
     [self.totalDataSet setPlotColor: [UIColor gm_greenColor]];
     [self.chartView setDataSetsWithArray: @[self.totalDataSet]];
     [self addSubview: self.chartView];
@@ -110,16 +117,33 @@ const CGFloat lineWidth = 2;
     [lineView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
     [lineView setTranslatesAutoresizingMaskIntoConstraints: YES];
     
+    flagView.layer.mask = [self triangleMask];
     [self.timeFlagView addSubview: flagView];
     [self.timeFlagView addSubview: lineView];
     
     [self.chartView setFrameSize: ^(CGFloat width, CGFloat height) {
+        _fullWidth = width;
         [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
         [[[self.timeFlagView subviews] firstObject] setFrame: CGRectMake(width - flagRange, 0, flagRange, flagRange)];
         [[[self.timeFlagView subviews] lastObject] setFrame: CGRectMake(width - lineWidth, 0, lineWidth, height)];
         [self setWidthForTimeFlagWithValue: width - [self stepWidth]];
         [self setMaxWidth];
     }];
+}
+
+//=============================================================================
+
+- (CAShapeLayer*) triangleMask
+{
+    UIBezierPath* trianglePath = [UIBezierPath bezierPath];
+    [trianglePath moveToPoint: CGPointMake(0, 0)];
+    [trianglePath addLineToPoint: CGPointMake(flagRange,0)];
+    [trianglePath addLineToPoint: CGPointMake(flagRange, flagRange)];
+    [trianglePath closePath];
+    
+    CAShapeLayer *triangleMaskLayer = [CAShapeLayer layer];
+    [triangleMaskLayer setPath: trianglePath.CGPath];
+    return triangleMaskLayer;
 }
 
 //=============================================================================
@@ -147,7 +171,6 @@ const CGFloat lineWidth = 2;
         _touchStart = [touch locationInView:self];
         _widthStart = CGRectGetWidth(self.timeFlagView.frame);
         _isResizing = YES;
-        NSLog(@"start x: %0.0f y: %0.0f", _touchStart.x, _touchStart.y);
     }
 }
 
@@ -173,6 +196,8 @@ const CGFloat lineWidth = 2;
     }
 }
 
+//=============================================================================
+
 - (void) setWidthForTimeFlagWithValue: (CGFloat) width
 {
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, CGRectGetHeight(self.timeFlagView.frame))];
@@ -196,24 +221,26 @@ const CGFloat lineWidth = 2;
     if (_isResizing)
     {
         UITouch *touch = [touches anyObject];
-        //if ([self touchIsInChart: touch])
-        //{
-            if([touch locationInView: self].x >=  self.chartView.chartPadding + _maxWidth)
+        NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
+       
+        if([touch locationInView: self].x >=  self.chartView.chartPadding + _maxWidth)
+        {
+            [self setWidthForTimeFlagWithValue: _maxWidth];
+             self.startDate =  [startDate dateByAddingTimeInterval:(_maxWidth/[self stepWidth]) * SECS_PER_WEEK];
+        }
+        else
+            if([touch locationInView: self].x <=  self.chartView.chartPadding)
             {
-                [self setWidthForTimeFlagWithValue: _maxWidth];
-            }
-            else
-                if([touch locationInView: self].x <=  self.chartView.chartPadding)
-                {
-                    [self setWidthForTimeFlagWithValue: 0];
-                } else
+                [self setWidthForTimeFlagWithValue: 0];
+                self.startDate = startDate;
+            } else
             {
-            CGFloat countOfSteps = [touch locationInView: self].x / [self stepWidth] - 1;
-            
-            [self setWidthForTimeFlagWithValue: countOfSteps * [self stepWidth]];
+                CGFloat countOfSteps = floorf([touch locationInView: self].x / [self stepWidth]);
+                
+                [self setWidthForTimeFlagWithValue: countOfSteps * [self stepWidth]];
+                self.startDate =  [startDate dateByAddingTimeInterval: countOfSteps * SECS_PER_WEEK];
             }
-            _isResizing = NO;
-        //}
+        _isResizing = NO;
     }
 }
 
@@ -221,8 +248,8 @@ const CGFloat lineWidth = 2;
 
 - (CGFloat) stepWidth
 {
-    NSInteger days = [self.totalDataSet count];
-    return (CGRectGetWidth(self.timeFlagView.frame) / days) * daysInStep;
+    NSInteger days = [self.totalDataSet daysInSet];
+    return (_fullWidth / days) * daysInStep;
 }
 
 

@@ -9,10 +9,12 @@
 #import <Foundation/Foundation.h>
 
 #define SECS_PER_DAY (86400)
+#define SECS_PER_WEEK 604800
 
 @interface NSDate (FitMeUp)
 
 - (NSDate*) gm_startOfDay;
 - (NSDate*) gm_startOfNextDay;
+- (NSInteger) gm_daysBetweenDate: (NSDate*) startDate;
 
 @end

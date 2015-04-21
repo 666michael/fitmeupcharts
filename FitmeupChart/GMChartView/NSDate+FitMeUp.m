@@ -20,7 +20,8 @@
 - (NSDate*) gm_startOfDay
 {
     NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDateComponents *components = [calendar components: ( NSCalendarUnitYear |  NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour |  NSCalendarUnitMinute |  NSCalendarUnitSecond ) fromDate: self];
+    NSDateComponents *components = [calendar components: ( NSCalendarUnitYear |  NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour |  NSCalendarUnitMinute |  NSCalendarUnitSecond )
+                                               fromDate: self];
     
     [components setHour: 0];
     [components setMinute: 0];
@@ -36,4 +37,17 @@
     return [[self dateByAddingTimeInterval: SECS_PER_DAY] gm_startOfDay];
 }
 
+//=============================================================================
+
+- (NSInteger) gm_daysBetweenDate: (NSDate*) startDate
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components: NSCalendarUnitDay
+                                               fromDate: self
+                                                 toDate:startDate
+                                                options: nil];
+    return [components day];
+}
+
+//=============================================================================
 @end

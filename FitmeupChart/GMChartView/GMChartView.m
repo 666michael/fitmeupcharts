@@ -246,7 +246,6 @@ const CGFloat averageMinMaxDelimeter = 10;
     fixedCount = fixedCount - (fixedCount % 2);
     
     _plotHeight -= (_plotHeight - stepX * fixedCount);
-        NSLog(@"height %f", _plotHeight);
     
     _xGridLines = defaultXSquaresCount;
     _yGridLines = fixedCount;
@@ -262,7 +261,6 @@ const CGFloat averageMinMaxDelimeter = 10;
         }
         [_labelsGrid addObject: innerArr];
     }
-    NSLog(@"w: %0.0f", _plotWidth);
 }
 
 //=============================================================================

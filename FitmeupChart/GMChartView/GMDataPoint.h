@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSUInteger, GMPointStyle)
+typedef NS_ENUM (NSUInteger, GMPointStyle)
 {
-    GMPointUpperStyle = 0,
+    GMPointStyleъ = 0,
     GMPointLowerStyle = 1
 };
 

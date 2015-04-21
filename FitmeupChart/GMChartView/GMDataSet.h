@@ -49,5 +49,5 @@ typedef NS_ENUM(NSUInteger, GMDataAggregation)
 
 - (void) aggregateByType: (GMDataAggregation) type
               ForEndDate: (NSDate*) endDate;
-
+- (NSInteger) daysInSet;
 @end

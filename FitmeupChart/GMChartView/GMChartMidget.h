@@ -15,6 +15,7 @@
     CGFloat _widthStart;
     BOOL _isResizing;
     CGFloat _maxWidth;
+    CGFloat _fullWidth;
 }
 
 @property (nonatomic) GMDataSet *totalDataSet;
