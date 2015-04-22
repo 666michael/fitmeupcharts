@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "GMPlainChartView.h"
+#import "GMChartMidgetProtocol.h"
 
 @interface GMChartMidget : UIView
 {
+@private
     CGPoint _touchStart;
     CGFloat _widthStart;
     BOOL _isResizing;
@@ -23,4 +25,6 @@
 @property (nonatomic) GMPlainChartView *chartView;
 
 @property (nonatomic) NSDate *startDate;
+@property (nonatomic, weak) NSObject<GMChartMidgetProtocol> *delegate;
+
 @end

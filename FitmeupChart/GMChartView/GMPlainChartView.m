@@ -92,11 +92,11 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
     else
     {
         [dataSet setXCoordForValue:^CGFloat(CGFloat xValue) {
-            return [self xCoordinatesForValue:xValue];
-        }];
+                                                                return [self xCoordinatesForValue:xValue];
+                                                            }];
         [dataSet setYCoordForValue:^CGFloat(CGFloat yValue) {
-            return [self yCoordinatesForValue:yValue];
-        }];
+                                                                return [self yCoordinatesForValue:yValue];
+                                                            }];
         UIBezierPath *path = [GMChartUtils gm_interpolateCGPointsWithHermiteForDataSet: [dataSet pointsArray]];
         if(path)
         {
@@ -121,12 +121,14 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 - (void) plotLabels
 {
     if (!self.shouldPlotLabels)
+    {
         return;
+    }
    
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (context)
     {
-        if(_dataSets.count)
+        if (_dataSets.count)
         {
             for (GMDataSet *dataSet in _dataSets)
             {
@@ -147,9 +149,9 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
                     if (row == _xGridLines)
                         row--;
                     
-                    if(dataPoint.shouldShowLabel)
+                    if (dataPoint.shouldShowLabel)
                     {
-                        UIColor* colorForText = dataPoint.pointStyle == GMPointUpperStyle ? [UIColor gm_redColor] : [UIColor gm_greenColor];
+                        UIColor* colorForText = dataPoint.pointStyle == GMPointStyleUpper ? [UIColor gm_redColor] : [UIColor gm_greenColor];
                         [self drawCircleAtXCoordinate: x
                                           yCoordinate: y
                                             fillColor: colorForText
@@ -273,24 +275,26 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 - (GMPointDirection) directionOfPointAtIndex: (NSInteger) index
                                        inSet: (GMDataSet*) dataSet
 {
-    if([dataSet count] < 3)
+    if ([dataSet count] < 3)
+    {
         return GMPointNone;
+    }
     
-    if(index==0)
+    if (index==0)
     {
         CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
         CGFloat rightPt = [[dataSet dataPointAtIndex: index + 1] yValue];
-        if(curPt < rightPt)
+        if (curPt < rightPt)
             return GMPointUpToUp;
         else
             return GMPointDownToDown;
     }
     else
-        if(index == [dataSet count]-1)
+        if (index == [dataSet count]-1)
         {
             CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
             CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
-            if(leftPt < curPt)
+            if (leftPt < curPt)
                 return GMPointUpToUp;
             else
                 return GMPointDownToDown;
@@ -333,15 +337,15 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
            andSpace: (CGFloat) space
 {
     CGFloat stepY = _plotHeight/_yGridLines;
-    if(path == GMPointDownToDown)
+    if (path == GMPointDownToDown)
     {
         return y - stepY;
     }
-    if(path == GMPointUpToDown)
+    if (path == GMPointUpToDown)
     {
         return y - (space>stepY/2.0 ? stepY : 0);
     }
-    if(path == GMPointDownToUp)
+    if (path == GMPointDownToUp)
     {
         return y +  (space<stepY/2.0 ? stepY : 0);
     }
@@ -353,19 +357,19 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 - (CGFloat) adjustX: (CGFloat) x
         basedOnPath: (GMPointDirection) path
 {
-    if(path == GMPointDownToDown)
+    if (path == GMPointDownToDown)
     {
         return x + defaultCircleRadius;
     }
-    if(path == GMPointUpToUp)
+    if (path == GMPointUpToUp)
     {
         return x + defaultCircleRadius;
     }
-    if(path == GMPointUpToDown)
+    if (path == GMPointUpToDown)
     {
         return x + defaultCircleRadius*2;
     }
-    if(path == GMPointDownToUp)
+    if (path == GMPointDownToUp)
     {
         return x + defaultCircleRadius;
     }

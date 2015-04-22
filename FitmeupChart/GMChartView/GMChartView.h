@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, GMGridSize)
 
 @interface GMChartView : UIView
 {
+@protected
     NSArray* _dataSets;
     CGFloat _plotWidth;
     CGFloat _plotHeight;

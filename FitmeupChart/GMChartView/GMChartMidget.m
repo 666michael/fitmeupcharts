@@ -125,13 +125,22 @@ const CGFloat lineWidth = 2;
     [self.timeFlagView addSubview: lineView];
     
     [self.chartView setFrameSize: ^(CGFloat width, CGFloat height) {
-        _fullWidth = width;
-        [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
-        [[[self.timeFlagView subviews] firstObject] setFrame: CGRectMake(width - flagRange, 0, flagRange, flagRange)];
-        [[[self.timeFlagView subviews] lastObject] setFrame: CGRectMake(width - lineWidth, 0, lineWidth, height)];
-        [self setWidthForTimeFlagWithValue: width - [self stepWidth]];
-        [self setMaxWidth];
+        [self setInitialWidth: width
+                    andHeight: height];
     }];
+}
+
+//=============================================================================
+
+- (void) setInitialWidth: (CGFloat) width
+               andHeight: (CGFloat) height
+{
+    _fullWidth = width;
+    [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
+    [[[self.timeFlagView subviews] firstObject] setFrame: CGRectMake(width - flagRange, 0, flagRange, flagRange)];
+    [[[self.timeFlagView subviews] lastObject] setFrame: CGRectMake(width - lineWidth, 0, lineWidth, height)];
+    [self setWidthForTimeFlagWithValue: width - [self stepWidth]];
+    [self setMaxWidth];
 }
 
 //=============================================================================
@@ -225,11 +234,12 @@ const CGFloat lineWidth = 2;
     {
         UITouch *touch = [touches anyObject];
         NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
-       
+        
         if([touch locationInView: self].x >=  self.chartView.chartPadding + _maxWidth)
         {
             [self setWidthForTimeFlagWithValue: _maxWidth];
-             self.startDate =  [startDate dateByAddingTimeInterval:(_maxWidth/[self stepWidth]) * SECS_PER_WEEK];
+            self.startDate =  [startDate dateByAddingTimeInterval:(_maxWidth/[self stepWidth]) * SECS_PER_WEEK];
+            
         }
         else
             if([touch locationInView: self].x <=  self.chartView.chartPadding)
@@ -243,6 +253,11 @@ const CGFloat lineWidth = 2;
                 [self setWidthForTimeFlagWithValue: countOfSteps * [self stepWidth]];
                 self.startDate =  [startDate dateByAddingTimeInterval: countOfSteps * SECS_PER_WEEK];
             }
+        if (self.delegate)
+        {
+            [self.delegate chartMidget: self
+                   startDateChanged: self.startDate];
+        }
         _isResizing = NO;
     }
 }
@@ -254,6 +269,6 @@ const CGFloat lineWidth = 2;
     NSInteger days = [self.totalDataSet daysInSet];
     return (_fullWidth / days) * daysInStep;
 }
-
+//=============================================================================
 
 @end

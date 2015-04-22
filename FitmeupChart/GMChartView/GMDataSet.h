@@ -20,6 +20,7 @@ typedef NS_ENUM(NSUInteger, GMDataAggregation)
 
 @interface GMDataSet : NSObject
 {
+@private
     NSMutableArray* _dataPoints;
     CGFloat _minX;
     CGFloat _minY;

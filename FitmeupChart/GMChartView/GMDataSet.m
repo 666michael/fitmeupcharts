@@ -184,7 +184,7 @@
         {
             [pointsArray addObject: [NSValue valueWithCGPoint:CGPointMake(self.xCoordForValue(dataPoint.xValue), self.yCoordForValue(dataPoint.yValue))]];
         }
-    }];
+                                                                                                  }];
     
     return pointsArray;
 }
