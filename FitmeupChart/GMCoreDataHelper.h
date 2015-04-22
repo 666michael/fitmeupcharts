@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "GMDataSet.h"
 
 @interface GMCoreDataHelper :NSObject
 
@@ -18,4 +19,6 @@
 
 - (void)setupCoreData;
 - (void)saveContext;
+
++ (GMDataSet*) testDataSet;
 @end

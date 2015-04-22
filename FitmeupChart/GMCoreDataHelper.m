@@ -7,9 +7,13 @@
 //
 
 #import "GMCoreDataHelper.h"
+#import "GMDatePoint.h"
+#import "NSDate+FitMeUp.h"
+#import "UIColor+FitMeUp.h"
 
 @implementation GMCoreDataHelper
 #define debug 1
+#define SECS_PER_DAY (86400)
 
 #pragma mark - FILES
 NSString *storeFilename = @"DataModel.sqlite";
@@ -107,5 +111,45 @@ NSString *storeFilename = @"DataModel.sqlite";
     } else {
         NSLog(@"SKIPPED _context save, there are no changes!");
     }
+}
+
++ (GMDataSet*) testDataSet
+{
+    //TEST
+    NSDateFormatter *dateFormat = [NSDateFormatter new];
+    [dateFormat setDateFormat: @"dd.MM.yyyy"];
+    NSDictionary *data1 = @{
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"03.06.2014"] timeIntervalSinceReferenceDate]]: @67.0,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"08.07.2014"]  timeIntervalSinceReferenceDate]]: @67.2,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"09.07.2014"]  timeIntervalSinceReferenceDate]]: @67.3,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"11.07.2014"]  timeIntervalSinceReferenceDate]]: @67.1,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"13.07.2014"]  timeIntervalSinceReferenceDate]]: @66.6,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"15.07.2014"]  timeIntervalSinceReferenceDate]]: @67.1,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"16.07.2014"]  timeIntervalSinceReferenceDate]]: @66.6,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"19.07.2014"]  timeIntervalSinceReferenceDate]]: @67.1,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"21.07.2014"]  timeIntervalSinceReferenceDate]]: @67.1,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"22.07.2014"]  timeIntervalSinceReferenceDate]]: @66.0,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"23.07.2014"]  timeIntervalSinceReferenceDate]]: @66.5,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"25.07.2014"]  timeIntervalSinceReferenceDate]]: @66.3,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"27.07.2014"]  timeIntervalSinceReferenceDate]]: @66.0,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"28.07.2014"]  timeIntervalSinceReferenceDate]]: @66.7,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"01.08.2014"]  timeIntervalSinceReferenceDate]]: @66.3,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"02.08.2014"]  timeIntervalSinceReferenceDate]]: @66.5,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"04.08.2014"]  timeIntervalSinceReferenceDate]]: @66.3,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"07.08.2014"]  timeIntervalSinceReferenceDate]]: @66.0,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"10.08.2014"]  timeIntervalSinceReferenceDate]]: @65.9,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"12.08.2014"]  timeIntervalSinceReferenceDate]]: @66.1,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"13.08.2014"]  timeIntervalSinceReferenceDate]]: @64.9,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"17.08.2014"]  timeIntervalSinceReferenceDate]]: @64.8,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"20.08.2014"]  timeIntervalSinceReferenceDate]]: @65.1,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"21.08.2014"]  timeIntervalSinceReferenceDate]]: @64.0,
+                            [NSNumber numberWithInteger:[[dateFormat dateFromString: @"11.11.2014"]  timeIntervalSinceReferenceDate]]: @61.5};
+    GMDataSet *dataSet = [[GMDataSet alloc] initWithDictionary:data1];
+
+    
+    [dataSet sortPoints];
+    [dataSet setPlotColor: [UIColor gm_greenColor]];
+    
+    return dataSet;
 }
 @end

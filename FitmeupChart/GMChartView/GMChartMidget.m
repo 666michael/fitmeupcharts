@@ -11,6 +11,7 @@
 #import "GMChartMidget.h"
 #import "GMPlainChartView.h"
 #import "GMDataSet.h"
+#import "GMCoreDataHelper.h"
 
 //=============================================================================
 
@@ -70,7 +71,6 @@ const CGFloat lineWidth = 2;
 - (void) setupDefaultViewLayout
 {
     self.chartView = [[GMPlainChartView alloc] initWithFrame: self.bounds];
-    self.chartView.delegate = self;
 
     [self.chartView.xAxisLabel setText: @""];
     [self.chartView.yAxisLabel setText: @""];
@@ -88,32 +88,11 @@ const CGFloat lineWidth = 2;
     [self.chartView setXAxisColor: [UIColor gm_greenColor]];
     [self.chartView setYAxisColor: [UIColor whiteColor]];
     [self.chartView setShouldDrawCirclesOnAxis: YES];
-    self.totalDataSet = [GMDataSet new];
     
-    //TEST
-    for (NSInteger ind = 7; ind <= 14; ind++)
-    {
-        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate: [[NSDate dateWithTimeIntervalSinceNow: ind * SECS_PER_DAY] gm_startOfDay]
-                                                     yValue: 76.5 + arc4random() % 4];
-        [self.totalDataSet addDataPoint: pt];
-    }
+    self.totalDataSet = [GMCoreDataHelper testDataSet];
     
-    for (NSInteger ind = -7; ind <= 0; ind++)
-    {
-        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate: [[NSDate dateWithTimeIntervalSinceNow: ind * SECS_PER_DAY] gm_startOfDay]
-                                                     yValue: 66.5 + arc4random() % 4];
-        [self.totalDataSet addDataPoint: pt];
-    }
-    
-    for (NSInteger ind = -21; ind <= -14; ind++)
-    {
-        GMDatePoint *pt = [[GMDatePoint alloc] initWithDate: [[NSDate dateWithTimeIntervalSinceNow: ind * SECS_PER_DAY] gm_startOfDay]
-                                                     yValue: 70.5 + arc4random() % 4];
-        [self.totalDataSet addDataPoint: pt];
-    }
-    [self.totalDataSet sortPoints];
-    [self.totalDataSet setPlotColor: [UIColor gm_greenColor]];
     [self.chartView setDataSetsWithArray: @[self.totalDataSet]];
+    self.chartView.delegate = self;
     [self addSubview: self.chartView];
     
     [self setupTimeFlag];

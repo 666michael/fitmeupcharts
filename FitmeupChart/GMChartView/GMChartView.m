@@ -410,7 +410,7 @@ const CGFloat averageMinMaxDelimeter = 10;
             }
             
             CGFloat avgToAdd = fabs(_minY - _maxY) / averageMinMaxDelimeter;
-            _minY = _minY - fmaxf(1.0, floorf(avgToAdd));
+            //_minY = _minY - fmaxf(1.0, floorf(avgToAdd));
             _maxY = _maxY + fmaxf(1.0, floorf(avgToAdd));
             if(fabs(_minY - _maxY) < 0.1)
             {
