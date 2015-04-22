@@ -63,7 +63,7 @@
         CGFloat x = [self xCoordinatesForValue: dataPoint.xValue];
         CGFloat y = [self yCoordinatesForValue: dataPoint.yValue];
         
-        if(x < _plotWidth + self.chartPadding + _leftPadding)
+        if (x < _plotWidth + self.chartPadding + _leftPadding)
         {
             [self drawRounedRectWithRect: CGRectMake(x + step/2.0, y, step, _plotHeight + self.chartTopPadding - y)
                             cornerRaduis: step / 2

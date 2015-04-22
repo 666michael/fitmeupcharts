@@ -10,8 +10,8 @@
 
 typedef NS_ENUM (NSUInteger, GMPointStyle)
 {
-    GMPointUpperStyle = 0,
-    GMPointLowerStyle
+    GMPointStyleUpper = 0,
+    GMPointStyleLower
 };
 
 @interface GMDataPoint : NSObject

@@ -45,9 +45,10 @@
     NSDateComponents *components = [calendar components: NSCalendarUnitDay
                                                fromDate: self
                                                  toDate:startDate
-                                                options: nil];
+                                                options: 0];
     return [components day];
 }
 
 //=============================================================================
+
 @end

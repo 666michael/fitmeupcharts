@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "GMPlainChartView.h"
+#import "GMChartMidgetProtocol.h"
 
 @interface GMChartMidget : UIView
-
 @property (nonatomic) GMDataSet *totalDataSet;
 @property (nonatomic) UIView *timeFlagView;
 @property (nonatomic) GMPlainChartView *chartView;
 @property (nonatomic) NSDate *startDate;
+@property (nonatomic, weak) NSObject<GMChartMidgetProtocol> *delegate;
 
 @end
