@@ -160,6 +160,7 @@ const CGFloat averageMinMaxDelimeter = 10;
 
 - (void) drawRect: (CGRect) rect
 {
+    NSLog(@"draw");
     [self plotChart];
     [self plotChartData];
     if(self.delegate)

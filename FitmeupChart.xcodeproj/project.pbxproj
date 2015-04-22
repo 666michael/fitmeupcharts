@@ -25,6 +25,9 @@
 		338DAA381AB19A8600594ED0 /* GMChartFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA371AB19A8600594ED0 /* GMChartFactory.m */; };
 		3395FD111AD7FCC20045C7A0 /* GMBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3395FD101AD7FCC20045C7A0 /* GMBarChartView.m */; };
 		3395FD151AD7FCE80045C7A0 /* GMPlainChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3395FD141AD7FCE80045C7A0 /* GMPlainChartView.m */; };
+		33A68BD01AE7AC7E009571C4 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 33A68BCE1AE7AC7E009571C4 /* DataModel.xcdatamodeld */; };
+		33A68BD31AE7ACD5009571C4 /* GMEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 33A68BD21AE7ACD5009571C4 /* GMEntity.m */; };
+		33A68BD91AE7E03F009571C4 /* GMCoreDataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 33A68BD81AE7E03F009571C4 /* GMCoreDataHelper.m */; };
 		33DC2A4E1AD2885F00D21199 /* GMChartUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 33DC2A4D1AD2885F00D21199 /* GMChartUtils.m */; };
 		33EEABD61ADBA9420045DAB1 /* GMPlainChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33EEABD41ADBA9420045DAB1 /* GMPlainChartViewController.m */; };
 		33EEABD71ADBA9420045DAB1 /* GMPlainChartViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33EEABD51ADBA9420045DAB1 /* GMPlainChartViewController.xib */; };
@@ -78,6 +81,11 @@
 		3395FD141AD7FCE80045C7A0 /* GMPlainChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMPlainChartView.m; path = GMChartView/GMPlainChartView.m; sourceTree = "<group>"; };
 		33A68BCB1AE78FC3009571C4 /* GMChartMidgetProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMChartMidgetProtocol.h; sourceTree = "<group>"; };
 		33A68BCC1AE7A2CB009571C4 /* GMChartViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMChartViewProtocol.h; sourceTree = "<group>"; };
+		33A68BCF1AE7AC7E009571C4 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		33A68BD11AE7ACD5009571C4 /* GMEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMEntity.h; sourceTree = "<group>"; };
+		33A68BD21AE7ACD5009571C4 /* GMEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMEntity.m; sourceTree = "<group>"; };
+		33A68BD71AE7E030009571C4 /* GMCoreDataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMCoreDataHelper.h; sourceTree = "<group>"; };
+		33A68BD81AE7E03F009571C4 /* GMCoreDataHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMCoreDataHelper.m; sourceTree = "<group>"; };
 		33DC2A4C1AD2885F00D21199 /* GMChartUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMChartUtils.h; path = GMChartView/GMChartUtils.h; sourceTree = "<group>"; };
 		33DC2A4D1AD2885F00D21199 /* GMChartUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMChartUtils.m; path = GMChartView/GMChartUtils.m; sourceTree = "<group>"; };
 		33EEABD31ADBA9420045DAB1 /* GMPlainChartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMPlainChartViewController.h; path = GMChartView/GMPlainChartViewController.h; sourceTree = "<group>"; };
@@ -193,6 +201,7 @@
 		338DAA291AB1869900594ED0 /* GMChartView */ = {
 			isa = PBXGroup;
 			children = (
+				33A68BCD1AE7AC65009571C4 /* Data */,
 				33B1E0CB1AD402B80044E788 /* Util */,
 				3395FD121AD7FCC90045C7A0 /* Charts */,
 				33EEABD21ADBA8A50045DAB1 /* Controllers */,
@@ -227,6 +236,18 @@
 				33EEABD91ADBBB920045DAB1 /* GMChartMidget.m */,
 			);
 			name = Charts;
+			sourceTree = "<group>";
+		};
+		33A68BCD1AE7AC65009571C4 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				33A68BCE1AE7AC7E009571C4 /* DataModel.xcdatamodeld */,
+				33A68BD11AE7ACD5009571C4 /* GMEntity.h */,
+				33A68BD21AE7ACD5009571C4 /* GMEntity.m */,
+				33A68BD71AE7E030009571C4 /* GMCoreDataHelper.h */,
+				33A68BD81AE7E03F009571C4 /* GMCoreDataHelper.m */,
+			);
+			name = Data;
 			sourceTree = "<group>";
 		};
 		33B1E0CB1AD402B80044E788 /* Util */ = {
@@ -351,6 +372,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33A68BD91AE7E03F009571C4 /* GMCoreDataHelper.m in Sources */,
 				33EEABD61ADBA9420045DAB1 /* GMPlainChartViewController.m in Sources */,
 				338DAA321AB1975E00594ED0 /* GMDataPoint.m in Sources */,
 				3395FD111AD7FCC20045C7A0 /* GMBarChartView.m in Sources */,
@@ -363,9 +385,11 @@
 				338DAA351AB199E900594ED0 /* GMDatePoint.m in Sources */,
 				338DAA2C1AB186DC00594ED0 /* GMChartView.m in Sources */,
 				338C85501AB2EA100025D2E4 /* NSString+FitMeUp.m in Sources */,
+				33A68BD31AE7ACD5009571C4 /* GMEntity.m in Sources */,
 				338DAA091AB185AE00594ED0 /* ViewController.m in Sources */,
 				3395FD151AD7FCE80045C7A0 /* GMPlainChartView.m in Sources */,
 				338DAA381AB19A8600594ED0 /* GMChartFactory.m in Sources */,
+				33A68BD01AE7AC7E009571C4 /* DataModel.xcdatamodeld in Sources */,
 				33DC2A4E1AD2885F00D21199 /* GMChartUtils.m in Sources */,
 				338DAA001AB185AE00594ED0 /* main.m in Sources */,
 			);
@@ -581,6 +605,16 @@
 			);
 			currentVersion = 338DAA051AB185AE00594ED0 /* FitmeupChart.xcdatamodel */;
 			path = FitmeupChart.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		33A68BCE1AE7AC7E009571C4 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				33A68BCF1AE7AC7E009571C4 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = 33A68BCF1AE7AC7E009571C4 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
