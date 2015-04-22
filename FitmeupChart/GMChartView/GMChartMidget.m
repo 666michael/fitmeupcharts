@@ -20,12 +20,15 @@ const CGFloat lineWidth = 2;
 
 //=============================================================================
 
-@interface GMChartMidget()
+@interface GMChartMidget() <GMChartViewProtocol>
+
 @property (nonatomic) CGPoint touchStart;
 @property (nonatomic) CGFloat widthStart;
 @property (nonatomic) BOOL isResizing;
 @property (nonatomic) CGFloat maxWidth;
 @property (nonatomic) CGFloat fullWidth;
+@property (nonatomic) UIView *innerFlagView;
+@property (nonatomic) UIView *innerLineView;
 @end
 
 //=============================================================================
@@ -67,6 +70,7 @@ const CGFloat lineWidth = 2;
 - (void) setupDefaultViewLayout
 {
     self.chartView = [[GMPlainChartView alloc] initWithFrame: self.bounds];
+    self.chartView.delegate = self;
 
     [self.chartView.xAxisLabel setText: @""];
     [self.chartView.yAxisLabel setText: @""];
@@ -123,36 +127,19 @@ const CGFloat lineWidth = 2;
     [self.timeFlagView setBackgroundColor: [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.3]];
     [self addSubview: self.timeFlagView];
     
-    UIView *flagView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - flagRange, 0, flagRange, flagRange)];
-    [flagView setBackgroundColor: [UIColor whiteColor]];
-    [flagView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
-    [flagView setTranslatesAutoresizingMaskIntoConstraints: YES];
+    self.innerFlagView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - flagRange, 0, flagRange, flagRange)];
+    [self.innerFlagView setBackgroundColor: [UIColor whiteColor]];
+    [self.innerFlagView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
+    [self.innerFlagView setTranslatesAutoresizingMaskIntoConstraints: YES];
     
-    UIView *lineView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - lineWidth, 0, lineWidth, flagRange/5)];
-    [lineView setBackgroundColor: [UIColor whiteColor]];
-    [lineView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
-    [lineView setTranslatesAutoresizingMaskIntoConstraints: YES];
+    self.innerLineView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - lineWidth, 0, lineWidth, flagRange/5)];
+    [self.innerLineView setBackgroundColor: [UIColor whiteColor]];
+    [self.innerLineView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
+    [self.innerLineView setTranslatesAutoresizingMaskIntoConstraints: YES];
     
-    flagView.layer.mask = [self triangleMask];
-    [self.timeFlagView addSubview: flagView];
-    [self.timeFlagView addSubview: lineView];
-    [self.chartView setFrameSize: ^(CGFloat width, CGFloat height) {
-        [self setInitialWidth: width
-                    andHeight: height];
-    }];
-}
-
-//=============================================================================
-
-- (void) setInitialWidth: (CGFloat) width
-               andHeight: (CGFloat) height
-{
-    _fullWidth = width;
-    [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
-    [[[self.timeFlagView subviews] firstObject] setFrame: CGRectMake(width - flagRange, 0, flagRange, flagRange)];
-    [[[self.timeFlagView subviews] lastObject] setFrame: CGRectMake(width - lineWidth, 0, lineWidth, height)];
-    [self setWidthForTimeFlagWithValue: width - [self stepWidth]];
-    [self setMaxWidth];
+    self.innerFlagView.layer.mask = [self triangleMask];
+    [self.timeFlagView addSubview: self.innerFlagView];
+    [self.timeFlagView addSubview: self.innerLineView];
 }
 
 //=============================================================================
@@ -226,8 +213,8 @@ const CGFloat lineWidth = 2;
 - (void) setWidthForTimeFlagWithValue: (CGFloat) width
 {
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, CGRectGetHeight(self.timeFlagView.frame))];
-    [[[self.timeFlagView subviews] firstObject] setFrame: CGRectMake(width - flagRange, 0, flagRange, flagRange)];
-    [[[self.timeFlagView subviews] lastObject] setFrame: CGRectMake(width - lineWidth, 0, lineWidth, CGRectGetHeight(self.timeFlagView.frame))];
+    [self.innerFlagView setFrame: CGRectMake(width - flagRange, 0, flagRange, flagRange)];
+    [self.innerLineView setFrame: CGRectMake(width - lineWidth, 0, lineWidth, CGRectGetHeight(self.timeFlagView.frame))];
 }
 
 //=============================================================================
@@ -281,6 +268,33 @@ const CGFloat lineWidth = 2;
 {
     NSInteger days = [self.totalDataSet daysInSet];
     return (_fullWidth / days) * daysInStep;
+}
+
+//=============================================================================
+
+#pragma mark - ChartView Delegate -
+
+//=============================================================================
+
+- (void)    chartView: (GMChartView *) chartView
+    widthValueChanged: (CGFloat) widthValue
+andHeightValueChanged: (CGFloat) heightValue
+{
+    [self setInitialWidth: widthValue
+                andHeight: heightValue];
+}
+
+//=============================================================================
+
+- (void) setInitialWidth: (CGFloat) width
+               andHeight: (CGFloat) height
+{
+    _fullWidth = width;
+    [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
+    [self.innerFlagView setFrame: CGRectMake(width - flagRange, 0, flagRange, flagRange)];
+    [self.innerLineView setFrame: CGRectMake(width - lineWidth, 0, lineWidth, height)];
+    [self setWidthForTimeFlagWithValue: width - [self stepWidth]];
+    [self setMaxWidth];
 }
 
 //=============================================================================

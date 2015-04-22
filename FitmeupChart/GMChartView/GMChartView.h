@@ -16,6 +16,7 @@
 #import "GMDataSet.h"
 #import "NSDate+FitMeUp.h"
 #import "GMChartUtils.h"
+#import "GMChartViewProtocol.h"
 
 #define defaultFontSize  10.5f
 #define defaultCircleRadius 2.5f
@@ -61,7 +62,7 @@ typedef NS_ENUM(NSUInteger, GMGridSize)
 @property (nonatomic) CGFloat chartPadding;
 @property (nonatomic) CGFloat chartTopPadding;
 @property (nonatomic) CGFloat chartBottomPadding;
-@property (nonatomic, copy) void (^frameSize)(CGFloat width, CGFloat height);
+@property (nonatomic, weak) NSObject<GMChartViewProtocol>* delegate;
 
 - (void) plotChart;
 - (void) setDataSetsWithArray: (NSArray*) dataSets;

@@ -162,9 +162,11 @@ const CGFloat averageMinMaxDelimeter = 10;
 {
     [self plotChart];
     [self plotChartData];
-    if(self.frameSize)
+    if(self.delegate)
     {
-        self.frameSize (_plotWidth, _plotHeight);
+        [self.delegate chartView: self
+               widthValueChanged: _plotWidth
+           andHeightValueChanged: _plotHeight];
     }
 }
 

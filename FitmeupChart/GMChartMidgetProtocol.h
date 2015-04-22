@@ -3,7 +3,7 @@
 //  FitmeupChart
 //
 //  Created by Anton Gubarenko on 22.04.15.
-//  Copyright (c) 2015 Anton Gubarenko. All rights reserved.
+//  Copyright (c) 2015 CleverBits. All rights reserved.
 //
 
 #ifndef FitmeupChart_GMChartMidgetProtocol_h
@@ -21,6 +21,5 @@
     startDateChanged: (NSDate*) date;
 
 @end
-
 
 #endif
