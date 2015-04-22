@@ -6,9 +6,6 @@
 //  Copyright (c) 2015 CleverBits. All rights reserved.
 //
 
-#ifndef FitmeupChart_GMChartMidgetProtocol_h
-#define FitmeupChart_GMChartMidgetProtocol_h
-
 #import <UIKit/UIKit.h>
 
 @class GMChartMidget;
@@ -22,4 +19,3 @@
 
 @end
 
-#endif

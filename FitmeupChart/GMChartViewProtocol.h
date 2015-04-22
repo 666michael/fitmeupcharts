@@ -6,9 +6,6 @@
 //  Copyright (c) 2015 Anton Gubarenko. All rights reserved.
 //
 
-#ifndef FitmeupChart_GMChartViewProtocol_h
-#define FitmeupChart_GMChartViewProtocol_h
-
 #import <UIKit/UIKit.h>
 
 @class GMChartView;
@@ -22,5 +19,3 @@
 andHeightValueChanged: (CGFloat) heightValue;
 
 @end
-
-#endif
