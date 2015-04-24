@@ -7,13 +7,13 @@
 //
 
 #import "ViewController.h"
-#import "GMChartView.h"
+#import "GMChartMidget.h"
 #import "GMChartFactory.h"
 #import "UIColor+FitMeUp.h"
 #define SECS_PER_DAY (86400)
 
 @interface ViewController ()
-@property (strong, nonatomic) IBOutlet GMChartView *chartView;
+@property (strong, nonatomic) IBOutlet GMChartMidget *chartView;
 
 @end
 
@@ -92,6 +92,17 @@
     
     [self.chartView setDataSetsWithArray:@[dataSet1]];
     //[self.view addSubview:self.chartView];*/
+}
+
+- (IBAction)changeFrameAction:(id)sender
+{
+    [self.chartView setFrame: CGRectMake(0, 94, 320 - arc4random() % 50, 279)];
+}
+
+- (IBAction)changeWithRedrawAction:(id)sender
+{
+    [self.chartView setFrame: CGRectMake(0, 94, 320 - arc4random() % 50, 279)];
+    [self.chartView redrawView];
 }
 
 - (void)didReceiveMemoryWarning {

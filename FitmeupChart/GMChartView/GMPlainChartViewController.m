@@ -35,8 +35,6 @@
 {
     [super viewDidLoad];
     
-    [self.midgetChart.chartView setChartTopPadding: 0.0f];
-    [self.midgetChart.chartView setChartBottomPadding: 0.0f];
 }
 
 //=============================================================================

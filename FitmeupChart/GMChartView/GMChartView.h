@@ -63,13 +63,14 @@ typedef NS_ENUM(NSUInteger, GMGridSize)
 @property (nonatomic) CGFloat chartTopPadding;
 @property (nonatomic) CGFloat chartBottomPadding;
 @property (nonatomic, weak) NSObject<GMChartViewProtocol>* delegate;
+@property (nonatomic) BOOL isCached;
 
 - (void) plotChart;
 - (void) setDataSetsWithArray: (NSArray*) dataSets;
 - (void) plotChartData;
 - (void) calcScale;
 - (void) plotDataSet: (GMDataSet*) dataSet
-          withContet: (CGContextRef) context;
+          withContext: (CGContextRef) context;
 
 - (CGFloat) xCoordinatesForValue: (CGFloat) xValue;
 - (CGFloat) yCoordinatesForValue: (CGFloat) xValue;
@@ -89,4 +90,6 @@ typedef NS_ENUM(NSUInteger, GMGridSize)
 - (void) drawCirclesOnAxisWithContext: (CGContextRef) context;
 - (CGFloat) height;
 - (CGFloat) width;
+- (UIImage*) viewImage;
+
 @end

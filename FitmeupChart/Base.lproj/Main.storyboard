@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -24,16 +25,49 @@
                                     <constraint firstAttribute="height" constant="279" id="JrB-cR-jpi"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="22h-m3-fZb">
+                                <rect key="frame" x="21" y="20" width="60" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="cXb-XE-hL6"/>
+                                    <constraint firstAttribute="width" constant="60" id="m2C-1s-sn3"/>
+                                </constraints>
+                                <state key="normal" title="Change">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="changeFrameAction:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="LA6-GE-2KV"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AfL-QW-Rsl">
+                                <rect key="frame" x="159" y="20" width="145" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="dCd-p8-qga"/>
+                                    <constraint firstAttribute="width" constant="145" id="r32-cN-cco"/>
+                                </constraints>
+                                <state key="normal" title="Change with Redraw">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="changeWithRedrawAction:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="5ZI-7l-h8M"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="AcY-2o-kXA" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="74" id="0SG-aG-B7c"/>
+                            <constraint firstItem="AfL-QW-Rsl" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="1XW-pP-Z5g"/>
+                            <constraint firstItem="AfL-QW-Rsl" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="aHm-yv-imv"/>
                             <constraint firstAttribute="trailingMargin" secondItem="AcY-2o-kXA" secondAttribute="trailing" constant="-16" id="bxR-yU-UN2"/>
                             <constraint firstItem="AcY-2o-kXA" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="dnv-Mc-P4F"/>
+                            <constraint firstItem="22h-m3-fZb" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="p82-tD-nrT"/>
+                            <constraint firstItem="22h-m3-fZb" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="5" id="v4u-MS-7M9"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="480"/>
+                    <connections>
+                        <outlet property="chartView" destination="AcY-2o-kXA" id="EIP-mM-4zQ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

@@ -54,7 +54,7 @@
 //=============================================================================
 
 - (void) plotDataSet: (GMDataSet*) dataSet
-          withContet: (CGContextRef) context
+          withContext: (CGContextRef) context
 {
     CGFloat step = _plotHeight/_yGridLines;
     for (NSInteger index = 0; index < [dataSet count]; index++)

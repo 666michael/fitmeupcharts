@@ -30,6 +30,9 @@ const CGFloat lineWidth = 2;
 @property (nonatomic) CGFloat fullWidth;
 @property (nonatomic) UIView *innerFlagView;
 @property (nonatomic) UIView *innerLineView;
+@property (nonatomic) UIView *timeFlagView;
+@property (nonatomic) GMPlainChartView *chartView;
+@property (nonatomic) UIImageView *imageCacheView;
 @end
 
 //=============================================================================
@@ -95,6 +98,7 @@ const CGFloat lineWidth = 2;
     self.chartView.delegate = self;
     [self addSubview: self.chartView];
     
+    //[self setupImageView];
     [self setupTimeFlag];
 }
 
@@ -119,6 +123,18 @@ const CGFloat lineWidth = 2;
     self.innerFlagView.layer.mask = [self triangleMask];
     [self.timeFlagView addSubview: self.innerFlagView];
     [self.timeFlagView addSubview: self.innerLineView];
+}
+
+- (void) setupImageView
+{
+    self.imageCacheView = [[UIImageView alloc] initWithFrame: CGRectMake(0, self.frame.origin.y + [self.chartView height], [self.chartView width],  CGRectGetHeight(self.frame))];
+    //[self.imageCacheView setContentMode: UIViewContentModeScaleAspectFill];
+    //[self.imageCacheView setBackgroundColor: [UIColor redColor]];
+    [self.imageCacheView setAlpha: 0.3];
+    [self.imageCacheView  setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
+    [self.imageCacheView  setTranslatesAutoresizingMaskIntoConstraints: YES];
+    [self addSubview: self.imageCacheView];
+    [self.imageCacheView setImage: [self.chartView viewImage]];
 }
 
 //=============================================================================
@@ -261,6 +277,7 @@ andHeightValueChanged: (CGFloat) heightValue
 {
     [self setInitialWidth: widthValue
                 andHeight: heightValue];
+    [chartView setIsCached: YES];
 }
 
 //=============================================================================
@@ -274,6 +291,15 @@ andHeightValueChanged: (CGFloat) heightValue
     [self.innerLineView setFrame: CGRectMake(width - lineWidth, 0, lineWidth, height)];
     [self setWidthForTimeFlagWithValue: width - [self stepWidth]];
     [self setMaxWidth];
+    [self.imageCacheView setFrame: CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame))];
+}
+
+//=============================================================================
+
+- (void) redrawView
+{
+    [self.chartView setIsCached: NO];
+    [self.chartView setNeedsDisplay];
 }
 
 //=============================================================================

@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 //=============================================================================
 
 - (void) plotDataSet: (GMDataSet*) dataSet
-          withContet: (CGContextRef) context
+          withContext: (CGContextRef) context
 {
     if(!self.shouldUseBezier)
     {

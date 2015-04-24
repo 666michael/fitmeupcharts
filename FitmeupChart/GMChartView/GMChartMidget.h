@@ -13,9 +13,9 @@
 @interface GMChartMidget : UIView
 
 @property (nonatomic) GMDataSet *totalDataSet;
-@property (nonatomic) UIView *timeFlagView;
-@property (nonatomic) GMPlainChartView *chartView;
 @property (nonatomic) NSDate *startDate;
 @property (nonatomic, weak) NSObject<GMChartMidgetProtocol> *delegate;
+
+- (void) redrawView;
 
 @end

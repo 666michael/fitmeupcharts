@@ -70,7 +70,7 @@ const CGFloat averageMinMaxDelimeter = 10;
     
     _plotWidth = CGRectGetWidth(self.frame) - 2 * _chartPadding - _leftPadding;
     _plotHeight = CGRectGetHeight(self.frame) - _chartTopPadding - _chartBottomPadding;
-
+    
     [self setupXLabel];
     [self setupYLabel];
     _xAxisLabel.text = @"month / january";
@@ -96,7 +96,7 @@ const CGFloat averageMinMaxDelimeter = 10;
     
     [self setShouldUseBezier: YES];
     [self setShouldPlotLabels: YES];
-
+    
     [self setGridSize: GMGridSize16];
     [self setShouldUseBezier: YES];
     
@@ -160,14 +160,17 @@ const CGFloat averageMinMaxDelimeter = 10;
 
 - (void) drawRect: (CGRect) rect
 {
-    NSLog(@"draw");
-    [self plotChart];
-    [self plotChartData];
-    if(self.delegate)
+    if (!self.isCached)
     {
-        [self.delegate chartView: self
-               widthValueChanged: _plotWidth
-           andHeightValueChanged: _plotHeight];
+        NSLog(@"draw");
+        [self plotChart];
+        [self plotChartData];
+        if ([self.delegate respondsToSelector: @selector(chartView:widthValueChanged:andHeightValueChanged:)])
+        {
+            [self.delegate chartView: self
+                   widthValueChanged: _plotWidth
+               andHeightValueChanged: _plotHeight];
+        }
     }
 }
 
@@ -183,7 +186,7 @@ const CGFloat averageMinMaxDelimeter = 10;
         _leftPadding = self.gridSize == GMGridSize18 ? ( ((CGRectGetWidth(self.frame) - 2 * _chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
         
         _plotWidth = CGRectGetWidth(self.frame) - 2 * _chartPadding - _leftPadding;
-        _plotHeight = CGRectGetHeight(self.frame) - _chartTopPadding - _chartBottomPadding;        
+        _plotHeight = CGRectGetHeight(self.frame) - _chartTopPadding - _chartBottomPadding;
         [self calcScale];
         [self calculateLinesNumber];
         [self arrangeLabels];
@@ -437,7 +440,7 @@ const CGFloat averageMinMaxDelimeter = 10;
             CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
             
             [self plotDataSet: dataSet
-                   withContet: context];
+                  withContext: context];
         }
     }
 }
@@ -445,7 +448,7 @@ const CGFloat averageMinMaxDelimeter = 10;
 //=============================================================================
 
 - (void) plotDataSet: (GMDataSet*) dataSet
-          withContet: (CGContextRef) context
+         withContext: (CGContextRef) context
 {
 }
 
@@ -716,6 +719,19 @@ const CGFloat averageMinMaxDelimeter = 10;
 - (CGFloat) width
 {
     return _plotWidth;
+}
+
+//=============================================================================
+
+
+- (UIImage *)viewImage
+{
+    UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, [UIScreen mainScreen].scale);
+    [self drawViewHierarchyInRect:self.frame afterScreenUpdates:YES];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 //=============================================================================
