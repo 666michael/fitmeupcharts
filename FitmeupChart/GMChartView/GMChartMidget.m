@@ -74,7 +74,7 @@ const CGFloat lineWidth = 2;
 - (void) setupDefaultViewLayout
 {
     self.chartView = [[GMPlainChartView alloc] initWithFrame: self.bounds];
-
+    [self.chartView setChartInterpolation: GMChartInterpolationQuad];
     [self.chartView.xAxisLabel setText: @""];
     [self.chartView.yAxisLabel setText: @""];
     

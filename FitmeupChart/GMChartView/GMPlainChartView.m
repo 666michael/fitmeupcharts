@@ -10,16 +10,17 @@
 
 #import "GMPlainChartView.h"
 #import "GMChartView.h"
+#import "GMDataSetProtocol.h"
 
 //=============================================================================
 
 typedef NS_ENUM(NSUInteger, GMPointDirection)
 {
     GMPointUpToUp = 0,
-    GMPointUpToDown = 1,
-    GMPointDownToUp = 2,
-    GMPointDownToDown = 3,
-    GMPointNone = 4
+    GMPointUpToDown,
+    GMPointDownToUp,
+    GMPointDownToDown,
+    GMPointNone
 };
 
 //=============================================================================
@@ -32,21 +33,22 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 
 //=============================================================================
 
-- (id) initWithFrame:(CGRect)frame
+- (instancetype) initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame: frame];
     if (self == nil)
+    {
         return nil;
-    
+    }
     return self;
 }
 
 //=============================================================================
 
 - (void) plotDataSet: (GMDataSet*) dataSet
-          withContext: (CGContextRef) context
+         withContext: (CGContextRef) context
 {
-    if(!self.shouldUseBezier)
+    if (!self.shouldUseBezier)
     {
         for (NSInteger index = 0; index < [dataSet count]; index++)
         {
@@ -63,41 +65,22 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
             {
                 CGContextAddLineToPoint(context, x, y);
             }
-            
-            if(index+1 < [dataSet count])
-            {
-                GMDataPoint *dataPoint1 = [dataSet dataPointAtIndex: index+1];
-                float x1 = [self xCoordinatesForValue: dataPoint1.xValue];
-                float y1 = [self yCoordinatesForValue: dataPoint1.yValue];
-                
-                for (CGFloat t = 0; t <= 1.0; t += 0.01)
-                {
-                    float midX = (1 - t) * x + t * x1;
-                    float midY = (1 - t) * y + t * y1;
-                    
-                    NSInteger row1 = (midX-_leftPadding-  self.chartPadding) / (_plotWidth/_xGridLines);
-                    NSInteger col1 = (_plotHeight  - (midY) + self.chartTopPadding) / (_plotHeight / _yGridLines);
-                    
-                    [self highlightCellInGridAtRow: row1
-                                         andColumn: _yGridLines - col1 -1
-                                         withIndex: [GMChartUtils gm_plotDirectionForPoint: CGPointMake(x, y)
-                                                                                  endPoint: CGPointMake(x1, y1)]];
-                }
-            }
-            
         }
         CGContextSetStrokeColorWithColor(context, dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
         CGContextDrawPath(context, kCGPathStroke);
     }
     else
     {
-        [dataSet setXCoordForValue:^CGFloat(CGFloat xValue) {
-                                                                return [self xCoordinatesForValue:xValue];
-                                                            }];
-        [dataSet setYCoordForValue:^CGFloat(CGFloat yValue) {
-                                                                return [self yCoordinatesForValue:yValue];
-                                                            }];
-        UIBezierPath *path = [GMChartUtils gm_interpolateCGPointsWithHermiteForDataSet: [dataSet pointsArray]];
+        [dataSet setDataSource: self];
+        UIBezierPath *path = nil;
+        if (self.chartInterpolation == GMChartInterpolationHermite)
+        {
+            path = [GMChartUtils gm_interpolateCGPointsWithHermiteForDataSet: [dataSet pointsArray]];
+        }
+        else
+        {
+            path = [GMChartUtils gm_quadCurvedPathWithPoints: [dataSet pointsArray]];
+        }
         if(path)
         {
             [path stroke];
@@ -107,6 +90,9 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
         }
     }
 }
+
+//=============================================================================
+
 
 //=============================================================================
 
@@ -124,52 +110,55 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
     {
         return;
     }
-   
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
-    if (context)
+    if (context == nil)
     {
-        if (_dataSets.count)
+        return;
+    }
+    if (_dataSets.count==0)
+    {
+        return;
+    }
+    for (GMDataSet *dataSet in _dataSets)
+    {
+        [dataSet sortPoints];
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        CGContextSetLineWidth(context, defaultLineWidth);
+        
+        for (NSInteger index = 0; index < [dataSet count]; index++)
         {
-            for (GMDataSet *dataSet in _dataSets)
+            GMDataPoint *dataPoint = [dataSet dataPointAtIndex: index];
+            CGFloat x = [self xCoordinatesForValue: dataPoint.xValue];
+            CGFloat y = [self yCoordinatesForValue: dataPoint.yValue];
+            
+            NSInteger row = ceilf((x - _leftPadding - self.chartPadding) / (_plotWidth / _xGridLines));
+            NSInteger col = ceilf((y - self.chartTopPadding) / (_plotHeight / _yGridLines));
+            
+            if (row == _xGridLines)
+                row--;
+            
+            if (dataPoint.shouldShowLabel)
             {
-                [dataSet sortPoints];
-                CGContextRef context = UIGraphicsGetCurrentContext();
                 
-                CGContextSetLineWidth(context, defaultLineWidth);
-                
-                for (NSInteger index = 0; index < [dataSet count]; index++)
+                UIColor* colorForText = dataPoint.pointStyle == GMPointStyleUpper ? [UIColor gm_redColor] : [UIColor gm_greenColor];
+                [self drawCircleAtXCoordinate: x
+                                  yCoordinate: y
+                                    fillColor: colorForText
+                                   andContext: context];
+                if(col< _yGridLines && row < _xGridLines)
                 {
-                    GMDataPoint *dataPoint = [dataSet dataPointAtIndex: index];
-                    float x = [self xCoordinatesForValue: dataPoint.xValue];
-                    float y = [self yCoordinatesForValue: dataPoint.yValue];
-                    
-                    NSInteger row = ceilf((x - _leftPadding - self.chartPadding) / (_plotWidth / _xGridLines));
-                    NSInteger col = ceilf((y - self.chartTopPadding) / (_plotHeight / _yGridLines));
-                    
-                    if (row == _xGridLines)
-                        row--;
-                    
-                    if (dataPoint.shouldShowLabel)
-                    {
-                        UIColor* colorForText = dataPoint.pointStyle == GMPointStyleUpper ? [UIColor gm_redColor] : [UIColor gm_greenColor];
-                        [self drawCircleAtXCoordinate: x
-                                          yCoordinate: y
-                                            fillColor: colorForText
-                                           andContext: context];
-                        if(col< _yGridLines && row < _xGridLines)
-                        {
-                            [self drawText: dataPoint.pointLabelText
-                               xCoordinate: x
-                               yCoordinate: y
-                                 fillColor: colorForText
-                                pointStyle: dataPoint.pointStyle
-                                 direction: [self directionOfPointAtIndex: index
-                                                                    inSet: dataSet]
-                                andContext: context];
-                        }
-                        CGContextDrawPath(context, kCGPathFillStroke);
-                    }
+                    [self drawText: dataPoint.pointLabelText
+                       xCoordinate: x
+                       yCoordinate: y
+                         fillColor: colorForText
+                        pointStyle: dataPoint.pointStyle
+                         direction: [self directionOfPointAtIndex: index
+                                                            inSet: dataSet]
+                        andContext: context];
                 }
+                CGContextDrawPath(context, kCGPathFillStroke);
             }
         }
     }
@@ -196,10 +185,10 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
     CGFloat rawY = y - self.chartTopPadding;
     
     NSInteger col = (x - _leftPadding - self.chartPadding) / step;
-
-    CGFloat colLeft = fmodf(rawY, step);
     
-    if(colLeft < step / 2.0)
+    CGFloat colLeft = fmod(rawY, step);
+    
+    if (colLeft < step / 2.0)
     {
         y -= colLeft;
     }
@@ -223,11 +212,11 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
             }
             else
             {
-                y = [self adjustY: y
-                      basedOnPath: direction
-                         andSpace: colLeft];
-                x = [self adjustX: x
-                      basedOnPath: direction];
+                y = [self adjustedY: y
+                        basedOnPath: direction
+                           andSpace: colLeft];
+                x = [self adjustedX: x
+                        basedOnPath: direction];
             }
         }
     }
@@ -255,11 +244,11 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
             }
             else
             {
-                y = [self adjustY: y
-                      basedOnPath: direction
-                         andSpace: colLeft];
-                x = [self adjustX: x
-                      basedOnPath: direction];
+                y = [self adjustedY: y
+                        basedOnPath: direction
+                           andSpace: colLeft];
+                x = [self adjustedX: x
+                        basedOnPath: direction];
             }
         }
         
@@ -278,72 +267,73 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
     {
         return GMPointNone;
     }
-    
+    NSInteger direction = GMPointNone;
     if (index==0)
     {
         CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
         CGFloat rightPt = [[dataSet dataPointAtIndex: index + 1] yValue];
         if (curPt < rightPt)
-            return GMPointUpToUp;
+            direction = GMPointUpToUp;
         else
-            return GMPointDownToDown;
+            direction = GMPointDownToDown;
     }
-    else
-        if (index == [dataSet count]-1)
-        {
-            CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
-            CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
-            if (leftPt < curPt)
-                return GMPointUpToUp;
-            else
-                return GMPointDownToDown;
-        }
     
+    if (index == [dataSet count]-1)
+    {
+        CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
+        CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
+        if (leftPt < curPt)
+            direction = GMPointUpToUp;
         else
+            direction = GMPointDownToDown;
+    }
+    
+    if (index != 0 && index != [dataSet count]-1 )
+    {
+        CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
+        CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
+        CGFloat rightPt = [[dataSet dataPointAtIndex: index + 1] yValue];
+        
+        if (leftPt < curPt && curPt < rightPt)
         {
-            
-            CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
-            CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
-            CGFloat rightPt = [[dataSet dataPointAtIndex: index + 1] yValue];
-            
-            if (leftPt < curPt && curPt < rightPt)
-            {
-                return GMPointUpToUp;
-            }
-            else
-                if (leftPt < curPt && curPt > rightPt)
-                {
-                    return GMPointUpToDown;
-                }
-                else
-                    if (leftPt > curPt && curPt < rightPt)
-                    {
-                        return GMPointDownToUp;
-                    }
-                    else
-                        if (leftPt > curPt && curPt > rightPt)
-                        {
-                            return GMPointDownToDown;
-                        }
+            direction = GMPointUpToUp;
         }
-    return GMPointNone;
+        
+        if (leftPt < curPt && curPt > rightPt)
+        {
+            direction = GMPointUpToDown;
+        }
+        
+        if (leftPt > curPt && curPt < rightPt)
+        {
+            direction = GMPointDownToUp;
+        }
+        
+        if (leftPt > curPt && curPt > rightPt)
+        {
+            direction = GMPointDownToDown;
+        }
+    }
+    return direction;
 }
 
 //=============================================================================
 
-- (CGFloat) adjustY: (CGFloat) y
-        basedOnPath: (GMPointDirection) path
-           andSpace: (CGFloat) space
+- (CGFloat) adjustedY: (CGFloat) y
+          basedOnPath: (GMPointDirection) path
+             andSpace: (CGFloat) space
 {
     CGFloat stepY = _plotHeight/_yGridLines;
     if (path == GMPointDownToDown)
     {
         return y - stepY;
     }
+    
     if (path == GMPointUpToDown)
     {
         return y - (space>stepY/2.0 ? stepY : 0);
     }
+    
     if (path == GMPointDownToUp)
     {
         return y +  (space<stepY/2.0 ? stepY : 0);
@@ -353,21 +343,24 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 
 //=============================================================================
 
-- (CGFloat) adjustX: (CGFloat) x
-        basedOnPath: (GMPointDirection) path
+- (CGFloat) adjustedX: (CGFloat) x
+          basedOnPath: (GMPointDirection) path
 {
     if (path == GMPointDownToDown)
     {
         return x + defaultCircleRadius;
     }
+    
     if (path == GMPointUpToUp)
     {
         return x + defaultCircleRadius;
     }
+    
     if (path == GMPointUpToDown)
     {
         return x + defaultCircleRadius*2;
     }
+    
     if (path == GMPointDownToUp)
     {
         return x + defaultCircleRadius;
@@ -377,4 +370,23 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 
 //=============================================================================
 
+#pragma mark - DataSet DataSource
+
+//=============================================================================
+
+- (CGFloat) xCoordForValue: (CGFloat) xValue
+                forDataSet: (GMDataSet * )dataSet
+{
+    return [self xCoordinatesForValue: xValue];
+}
+
+//=============================================================================
+
+- (CGFloat) yCoordForValue: (CGFloat) yValue
+                forDataSet: (GMDataSet * )dataSet
+{
+    return [self yCoordinatesForValue: yValue];
+}
+
+//=============================================================================
 @end

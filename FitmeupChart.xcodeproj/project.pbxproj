@@ -79,6 +79,7 @@
 		3395FD101AD7FCC20045C7A0 /* GMBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMBarChartView.m; path = GMChartView/GMBarChartView.m; sourceTree = "<group>"; };
 		3395FD131AD7FCE80045C7A0 /* GMPlainChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMPlainChartView.h; path = GMChartView/GMPlainChartView.h; sourceTree = "<group>"; };
 		3395FD141AD7FCE80045C7A0 /* GMPlainChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMPlainChartView.m; path = GMChartView/GMPlainChartView.m; sourceTree = "<group>"; };
+		339CED6A1AEA8593002454CE /* GMDataSetProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMDataSetProtocol.h; path = GMChartView/GMDataSetProtocol.h; sourceTree = "<group>"; };
 		33A68BCB1AE78FC3009571C4 /* GMChartMidgetProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMChartMidgetProtocol.h; sourceTree = "<group>"; };
 		33A68BCC1AE7A2CB009571C4 /* GMChartViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMChartViewProtocol.h; sourceTree = "<group>"; };
 		33A68BCF1AE7AC7E009571C4 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -205,6 +206,7 @@
 				33B1E0CB1AD402B80044E788 /* Util */,
 				3395FD121AD7FCC90045C7A0 /* Charts */,
 				33EEABD21ADBA8A50045DAB1 /* Controllers */,
+				339CED6A1AEA8593002454CE /* GMDataSetProtocol.h */,
 				338DAA2D1AB193D800594ED0 /* GMDataSet.h */,
 				338DAA2E1AB193D800594ED0 /* GMDataSet.m */,
 				338DAA301AB1975E00594ED0 /* GMDataPoint.h */,

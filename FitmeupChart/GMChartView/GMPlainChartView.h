@@ -7,7 +7,8 @@
 //
 
 #import "GMChartView.h"
+#import "GMDataSetProtocol.h"
 
-@interface GMPlainChartView : GMChartView
+@interface GMPlainChartView : GMChartView <GMDataSetProtocol>
 
 @end

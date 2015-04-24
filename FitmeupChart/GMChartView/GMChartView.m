@@ -17,15 +17,23 @@
 
 //=============================================================================
 
+static const CGFloat kDefaultGridLineWidth = 0.5f;
+static const NSInteger kDefaultGridLines = 5;
+static const CGFloat kDefaultSmallCircleRadius = 2.5;
+static const NSString* const kDefaultDateFormat = @"EEE";
+static const CGFloat kDefaultLegendSquare = 30.0f;
+static const CGFloat kDefaultXSquaresCount = 14;
+static const CGFloat kAxisLabelsPadding = 10;
+static const CGFloat kAverageMinMaxDelimeter = 10;
 
-const CGFloat defaultGridLineWidth = 0.5f;
-const NSInteger defaultGridLines = 5;
-const CGFloat defaultSmallCircleRadius = 2.5;
-const NSString* defaultDateFormat = @"EEE";
-const CGFloat defaultLegendSquare = 30.0f;
-const CGFloat defaultXSquaresCount = 14;
-const CGFloat axisLabelsPadding = 10;
-const CGFloat averageMinMaxDelimeter = 10;
+static const CGFloat kDefaultChartPadding = 30.0f;
+static const CGFloat kDefaultChartTopPadding = 60.0f;
+static const CGFloat kDefaultChartBottomPadding = 120.0f;
+static const CGFloat kDefaultMinGridSize = 30.0f;
+static const NSInteger kDefaultCellsOffset = 3;
+static const CGFloat kTextScaleHeight = 1.5;
+static const CGFloat kTextLabelOffset = 5.0;
+static const NSInteger kVerticalLinesStartIndex = -1;
 
 //=============================================================================
 
@@ -37,7 +45,7 @@ const CGFloat averageMinMaxDelimeter = 10;
 
 //=============================================================================
 
-- (id) initWithFrame: (CGRect) frame
+- (instancetype) initWithFrame: (CGRect) frame
 {
     if(self == [super initWithFrame: frame])
     {
@@ -48,7 +56,7 @@ const CGFloat averageMinMaxDelimeter = 10;
 
 //=============================================================================
 
-- (id) initWithCoder: (NSCoder*) aDecoder
+- (instancetype) initWithCoder: (NSCoder*) aDecoder
 {
     if(self == [super initWithCoder: aDecoder])
     {
@@ -86,19 +94,21 @@ const CGFloat averageMinMaxDelimeter = 10;
     _maxX = 0.0f;
     _maxY = 0.0f;
     
-    _minGridSize = 30.0f;
+    _minGridSize = kDefaultMinGridSize;
     
     self.showGrid = YES;
     
-    self.chartPadding = 30.0f;
-    self.chartTopPadding = 60.0f;
-    self.chartBottomPadding = 120.0f;
+    self.chartPadding = kDefaultChartPadding;
+    self.chartTopPadding = kDefaultChartTopPadding;
+    self.chartBottomPadding = kDefaultChartBottomPadding;
     
     [self setShouldUseBezier: YES];
     [self setShouldPlotLabels: YES];
     
     [self setGridSize: GMGridSize16];
     [self setShouldUseBezier: YES];
+    
+    [self setChartInterpolation: GMChartInterpolationHermite];
     
     [self setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
     [self setTranslatesAutoresizingMaskIntoConstraints: YES];
@@ -121,7 +131,7 @@ const CGFloat averageMinMaxDelimeter = 10;
 
 - (void) setupXLabel
 {
-    _xAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_plotHeight + axisLabelsPadding, _chartPadding, _plotWidth, 0)];
+    _xAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_plotHeight + kAxisLabelsPadding, _chartPadding, _plotWidth, 0)];
     [_xAxisLabel setTextAlignment: NSTextAlignmentCenter];
     [_xAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
     UIViewAutoresizing mask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth
@@ -134,7 +144,7 @@ const CGFloat averageMinMaxDelimeter = 10;
 
 - (void) setupYLabel
 {
-    _yAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_chartPadding, axisLabelsPadding, _plotWidth, 0)];
+    _yAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_chartPadding, kAxisLabelsPadding, _plotWidth, 0)];
     [_yAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
     [self addSubview: _yAxisLabel];
 }
@@ -179,19 +189,28 @@ const CGFloat averageMinMaxDelimeter = 10;
 - (void) plotChart
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    if (context)
+    if (context == nil)
     {
-        [self clearContext];
-        
-        _leftPadding = self.gridSize == GMGridSize18 ? ( ((CGRectGetWidth(self.frame) - 2 * _chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
-        
-        _plotWidth = CGRectGetWidth(self.frame) - 2 * _chartPadding - _leftPadding;
-        _plotHeight = CGRectGetHeight(self.frame) - _chartTopPadding - _chartBottomPadding;
-        [self calcScale];
-        [self calculateLinesNumber];
-        [self arrangeLabels];
-        [self drawGrid];
+        return;
     }
+    [self clearContext];
+    
+    if(self.gridSize == GMGridSize18)
+    {
+        CGFloat yLabelsOffset = (((CGRectGetWidth(self.frame) - 2 * _chartPadding) /kDefaultXSquaresCount) * kDefaultCellsOffset);
+        _leftPadding =  yLabelsOffset;
+    }
+    else
+    {
+        _leftPadding = 0.0f;
+    }
+    
+    _plotWidth = CGRectGetWidth(self.frame) - 2 * _chartPadding - _leftPadding;
+    _plotHeight = CGRectGetHeight(self.frame) - _chartTopPadding - _chartBottomPadding;
+    [self calcScale];
+    [self calculateLinesNumber];
+    [self arrangeLabels];
+    [self drawGrid];
 }
 
 //=============================================================================
@@ -220,9 +239,9 @@ const CGFloat averageMinMaxDelimeter = 10;
     
     CGFloat xTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
     CGFloat yTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
-    
+
     [_xAxisLabel setFrame: CGRectMake(_chartPadding, _plotHeight + _chartTopPadding + xTextHeight / 2.0, _plotWidth, xTextHeight)];
-    [_yAxisLabel setFrame: CGRectMake(_chartPadding, _chartTopPadding - yTextHeight * 1.5, _plotWidth, yTextHeight)];
+    [_yAxisLabel setFrame: CGRectMake(_chartPadding, _chartTopPadding - yTextHeight * kTextScaleHeight, _plotWidth, yTextHeight)];
 }
 
 //=============================================================================
@@ -243,21 +262,30 @@ const CGFloat averageMinMaxDelimeter = 10;
 
 - (void) calculateLinesNumber
 {
-    _xGridLines = defaultGridLines;
-    _yGridLines = defaultGridLines;
+    _xGridLines = kDefaultGridLines;
+    _yGridLines = kDefaultGridLines;
     
-    CGFloat stepX = _plotWidth / defaultXSquaresCount;
+    CGFloat stepX = _plotWidth /kDefaultXSquaresCount;
     NSInteger fixedCount = _plotHeight / stepX;
     
     fixedCount = fixedCount - (fixedCount % 2);
     
     _plotHeight -= (_plotHeight - stepX * fixedCount);
     
-    _xGridLines = defaultXSquaresCount;
+    _xGridLines =kDefaultXSquaresCount;
     _yGridLines = fixedCount;
     
     _labelsGrid = [NSMutableArray array];
-    NSInteger count = self.gridSize == GMGridSize18 ? _yGridLines + 1 : _yGridLines;
+
+    NSInteger count = 0;
+    if (self.gridSize == GMGridSize18)
+    {
+        count = _yGridLines + 1;
+    }
+    else
+    {
+        count = _yGridLines;
+    };
     for (short i = 0; i < count; i++)
     {
         NSMutableArray* innerArr = [NSMutableArray arrayWithCapacity: _xGridLines];
@@ -319,13 +347,19 @@ const CGFloat averageMinMaxDelimeter = 10;
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetLineWidth(context, defaultGridLineWidth);
+    CGContextSetLineWidth(context, kDefaultGridLineWidth);
     CGContextSetStrokeColorWithColor(context, _defaultGridLineColor);
     
     CGFloat stepX = _plotWidth / _xGridLines;
     NSInteger howMany = _plotWidth/ stepX;
     
-    for (NSInteger i = self.gridSize == GMGridSize18 ? -1 : 0; i <= howMany; i++)
+    NSInteger startIndex = 0;
+    if (self.gridSize == GMGridSize18)
+    {
+        startIndex = kVerticalLinesStartIndex;
+    }
+    
+    for (NSInteger i = startIndex; i <= howMany; i++)
     {
         CGContextMoveToPoint(context, _chartPadding + i * stepX + _leftPadding, _chartTopPadding);
         CGContextAddLineToPoint(context, _chartPadding + i * stepX + _leftPadding, _plotHeight + _chartTopPadding);
@@ -340,7 +374,7 @@ const CGFloat averageMinMaxDelimeter = 10;
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetLineWidth(context, defaultGridLineWidth);
+    CGContextSetLineWidth(context, kDefaultGridLineWidth);
     CGContextSetStrokeColorWithColor(context, _defaultGridLineColor);
     
     CGFloat stepY = _plotHeight/_yGridLines;
@@ -365,7 +399,9 @@ const CGFloat averageMinMaxDelimeter = 10;
     [self plotGraph];
     [self plotLabels];
     if (!_xAxisLabel.text.length)
+    {
         [self drawXLegend];
+    }
     if (self.gridSize == GMGridSize18)
     {
         [self drawYLegend];
@@ -386,40 +422,42 @@ const CGFloat averageMinMaxDelimeter = 10;
 - (void) calcScale
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    if (context)
+    if (context == nil)
     {
-        if(_dataSets.count)
+        return;
+    }
+    
+    if(_dataSets.count)
+    {
+        _minX = MAXFLOAT;
+        _minY = MAXFLOAT;
+        
+        _maxX = 0.0f;
+        _maxY = 0.0f;
+        
+        for (GMDataSet *dataSet in _dataSets)
         {
-            _minX = MAXFLOAT;
-            _minY = MAXFLOAT;
+            [dataSet sortPoints];
+            if(dataSet.maxPoint.x > _maxX)
+                _maxX = dataSet.maxPoint.x;
             
-            _maxX = 0.0f;
-            _maxY = 0.0f;
+            if(dataSet.minPoint.x < _minX)
+                _minX = dataSet.minPoint.x;
             
-            for (GMDataSet *dataSet in _dataSets)
-            {
-                [dataSet sortPoints];
-                if(dataSet.maxPoint.x > _maxX)
-                    _maxX = dataSet.maxPoint.x;
-                
-                if(dataSet.minPoint.x < _minX)
-                    _minX = dataSet.minPoint.x;
-                
-                if(dataSet.maxPoint.y > _maxY)
-                    _maxY = dataSet.maxPoint.y;
-                
-                if(dataSet.minPoint.y < _minY)
-                    _minY = dataSet.minPoint.y;
-            }
+            if(dataSet.maxPoint.y > _maxY)
+                _maxY = dataSet.maxPoint.y;
             
-            CGFloat avgToAdd = fabs(_minY - _maxY) / averageMinMaxDelimeter;
-            //_minY = _minY - fmaxf(1.0, floorf(avgToAdd));
-            _maxY = _maxY + fmaxf(1.0, floorf(avgToAdd));
-            if(fabs(_minY - _maxY) < 0.1)
-            {
-                _minY -= floorf(_minY/2.0);
-                _maxY += floorf(_maxY/2.0);
-            }
+            if(dataSet.minPoint.y < _minY)
+                _minY = dataSet.minPoint.y;
+        }
+        
+        CGFloat avgToAdd = fabs(_minY - _maxY) / kAverageMinMaxDelimeter;
+        //_minY = _minY - fmaxf(1.0, floorf(avgToAdd));
+        _maxY = _maxY + fmaxf(1.0, floorf(avgToAdd));
+        if(fabs(_minY - _maxY) < 0.1)
+        {
+            _minY -= floorf(_minY/2.0);
+            _maxY += floorf(_maxY/2.0);
         }
     }
 }
@@ -428,20 +466,21 @@ const CGFloat averageMinMaxDelimeter = 10;
 
 - (void) plotGraph
 {
-    if(_dataSets.count)
+    if(_dataSets.count == 0)
     {
-        for (GMDataSet *dataSet in _dataSets)
-        {
-            [dataSet sortPoints];
-            CGContextRef context = UIGraphicsGetCurrentContext();
-            
-            CGContextSetLineWidth(context, defaultLineWidth);
-            CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
-            CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
-            
-            [self plotDataSet: dataSet
-                  withContext: context];
-        }
+        return;
+    }
+    for (GMDataSet *dataSet in _dataSets)
+    {
+        [dataSet sortPoints];
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        CGContextSetLineWidth(context, defaultLineWidth);
+        CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
+        CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
+        
+        [self plotDataSet: dataSet
+              withContext: context];
     }
 }
 
@@ -503,7 +542,7 @@ const CGFloat averageMinMaxDelimeter = 10;
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetLineWidth(context, defaultGridLineWidth);
+    CGContextSetLineWidth(context, kDefaultGridLineWidth);
     
     UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize];
     
@@ -516,7 +555,7 @@ const CGFloat averageMinMaxDelimeter = 10;
             CGFloat x = [self xCoordinatesForValue:_minX + i * amountPerLine];
             CGFloat y = _plotHeight + _chartTopPadding;
             
-            CGRect rect = CGRectMake(x - defaultSmallCircleRadius, y - defaultSmallCircleRadius, 2 * defaultSmallCircleRadius, 2 * defaultSmallCircleRadius);
+            CGRect rect = CGRectMake(x - kDefaultSmallCircleRadius, y -kDefaultSmallCircleRadius, 2 *kDefaultSmallCircleRadius, 2 *kDefaultSmallCircleRadius);
             CGContextAddEllipseInRect(context, rect);
             
             UIColor *textColor = [self colorForDataSet: _dataSets[0]
@@ -551,7 +590,7 @@ const CGFloat averageMinMaxDelimeter = 10;
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetLineWidth(context, defaultGridLineWidth);
+    CGContextSetLineWidth(context, kDefaultGridLineWidth);
     
     UIFont* textFont = [GMChartUtils gm_defaultLightFontWithSize:defaultFontSize - 2.0];
     
@@ -564,7 +603,7 @@ const CGFloat averageMinMaxDelimeter = 10;
             CGFloat x = _chartPadding;
             CGFloat y = [self yCoordinatesForValue:_minY + (i * stepY)];
             
-            CGRect rect = CGRectMake(x - defaultSmallCircleRadius, y - defaultSmallCircleRadius, 2 * defaultSmallCircleRadius, 2 * defaultSmallCircleRadius);
+            CGRect rect = CGRectMake(x -kDefaultSmallCircleRadius, y -kDefaultSmallCircleRadius, 2 *kDefaultSmallCircleRadius, 2 *kDefaultSmallCircleRadius);
             CGContextAddEllipseInRect(context, rect);
             
             NSDictionary *attributes = @{
@@ -572,8 +611,8 @@ const CGFloat averageMinMaxDelimeter = 10;
                                          NSForegroundColorAttributeName : [UIColor gm_grayColor]};
             NSString* legendText = [NSString stringWithFormat:@"%.0f", _minY +(i * stepY) ];
             
-            x += fminf(5.0, [legendText gm_widthForFont: textFont]);
-            [legendText drawAtPoint: CGPointMake(x, y + fminf( 5.0f, [legendText gm_heightForFont: textFont] / 2.0))
+            x += fminf(kTextLabelOffset, [legendText gm_widthForFont: textFont]);
+            [legendText drawAtPoint: CGPointMake(x, y + fminf(kTextLabelOffset, [legendText gm_heightForFont: textFont] / 2.0))
                      withAttributes: attributes];
             
             CGContextDrawPath(context, kCGPathFillStroke);
@@ -586,7 +625,7 @@ const CGFloat averageMinMaxDelimeter = 10;
 - (NSDateFormatter*) defaultDateFormatter
 {
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    [dateFormatter setDateFormat: [defaultDateFormat copy]];
+    [dateFormatter setDateFormat: [kDefaultDateFormat copy]];
     [dateFormatter setTimeZone: [NSTimeZone defaultTimeZone]];
     return dateFormatter;
 }
@@ -620,12 +659,12 @@ const CGFloat averageMinMaxDelimeter = 10;
                                  NSForegroundColorAttributeName : [UIColor gm_grayColor]};
     
     UIColor* legendColor = [_dataSets[index] plotColor] ? [_dataSets[index] plotColor] : [UIColor gm_grayColor];
-    [self drawRounedRectWithRect: CGRectMake(x, y, defaultLegendSquare, defaultLegendSquare)
-                    cornerRaduis: defaultSmallCircleRadius * 2
+    [self drawRounedRectWithRect: CGRectMake(x, y,kDefaultLegendSquare,kDefaultLegendSquare)
+                    cornerRaduis:kDefaultSmallCircleRadius * 2
                            color: legendColor
                       forContext: context];
     
-    [[_dataSets[index] plotName] drawAtPoint: CGPointMake(x + _chartPadding/2.0 + defaultLegendSquare, y + [[_dataSets[index] plotName] gm_heightForFont: textFont] / 2.0)
+    [[_dataSets[index] plotName] drawAtPoint: CGPointMake(x + _chartPadding/2.0 +kDefaultLegendSquare, y + [[_dataSets[index] plotName] gm_heightForFont: textFont] / 2.0)
                               withAttributes: attributes];
 }
 
@@ -661,16 +700,19 @@ const CGFloat averageMinMaxDelimeter = 10;
                         withIndex: (GMPlotDirection) direction
 {
     if(row < 0 || row > _xGridLines)
+    {
         return;
+    }
     
     if(column < 0 || column + 1 > _yGridLines)
+    {
         return;
+    }
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
     CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
     _labelsGrid[column][row] = [NSNumber numberWithInteger:direction];
-    
 }
 
 //=============================================================================
@@ -709,7 +751,16 @@ const CGFloat averageMinMaxDelimeter = 10;
 
 - (CGFloat) height
 {
-    _leftPadding = self.gridSize == GMGridSize18 ? ( ((CGRectGetWidth(self.frame) - 2 * _chartPadding) / defaultXSquaresCount) * 3) : 0.0f;
+    
+    if(self.gridSize == GMGridSize18)
+    {
+        CGFloat yLabelsOffset = (((CGRectGetWidth(self.frame) - 2 * _chartPadding) /kDefaultXSquaresCount) * kDefaultCellsOffset);
+        _leftPadding =  yLabelsOffset;
+    }
+    else
+    {
+        _leftPadding = 0.0f;
+    }
     [self calculateLinesNumber];
     return _plotHeight - self.chartTopPadding;
 }

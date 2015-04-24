@@ -25,7 +25,13 @@
 typedef NS_ENUM(NSUInteger, GMGridSize)
 {
     GMGridSize16 = 0,
-    GMGridSize18 = 1
+    GMGridSize18
+};
+
+typedef NS_ENUM(NSUInteger, GMChartInterpolation)
+{
+    GMChartInterpolationQuad = 0,
+    GMChartInterpolationHermite
 };
 
 @interface GMChartView : UIView
@@ -64,6 +70,7 @@ typedef NS_ENUM(NSUInteger, GMGridSize)
 @property (nonatomic) CGFloat chartBottomPadding;
 @property (nonatomic, weak) NSObject<GMChartViewProtocol>* delegate;
 @property (nonatomic) BOOL isCached;
+@property (nonatomic) GMChartInterpolation chartInterpolation;
 
 - (void) plotChart;
 - (void) setDataSetsWithArray: (NSArray*) dataSets;

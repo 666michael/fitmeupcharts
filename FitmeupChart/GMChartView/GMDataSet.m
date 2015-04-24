@@ -180,10 +180,12 @@
 {
     NSMutableArray* pointsArray = [NSMutableArray new];
     [_dataPoints enumerateObjectsUsingBlock:^(GMDataPoint* dataPoint, NSUInteger idx, BOOL *stop) {
-        if(self.xCoordForValue && self.yCoordForValue)
+        if([self.dataSource respondsToSelector: @selector(xCoordForValue:forDataSet:)] && [self.dataSource respondsToSelector: @selector(yCoordForValue:forDataSet:)])
         {
-            [pointsArray addObject: [NSValue valueWithCGPoint:CGPointMake(self.xCoordForValue(dataPoint.xValue), self.yCoordForValue(dataPoint.yValue))]];
-        }
+            [pointsArray addObject: [NSValue valueWithCGPoint: CGPointMake([self.dataSource xCoordForValue: dataPoint.xValue
+                                                                                                forDataSet: self],
+                                                                           [self.dataSource yCoordForValue: dataPoint.yValue
+                                                                                                forDataSet: self])]];}
                                                                                                   }];
     
     return pointsArray;
@@ -215,10 +217,6 @@
 - (void) aggregateByType: (GMDataAggregation) type
               ForEndDate: (NSDate*) endDate
 {
-    for (GMDataPoint* dataPoint in _dataPoints)
-    {
-        
-    }
 }
 
 //=============================================================================

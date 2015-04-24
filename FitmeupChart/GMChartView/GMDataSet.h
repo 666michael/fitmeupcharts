@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GMDataSetProtocol.h"
 
 typedef NS_ENUM(NSUInteger, GMDataAggregation)
 {
     GMData7Days = 0,
-    GMData7Weeks = 1,
-    GMData7Month = 2,
-    GMData7Years = 3
+    GMData7Weeks,
+    GMData7Month,
+    GMData7Years
 };
 
 @class GMDataPoint;
@@ -31,8 +32,7 @@ typedef NS_ENUM(NSUInteger, GMDataAggregation)
 @property (nonatomic, strong) UIColor* plotColor;
 @property (nonatomic, copy) NSString* plotName;
 
-@property (nonatomic, copy) CGFloat (^xCoordForValue)(CGFloat xValue);
-@property (nonatomic, copy) CGFloat (^yCoordForValue)(CGFloat yValue);
+@property (nonatomic, weak) NSObject<GMDataSetProtocol>* dataSource;
 
 - (id) initWithDataPoints: (NSArray*) dataPoints;
 - (id) initWithDictionary: (NSDictionary*) dictionary;
