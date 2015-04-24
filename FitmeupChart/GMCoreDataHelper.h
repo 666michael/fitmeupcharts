@@ -10,15 +10,17 @@
 #import <CoreData/CoreData.h>
 #import "GMDataSet.h"
 
+//=============================================================================
+
 @interface GMCoreDataHelper :NSObject
 
-@property (nonatomic, readonly) NSManagedObjectContext       *context;
-@property (nonatomic, readonly) NSManagedObjectModel         *model;
+@property (nonatomic, readonly) NSManagedObjectContext *context;
+@property (nonatomic, readonly) NSManagedObjectModel *model;
 @property (nonatomic, readonly) NSPersistentStoreCoordinator *coordinator;
-@property (nonatomic, readonly) NSPersistentStore            *store;
+@property (nonatomic, readonly) NSPersistentStore *store;
 
 - (void)setupCoreData;
 - (void)saveContext;
 
-+ (GMDataSet*) testDataSet;
++ (GMDataSet *) testDataSet;
 @end
