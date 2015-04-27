@@ -127,6 +127,16 @@
 
 //=============================================================================
 
+- (GMDataPoint*) lastDataPoint
+{
+    if(!_dataPoints.count)
+        return nil;
+    
+    return [_dataPoints lastObject];
+}
+
+//=============================================================================
+
 - (CGPoint) minPoint
 {
     return CGPointMake(_minX, _minY);

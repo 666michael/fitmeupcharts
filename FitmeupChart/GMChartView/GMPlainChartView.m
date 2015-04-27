@@ -73,14 +73,29 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
     {
         [dataSet setDataSource: self];
         UIBezierPath *path = nil;
-        if (self.chartInterpolation == GMChartInterpolationHermite)
-        {
-            path = [GMChartUtils gm_interpolateCGPointsWithHermiteForDataSet: [dataSet pointsArray]];
+        
+        switch (self.chartInterpolation) {
+            case GMChartInterpolationHermite:
+            {
+                path = [GMChartUtils gm_interpolateCGPointsWithHermiteForDataSet: [dataSet pointsArray]];
+                break;
+            }
+            case GMChartInterpolationQuad:
+            {
+                path = [GMChartUtils gm_quadCurvedPathWithPoints: [dataSet pointsArray]];
+                break;
+            }
+            case GMChartInterpolationCatmullRom:
+            {
+                path = [GMChartUtils gm_smoothedPathWithGranularity: 5
+                                                         forDataSet: [[dataSet pointsArray] mutableCopy]];
+            }
+                break;
+            default:
+                break;
         }
-        else
-        {
-            path = [GMChartUtils gm_quadCurvedPathWithPoints: [dataSet pointsArray]];
-        }
+        
+        
         if(path)
         {
             [path stroke];

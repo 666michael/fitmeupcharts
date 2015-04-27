@@ -42,6 +42,7 @@ typedef NS_ENUM(NSUInteger, GMDataAggregation)
 - (void) addDataPoint: (GMDataPoint*) dataPoint;
 - (NSInteger) count;
 - (GMDataPoint*) dataPointAtIndex: (NSInteger) index;
+- (GMDataPoint*) lastDataPoint;
 - (CGPoint) minPoint;
 - (CGPoint) maxPoint;
 - (void) sortPoints;

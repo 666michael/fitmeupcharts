@@ -10,11 +10,19 @@
 #import "GMPlainChartView.h"
 #import "GMChartMidgetProtocol.h"
 
+typedef NS_ENUM(NSUInteger, GMChartLastDateType)
+{
+    GMChartLastDateTypeNone = 0,
+    GMChartLastDateTypeCurrentDateWithLastValue,
+    GMChartLastDateTypeCurrentDateWithZeroValue
+};
+
 @interface GMChartMidget : UIView
 
 @property (nonatomic) GMDataSet *totalDataSet;
 @property (nonatomic) NSDate *startDate;
 @property (nonatomic, weak) NSObject<GMChartMidgetProtocol> *delegate;
+@property (nonatomic) GMChartLastDateType lastDateType;
 
 - (void) redrawView;
 

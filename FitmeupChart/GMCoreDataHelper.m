@@ -198,8 +198,8 @@ NSString *storeFilename = @"DataModel.sqlite";
                             @([[dateFormat dateFromString: @"17.08.2014"] timeIntervalSinceReferenceDate]): @64.8,
                             @([[dateFormat dateFromString: @"20.08.2014"] timeIntervalSinceReferenceDate]): @65.1,
                             @([[dateFormat dateFromString: @"21.08.2014"] timeIntervalSinceReferenceDate]): @64.0,
-                            @([[dateFormat dateFromString: @"11.11.2014"] timeIntervalSinceReferenceDate]): @61.5,
-                            @([[NSDate date] timeIntervalSinceReferenceDate]): @0.0};
+                            @([[dateFormat dateFromString: @"11.11.2014"] timeIntervalSinceReferenceDate]): @61.5
+                            };
     GMDataSet *dataSet = [[GMDataSet alloc] initWithDictionary: data1];
 
     

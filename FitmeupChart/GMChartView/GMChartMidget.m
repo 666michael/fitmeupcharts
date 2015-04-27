@@ -12,6 +12,7 @@
 #import "GMPlainChartView.h"
 #import "GMDataSet.h"
 #import "GMCoreDataHelper.h"
+#import "GMDatePoint.h"
 
 //=============================================================================
 
@@ -79,6 +80,7 @@ const CGFloat lineWidth = 2;
     [self.chartView.yAxisLabel setText: @""];
     
     [self.chartView setShowGrid: NO];
+    [self.chartView setShouldAddMinYAverage: NO];
     
     [self.chartView setShouldPlotLabels: NO];
     [self.chartView setShouldUseBezier: YES];
@@ -93,6 +95,22 @@ const CGFloat lineWidth = 2;
     [self.chartView setShouldDrawCirclesOnAxis: YES];
     
     self.totalDataSet = [GMCoreDataHelper testDataSet];
+    self.lastDateType = GMChartLastDateTypeCurrentDateWithLastValue;
+    switch (self.lastDateType)
+    {
+        case GMChartLastDateTypeCurrentDateWithLastValue:
+        {
+            [self.totalDataSet addDataPoint: [[GMDatePoint alloc] initWithDate: [NSDate date]  yValue: [[self.totalDataSet lastDataPoint] yValue]]];
+            break;
+        }
+        case GMChartLastDateTypeCurrentDateWithZeroValue:
+        {
+            [self.totalDataSet addDataPoint: [[GMDatePoint alloc] initWithDate: [NSDate date]  yValue: 0.0f]];
+            break;
+        }
+        default:
+            break;
+    }
     
     [self.chartView setDataSetsWithArray: @[self.totalDataSet]];
     self.chartView.delegate = self;

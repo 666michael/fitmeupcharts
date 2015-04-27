@@ -97,6 +97,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     _minGridSize = kDefaultMinGridSize;
     
     self.showGrid = YES;
+    self.shouldAddMinYAverage = YES;
     
     self.chartPadding = kDefaultChartPadding;
     self.chartTopPadding = kDefaultChartTopPadding;
@@ -452,7 +453,8 @@ static const NSInteger kVerticalLinesStartIndex = -1;
         }
         
         CGFloat avgToAdd = fabs(_minY - _maxY) / kAverageMinMaxDelimeter;
-        //_minY = _minY - fmaxf(1.0, floorf(avgToAdd));
+        if (self.shouldAddMinYAverage)
+            _minY = _minY - fmaxf(1.0, floorf(avgToAdd));
         _maxY = _maxY + fmaxf(1.0, floorf(avgToAdd));
         if(fabs(_minY - _maxY) < 0.1)
         {

@@ -92,7 +92,9 @@ const CGFloat eps = 0.1;
 + (UIBezierPath*) gm_interpolateCGPointsWithHermiteForDataSet: (NSArray*) points
 {
     if ([points count] < 2)
+    {
         return nil;
+    }
     
     NSInteger nCurves = [points count] -1 ;
     
@@ -144,11 +146,13 @@ const CGFloat eps = 0.1;
             prevPt = [points[prevIndex] CGPointValue];
             nextPt = [points[nextIndex] CGPointValue];
             
-            if (index < nCurves-1) {
+            if (index < nCurves-1)
+            {
                 mx = (nextPt.x - curPoint.x)*0.5 + (curPoint.x - prevPt.x)*0.5;
                 my = (nextPt.y - curPoint.y)*0.5 + (curPoint.y - prevPt.y)*0.5;
             }
-            else {
+            else
+            {
                 mx = (curPoint.x - prevPt.x)*0.5;
                 my = (curPoint.y - prevPt.y)*0.5;
             }
@@ -163,6 +167,49 @@ const CGFloat eps = 0.1;
     return path;
 }
 
+//=============================================================================
+
++ (UIBezierPath*) gm_smoothedPathWithGranularity: (NSInteger) granularity
+                                   forDataSet: (NSMutableArray*) points
+{
+    if (points.count < 4)
+    {
+        return [self gm_quadCurvedPathWithPoints: points];
+    }
+    
+    [points insertObject:[points objectAtIndex:0] atIndex:0];
+    [points addObject:[points lastObject]];
+    
+    UIBezierPath *smoothedPath = [UIBezierPath bezierPath];
+    
+    [smoothedPath moveToPoint:[points[0] CGPointValue]];
+    
+    for (NSUInteger index = 1; index < points.count - 2; index++)
+    {
+        CGPoint p0 = [points[index - 1] CGPointValue];
+        CGPoint p1 = [points[index] CGPointValue];
+        CGPoint p2 = [points[index+1] CGPointValue];;
+        CGPoint p3 = [points[index+2] CGPointValue];;
+        
+        for (int i = 1; i < granularity; i++)
+        {
+            float t = (float) i * (1.0f / (float) granularity);
+            float tt = t * t;
+            float ttt = tt * t;
+            
+            CGPoint pi; // intermediate point
+            pi.x = 0.5 * (2*p1.x+(p2.x-p0.x)*t + (2*p0.x-5*p1.x+4*p2.x-p3.x)*tt + (3*p1.x-p0.x-3*p2.x+p3.x)*ttt);
+            pi.y = 0.5 * (2*p1.y+(p2.y-p0.y)*t + (2*p0.y-5*p1.y+4*p2.y-p3.y)*tt + (3*p1.y-p0.y-3*p2.y+p3.y)*ttt);
+            [smoothedPath addLineToPoint:pi];
+        }
+        
+        [smoothedPath addLineToPoint:p2];
+    }
+    
+    [smoothedPath addLineToPoint: [points[points.count - 1] CGPointValue]];
+    
+    return smoothedPath;
+}
 
 //=============================================================================
 
