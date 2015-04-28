@@ -51,4 +51,40 @@
 
 //=============================================================================
 
+- (NSInteger) gm_weeksBetweenDate: (NSDate*) startDate
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components: NSCalendarUnitWeekOfYear
+                                               fromDate: self
+                                                 toDate:startDate
+                                                options: 0];
+    return [components day];
+}
+
+//=============================================================================
+
+- (NSInteger) gm_monthsBetweenDate: (NSDate*) startDate
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components: NSCalendarUnitMonth
+                                               fromDate: self
+                                                 toDate:startDate
+                                                options: 0];
+    return [components day];
+}
+
+//=============================================================================
+
+- (NSInteger) gm_yearsBetweenDate: (NSDate*) startDate
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components: NSCalendarUnitYear
+                                               fromDate: self
+                                                 toDate:startDate
+                                                options: 0];
+    return [components day];
+}
+
+//=============================================================================
+
 @end

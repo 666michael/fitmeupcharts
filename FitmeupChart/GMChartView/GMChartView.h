@@ -57,6 +57,7 @@ typedef NS_ENUM(NSUInteger, GMChartInterpolation)
 
 @property (nonatomic, strong) UIColor* yAxisColor;
 @property (nonatomic, strong) UIColor* xAxisColor;
+@property (nonatomic, strong) UIColor* backgroundColor;
 
 @property (nonatomic, strong) UILabel* yAxisLabel;
 @property (nonatomic, strong) UILabel* xAxisLabel;

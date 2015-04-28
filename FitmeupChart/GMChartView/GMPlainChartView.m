@@ -288,9 +288,13 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
         CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
         CGFloat rightPt = [[dataSet dataPointAtIndex: index + 1] yValue];
         if (curPt < rightPt)
+        {
             direction = GMPointUpToUp;
+        }
         else
+        {
             direction = GMPointDownToDown;
+        }
     }
     
     if (index == [dataSet count]-1)
@@ -298,9 +302,13 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
         CGFloat leftPt = [[dataSet dataPointAtIndex: index - 1] yValue];
         CGFloat curPt = [[dataSet dataPointAtIndex: index] yValue];
         if (leftPt < curPt)
+        {
             direction = GMPointUpToUp;
+        }
         else
+        {
             direction = GMPointDownToDown;
+        }
     }
     
     if (index != 0 && index != [dataSet count]-1 )

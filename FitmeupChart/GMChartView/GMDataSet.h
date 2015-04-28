@@ -11,10 +11,10 @@
 
 typedef NS_ENUM(NSUInteger, GMDataAggregation)
 {
-    GMData7Days = 0,
-    GMData7Weeks,
-    GMData7Month,
-    GMData7Years
+    GMDataAggregationDays = 0,
+    GMDataAggregationWeeks,
+    GMDataAggregationMonth,
+    GMDataAggregationYears
 };
 
 @class GMDataPoint;
@@ -27,6 +27,10 @@ typedef NS_ENUM(NSUInteger, GMDataAggregation)
     CGFloat _minY;
     CGFloat _maxX;
     CGFloat _maxY;
+    NSMutableArray* _days;
+    NSMutableArray* _weeks;
+    NSMutableArray* _months;
+    NSMutableArray* _years;
 }
 
 @property (nonatomic, strong) UIColor* plotColor;
@@ -49,7 +53,8 @@ typedef NS_ENUM(NSUInteger, GMDataAggregation)
 - (NSArray*) pointsArray;
 - (BOOL) hasDataForDate: (NSDate*) date;
 
-- (void) aggregateByType: (GMDataAggregation) type
-              ForEndDate: (NSDate*) endDate;
+- (void) aggregateByType: (GMDataAggregation) type;
 - (NSInteger) daysInSet;
+- (GMDataSet*) dataSetFromDate: (NSDate*) startDate;
+
 @end

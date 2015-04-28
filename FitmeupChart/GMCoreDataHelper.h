@@ -23,4 +23,5 @@
 - (void)saveContext;
 
 + (GMDataSet *) testDataSet;
++ (GMDataSet *) testDataSetWithStartDate: (NSDate*) startDate;
 @end

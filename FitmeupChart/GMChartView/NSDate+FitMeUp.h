@@ -16,5 +16,8 @@
 - (NSDate*) gm_startOfDay;
 - (NSDate*) gm_startOfNextDay;
 - (NSInteger) gm_daysBetweenDate: (NSDate*) startDate;
+- (NSInteger) gm_weeksBetweenDate: (NSDate*) startDate;
+- (NSInteger) gm_monthsBetweenDate: (NSDate*) startDate;
+- (NSInteger) gm_yearsBetweenDate: (NSDate*) startDate;
 
 @end

@@ -117,6 +117,8 @@ const CGFloat lineWidth = 2;
     [self addSubview: self.chartView];
     
     //[self setupImageView];
+    
+    self.flagColor = [UIColor blackColor];
     [self setupTimeFlag];
 }
 
@@ -129,12 +131,12 @@ const CGFloat lineWidth = 2;
     [self addSubview: self.timeFlagView];
     
     self.innerFlagView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - flagRange, 0, flagRange, flagRange)];
-    [self.innerFlagView setBackgroundColor: [UIColor whiteColor]];
+    [self.innerFlagView setBackgroundColor: self.flagColor];
     [self.innerFlagView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
     [self.innerFlagView setTranslatesAutoresizingMaskIntoConstraints: YES];
     
     self.innerLineView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - lineWidth, 0, lineWidth, flagRange/5)];
-    [self.innerLineView setBackgroundColor: [UIColor whiteColor]];
+    [self.innerLineView setBackgroundColor: self.flagColor];
     [self.innerLineView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
     [self.innerLineView setTranslatesAutoresizingMaskIntoConstraints: YES];
     
@@ -251,6 +253,7 @@ const CGFloat lineWidth = 2;
         
         if([touch locationInView: self].x >=  self.chartView.chartPadding + _maxWidth)
         {
+            NSLog(@"max");
             [self setWidthForTimeFlagWithValue: _maxWidth];
             self.startDate =  [startDate dateByAddingTimeInterval: (_maxWidth / [self stepWidth]) * SECS_PER_WEEK];
         }
@@ -262,7 +265,7 @@ const CGFloat lineWidth = 2;
             } else
             {
                 CGFloat countOfSteps = floorf([touch locationInView: self].x / [self stepWidth]);
-                
+                NSLog(@"mid");
                 [self setWidthForTimeFlagWithValue: countOfSteps * [self stepWidth]];
                 self.startDate =  [startDate dateByAddingTimeInterval: countOfSteps * SECS_PER_WEEK];
             }

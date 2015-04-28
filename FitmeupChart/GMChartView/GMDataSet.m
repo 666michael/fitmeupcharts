@@ -30,6 +30,10 @@
         return nil;
     
     _dataPoints = [NSMutableArray arrayWithCapacity: 0];
+    _days = [NSMutableArray arrayWithCapacity: 0];
+    _weeks = [NSMutableArray arrayWithCapacity: 0];
+    _months = [NSMutableArray arrayWithCapacity: 0];
+    _years = [NSMutableArray arrayWithCapacity: 0];
     
     _minX = MAXFLOAT;
     _minY = MAXFLOAT;
@@ -180,8 +184,32 @@
             _minY = pt2.yValue;
         
         return pt1.xValue > pt2.xValue;
-        
     }];
+    [_dataPoints enumerateObjectsWithOptions: NSEnumerationReverse
+                                  usingBlock: ^(id obj, NSUInteger idx, BOOL *stop) {
+                                      [self placeDataPointInGroup: obj];
+                                  }];
+}
+
+#define kElementsToShow 14
+- (void) placeDataPointInGroup: (GMDataPoint*) dataPoint
+{
+    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_daysBetweenDate: [NSDate date]] < kElementsToShow)
+    {
+        [_days addObject: dataPoint];
+    }
+    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_weeksBetweenDate: [NSDate date]] < kElementsToShow)
+    {
+        
+    }
+    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_monthsBetweenDate: [NSDate date]] < kElementsToShow)
+    {
+        
+    }
+    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_yearsBetweenDate: [NSDate date]] < kElementsToShow)
+    {
+        
+    }
 }
 
 //=============================================================================
@@ -215,6 +243,22 @@
     return NO;
 }
 
+- (GMDataSet*) dataSetFromDate: (NSDate*) startDate;
+{
+    NSInteger indexOfDate = [_dataPoints indexOfObjectPassingTest: ^BOOL(GMDataPoint *point, NSUInteger idx, BOOL *stop) {
+        return point.xValue > [startDate timeIntervalSinceReferenceDate];
+    }];
+    if (indexOfDate != NSNotFound)
+    {
+        
+        return [[GMDataSet alloc] initWithDataPoints: @[[_dataPoints subarrayWithRange: NSMakeRange(indexOfDate, _dataPoints.count - indexOfDate)]]];
+    }
+    else
+    {
+        return self;
+    }
+}
+
 //=============================================================================
 
 - (NSInteger) daysInSet
@@ -225,8 +269,25 @@
 //=============================================================================
 
 - (void) aggregateByType: (GMDataAggregation) type
-              ForEndDate: (NSDate*) endDate
 {
+    switch (type)
+    {
+        case GMDataAggregationDays:
+            
+            break;
+        case GMDataAggregationWeeks:
+            
+            break;
+        case GMDataAggregationMonth:
+            
+            break;
+            
+        case GMDataAggregationYears:
+            
+            break;
+        default:
+            break;
+    }    
 }
 
 //=============================================================================

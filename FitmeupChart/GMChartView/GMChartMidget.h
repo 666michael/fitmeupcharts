@@ -23,6 +23,7 @@ typedef NS_ENUM(NSUInteger, GMChartLastDateType)
 @property (nonatomic) NSDate *startDate;
 @property (nonatomic, weak) NSObject<GMChartMidgetProtocol> *delegate;
 @property (nonatomic) GMChartLastDateType lastDateType;
+@property (nonatomic, strong) UIColor *flagColor;
 
 - (void) redrawView;
 

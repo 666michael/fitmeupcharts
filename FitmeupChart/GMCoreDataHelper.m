@@ -202,6 +202,24 @@ NSString *storeFilename = @"DataModel.sqlite";
                             };
     GMDataSet *dataSet = [[GMDataSet alloc] initWithDictionary: data1];
 
+    GMDatePoint *pt12 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-7 * SECS_PER_DAY]  yValue:66.5];
+    GMDatePoint *pt13 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-6 * SECS_PER_DAY]  yValue:65.9];
+    GMDatePoint *pt14 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-5  *SECS_PER_DAY]  yValue:66.1];
+    GMDatePoint *pt15 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-4]  yValue:64.9];
+    GMDataPoint *pt16 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-3 * SECS_PER_DAY]  yValue:64.8];
+    GMDataPoint *pt17 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-2  *SECS_PER_DAY]  yValue:65.1];
+    GMDataPoint *pt18 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-1 * SECS_PER_DAY]  yValue:64.0];
+    GMDataPoint *pt19 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:0 * SECS_PER_DAY]  yValue:65.5];
+    
+    //[dataSet1 addDataPoint:pt11];
+    [dataSet addDataPoint:pt12];
+    [dataSet addDataPoint:pt13];
+    [dataSet addDataPoint:pt14];
+    [dataSet addDataPoint:pt15];
+    [dataSet addDataPoint:pt16];
+    [dataSet addDataPoint:pt17];
+    [dataSet addDataPoint:pt18];
+    [dataSet addDataPoint:pt19];
     
     [dataSet sortPoints];
     [dataSet setPlotColor: [UIColor gm_greenColor]];
@@ -211,4 +229,10 @@ NSString *storeFilename = @"DataModel.sqlite";
 
 //=============================================================================
 
++ (GMDataSet *) testDataSetWithStartDate: (NSDate*) startDate
+{
+    GMDataSet *subSet = [[self testDataSet] dataSetFromDate: startDate];
+    [subSet sortPoints];
+    return subSet;
+}
 @end

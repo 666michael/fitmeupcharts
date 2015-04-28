@@ -73,6 +73,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     
     _xAxisColor = [UIColor gm_grayColor];
     _yAxisColor = [UIColor gm_grayColor];
+    _backgroundColor = [UIColor whiteColor];
     
     _leftPadding = 0.0f;
     
@@ -81,8 +82,8 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     
     [self setupXLabel];
     [self setupYLabel];
-    _xAxisLabel.text = @"month / january";
-    _yAxisLabel.text = @"weight";
+    _xAxisLabel.text = @"";
+    _yAxisLabel.text = @"";
     
     _defaultGridLineColor = [[UIColor lightGrayColor] CGColor];
     
@@ -227,7 +228,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     CGContextAddLineToPoint(context, CGRectGetWidth(self.frame), 0);
     CGContextAddLineToPoint(context, 0, 0);
     
-    CGContextSetFillColorWithColor(context, [UIColor darkGrayColor].CGColor);
+    CGContextSetFillColorWithColor(context, _backgroundColor.CGColor);
     CGContextFillPath(context);
 }
 
@@ -548,7 +549,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     
     UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize];
     
-    NSInteger amountPerLine = SECS_PER_DAY/2;
+    NSInteger amountPerLine = SECS_PER_DAY / 2;
     
     for (NSInteger i = 0; i < _xGridLines; i++)
     {
