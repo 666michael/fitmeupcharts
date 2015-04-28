@@ -185,10 +185,10 @@
         
         return pt1.xValue > pt2.xValue;
     }];
-    [_dataPoints enumerateObjectsWithOptions: NSEnumerationReverse
-                                  usingBlock: ^(id obj, NSUInteger idx, BOOL *stop) {
-                                      [self placeDataPointInGroup: obj];
-                                  }];
+    //[_dataPoints enumerateObjectsWithOptions: NSEnumerationReverse
+    //                              usingBlock: ^(id obj, NSUInteger idx, BOOL *stop) {
+    //                                  [self placeDataPointInGroup: obj];
+    //                              }];
 }
 
 #define kElementsToShow 14
@@ -250,8 +250,7 @@
     }];
     if (indexOfDate != NSNotFound)
     {
-        
-        return [[GMDataSet alloc] initWithDataPoints: @[[_dataPoints subarrayWithRange: NSMakeRange(indexOfDate, _dataPoints.count - indexOfDate)]]];
+        return [[GMDataSet alloc] initWithDataPoints: [_dataPoints subarrayWithRange: NSMakeRange(indexOfDate, _dataPoints.count - indexOfDate)]];
     }
     else
     {

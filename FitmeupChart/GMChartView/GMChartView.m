@@ -113,7 +113,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     [self setChartInterpolation: GMChartInterpolationHermite];
     
     [self setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
-    [self setTranslatesAutoresizingMaskIntoConstraints: YES];
+    [self setTranslatesAutoresizingMaskIntoConstraints: NO];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -410,13 +410,12 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     }
     if (self.isStepUsed)
     {
-        [self drawLowerLegend];
+        //[self drawLowerLegend];
     }
     if (self.shouldDrawCirclesOnAxis)
     {
         [self drawCirclesOnAxisWithContext: UIGraphicsGetCurrentContext()];
     }
-    //[self printGrid];
 }
 
 //=============================================================================

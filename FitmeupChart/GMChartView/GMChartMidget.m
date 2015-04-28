@@ -133,12 +133,12 @@ const CGFloat lineWidth = 2;
     self.innerFlagView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - flagRange, 0, flagRange, flagRange)];
     [self.innerFlagView setBackgroundColor: self.flagColor];
     [self.innerFlagView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
-    [self.innerFlagView setTranslatesAutoresizingMaskIntoConstraints: YES];
+    [self.innerFlagView setTranslatesAutoresizingMaskIntoConstraints: NO];
     
     self.innerLineView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - lineWidth, 0, lineWidth, flagRange/5)];
     [self.innerLineView setBackgroundColor: self.flagColor];
     [self.innerLineView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
-    [self.innerLineView setTranslatesAutoresizingMaskIntoConstraints: YES];
+    [self.innerLineView setTranslatesAutoresizingMaskIntoConstraints: NO];
     
     self.innerFlagView.layer.mask = [self triangleMask];
     [self.timeFlagView addSubview: self.innerFlagView];
@@ -152,7 +152,7 @@ const CGFloat lineWidth = 2;
     //[self.imageCacheView setBackgroundColor: [UIColor redColor]];
     [self.imageCacheView setAlpha: 0.3];
     [self.imageCacheView  setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
-    [self.imageCacheView  setTranslatesAutoresizingMaskIntoConstraints: YES];
+    [self.imageCacheView  setTranslatesAutoresizingMaskIntoConstraints: NO];
     [self addSubview: self.imageCacheView];
     [self.imageCacheView setImage: [self.chartView viewImage]];
 }
@@ -269,10 +269,10 @@ const CGFloat lineWidth = 2;
                 [self setWidthForTimeFlagWithValue: countOfSteps * [self stepWidth]];
                 self.startDate =  [startDate dateByAddingTimeInterval: countOfSteps * SECS_PER_WEEK];
             }
-        if (self.delegate)
+        if (self.delegate && [self.delegate respondsToSelector: @selector(chartMidget:startDateChanged:)])
         {
             [self.delegate chartMidget: self
-                   startDateChanged: self.startDate];
+                      startDateChanged: [self.startDate gm_startOfNextDay]];
         }
         _isResizing = NO;
     }
@@ -313,6 +313,14 @@ andHeightValueChanged: (CGFloat) heightValue
     [self setWidthForTimeFlagWithValue: width - [self stepWidth]];
     [self setMaxWidth];
     [self.imageCacheView setFrame: CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame))];
+    
+    if (self.delegate && [self.delegate respondsToSelector: @selector(chartMidget:startDateChanged:)])
+    {
+        NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
+        self.startDate =  [startDate dateByAddingTimeInterval: ((width - [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK];
+        [self.delegate chartMidget: self
+                  startDateChanged: [self.startDate gm_startOfNextDay]];
+    }
 }
 
 //=============================================================================

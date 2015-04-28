@@ -19,14 +19,23 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DzJ-om-CeK" customClass="GMPlainChartView">
-                                <rect key="frame" x="0.0" y="58" width="320" height="141"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="176"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="141" id="i7q-iv-wjH"/>
+                                    <constraint firstAttribute="height" constant="176" id="i7q-iv-wjH"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7bx-A5-RmB">
+                                <rect key="frame" x="16" y="279" width="297" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="q76-nQ-uk9"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XXy-Un-l7m" customClass="GMChartMidget">
-                                <rect key="frame" x="0.0" y="308" width="320" height="152"/>
+                                <rect key="frame" x="0.0" y="184" width="320" height="152"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="152" id="03e-uw-hKE"/>
@@ -38,15 +47,6 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7bx-A5-RmB">
-                                <rect key="frame" x="16" y="279" width="297" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="q76-nQ-uk9"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -55,10 +55,10 @@
                             <constraint firstItem="XXy-Un-l7m" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="eag-RO-1Tw"/>
                             <constraint firstItem="7bx-A5-RmB" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="f7o-hh-qBp"/>
                             <constraint firstItem="XXy-Un-l7m" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" constant="16" id="h2l-im-Xii"/>
-                            <constraint firstItem="DzJ-om-CeK" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="38" id="hzO-me-abW"/>
+                            <constraint firstItem="DzJ-om-CeK" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="-20" id="hzO-me-abW"/>
                             <constraint firstAttribute="trailingMargin" secondItem="DzJ-om-CeK" secondAttribute="trailing" constant="-16" id="r6J-Xa-kov"/>
-                            <constraint firstItem="XXy-Un-l7m" firstAttribute="top" secondItem="7bx-A5-RmB" secondAttribute="bottom" constant="8" id="ted-kA-1MX"/>
-                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="XXy-Un-l7m" secondAttribute="bottom" constant="20" id="znK-HS-UxY"/>
+                            <constraint firstItem="XXy-Un-l7m" firstAttribute="top" secondItem="7bx-A5-RmB" secondAttribute="bottom" constant="-116" id="ted-kA-1MX"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="XXy-Un-l7m" secondAttribute="bottom" constant="144" id="znK-HS-UxY"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
