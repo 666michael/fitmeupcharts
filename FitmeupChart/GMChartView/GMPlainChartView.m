@@ -85,11 +85,6 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
                 path = [GMChartUtils gm_quadCurvedPathWithPoints: [dataSet pointsArray]];
                 break;
             }
-            case GMChartInterpolationCatmullRom:
-            {
-                path = [GMChartUtils gm_smoothedPathWithGranularity: 5
-                                                         forDataSet: [[dataSet pointsArray] mutableCopy]];
-            }
                 break;
             default:
                 break;

@@ -31,8 +31,7 @@ typedef NS_ENUM(NSUInteger, GMGridSize)
 typedef NS_ENUM(NSUInteger, GMChartInterpolation)
 {
     GMChartInterpolationQuad = 0,
-    GMChartInterpolationHermite,
-    GMChartInterpolationCatmullRom
+    GMChartInterpolationHermite
 };
 
 @interface GMChartView : UIView
