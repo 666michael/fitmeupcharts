@@ -89,6 +89,9 @@ const CGFloat eps = 0.1;
 
 //=============================================================================
 
+//According to http://cubic.org/docs/hermite.htm
+//Improved https://github.com/jnfisher/ios-curve-interpolation/blob/master/Curve%20Interpolation/UIBezierPath%2BInterpolation.h
+
 + (UIBezierPath*) gm_interpolateCGPointsWithHermiteForDataSet: (NSArray*) points
 {
     if ([points count] < 2)
@@ -154,7 +157,7 @@ const CGFloat eps = 0.1;
     
     curPoint = [points[nextIndex] CGPointValue];
     
-    nextIndex = (nextIndex+1)%[points count];
+    nextIndex = (nextIndex+1) % [points count];
     prevIndex = index;
     
     prevPt = [points[prevIndex] CGPointValue];
@@ -164,7 +167,7 @@ const CGFloat eps = 0.1;
     if (index < nCurves-1)
     {
         mx = (nextPt.x - curPoint.x) * 0.5 + (curPoint.x - prevPt.x) * 0.5;
-        my = (nextPt.y - curPoint.y) * 0.5 + (curPoint.y - prevPt.y)  *0.5;
+        my = (nextPt.y - curPoint.y) * 0.5 + (curPoint.y - prevPt.y) * 0.5;
     }
     else
     {
