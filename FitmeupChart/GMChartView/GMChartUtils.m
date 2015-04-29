@@ -14,6 +14,7 @@
 //=============================================================================
 
 const CGFloat eps = 0.1;
+const CGFloat epsLarge= 1.0;
 
 //=============================================================================
 
@@ -133,7 +134,7 @@ const CGFloat eps = 0.1;
     nextPt = [points[nextIndex] CGPointValue];
     endPt = nextPt;
     
-    if ( fabs(curPoint.y - nextPt.y) < 1.0)
+    if ( fabs(curPoint.y - nextPt.y) < epsLarge)
     {
         [path addLineToPoint: nextPt];
         return;
@@ -163,7 +164,7 @@ const CGFloat eps = 0.1;
     prevPt = [points[prevIndex] CGPointValue];
     nextPt = [points[nextIndex] CGPointValue];
     
-    NSInteger nCurves = [points count] -1 ;
+    NSInteger nCurves = [points count] -1;
     if (index < nCurves-1)
     {
         mx = (nextPt.x - curPoint.x) * 0.5 + (curPoint.x - prevPt.x) * 0.5;
