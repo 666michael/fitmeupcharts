@@ -238,7 +238,7 @@ const CGFloat lineWidth = 2;
 {
     CGFloat xCoord = [touch locationInView: self].x;
     
-    return  self.chartView.chartPadding <= xCoord && xCoord <= self.chartView.chartPadding + _maxWidth;
+    return  self.chartView.chartPadding <= xCoord && xCoord <= self.chartView.chartPadding + _maxWidth - [self stepWidth];
 }
 
 //=============================================================================
@@ -249,21 +249,19 @@ const CGFloat lineWidth = 2;
     if (_isResizing)
     {
         UITouch *touch = [touches anyObject];
-        NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
-        
+        NSLog(@"%f %@", [touch locationInView: self].x, self);
         if([touch locationInView: self].x >=  self.chartView.chartPadding + _maxWidth)
         {
-            NSLog(@"max");
-            [self setWidthForTimeFlagWithValue: _maxWidth];
-            self.startDate =  [startDate dateByAddingTimeInterval: (_maxWidth / [self stepWidth]) * SECS_PER_WEEK];
+            [self setMaxFlagValue];
         }
         else
             if([touch locationInView: self].x <=  self.chartView.chartPadding)
             {
-                [self setWidthForTimeFlagWithValue: 0];
-                self.startDate = startDate;
-            } else
+                [self setMinFlagValue];
+            }
+            else
             {
+                NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
                 CGFloat countOfSteps = floorf([touch locationInView: self].x / [self stepWidth]);
                 NSLog(@"mid");
                 [self setWidthForTimeFlagWithValue: countOfSteps * [self stepWidth]];
@@ -276,6 +274,25 @@ const CGFloat lineWidth = 2;
         }
         _isResizing = NO;
     }
+}
+
+//=============================================================================
+
+- (void) setMaxFlagValue
+{
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
+    NSLog(@"max");
+    [self setWidthForTimeFlagWithValue: _maxWidth];
+    self.startDate =  [startDate dateByAddingTimeInterval: (_maxWidth / [self stepWidth]) * SECS_PER_WEEK];
+}
+
+//=============================================================================
+
+- (void) setMinFlagValue
+{
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
+    [self setWidthForTimeFlagWithValue: 0];
+    self.startDate = startDate;
 }
 
 //=============================================================================
