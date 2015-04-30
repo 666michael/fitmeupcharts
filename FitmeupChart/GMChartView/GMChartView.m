@@ -176,7 +176,8 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     {
         NSLog(@"draw");
         [self plotChart];
-        [self plotChartData];
+        if ([_dataSets count])
+            [self plotChartData];
         if ([self.delegate respondsToSelector: @selector(chartView:widthValueChanged:andHeightValueChanged:)])
         {
             [self.delegate chartView: self
@@ -752,8 +753,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
 //=============================================================================
 
 - (CGFloat) height
-{
-    
+{    
     if(self.gridSize == GMGridSize18)
     {
         CGFloat yLabelsOffset = (((CGRectGetWidth(self.frame) - 2 * _chartPadding) /kDefaultXSquaresCount) * kDefaultCellsOffset);

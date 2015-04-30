@@ -264,7 +264,6 @@ const CGFloat lineWidth = 2;
                 NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
                 CGFloat countOfSteps = floorf([touch locationInView: self].x / [self stepWidth]);
                 NSLog(@"mid");
-                [self setWidthForTimeFlagWithValue: countOfSteps * [self stepWidth]];
                 self.startDate =  [startDate dateByAddingTimeInterval: countOfSteps * SECS_PER_WEEK];
             }
         if (self.delegate && [self.delegate respondsToSelector: @selector(chartMidget:startDateChanged:)])
@@ -315,7 +314,7 @@ andHeightValueChanged: (CGFloat) heightValue
 {
     [self setInitialWidth: widthValue
                 andHeight: heightValue];
-    [chartView setIsCached: YES];
+    //[chartView setIsCached: YES];
 }
 
 //=============================================================================

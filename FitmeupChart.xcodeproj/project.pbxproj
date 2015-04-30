@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		331503701AB6CE1800F2FC79 /* UIColor+FitMeUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3315036F1AB6CE1800F2FC79 /* UIColor+FitMeUp.m */; };
+		3342DD401AF2147D008836ED /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3342DD3E1AF2147D008836ED /* Default-568h@2x.png */; };
 		3355055D1ABC50B600193BA2 /* NSDate+FitMeUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3355055C1ABC50B600193BA2 /* NSDate+FitMeUp.m */; };
 		338C85501AB2EA100025D2E4 /* NSString+FitMeUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 338C854F1AB2EA100025D2E4 /* NSString+FitMeUp.m */; };
 		338DAA001AB185AE00594ED0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DA9FF1AB185AE00594ED0 /* main.m */; };
@@ -47,6 +48,7 @@
 /* Begin PBXFileReference section */
 		3315036E1AB6CE1800F2FC79 /* UIColor+FitMeUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+FitMeUp.h"; path = "GMChartView/UIColor+FitMeUp.h"; sourceTree = "<group>"; };
 		3315036F1AB6CE1800F2FC79 /* UIColor+FitMeUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+FitMeUp.m"; path = "GMChartView/UIColor+FitMeUp.m"; sourceTree = "<group>"; };
+		3342DD3F1AF2147D008836ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Base; path = "Base.lproj/Default-568h@2x.png"; sourceTree = "<group>"; };
 		3355055B1ABC50B600193BA2 /* NSDate+FitMeUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+FitMeUp.h"; path = "GMChartView/NSDate+FitMeUp.h"; sourceTree = "<group>"; };
 		3355055C1ABC50B600193BA2 /* NSDate+FitMeUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+FitMeUp.m"; path = "GMChartView/NSDate+FitMeUp.m"; sourceTree = "<group>"; };
 		338C854E1AB2EA100025D2E4 /* NSString+FitMeUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+FitMeUp.h"; path = "GMChartView/NSString+FitMeUp.h"; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 		338DAA271AB1863800594ED0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3342DD3E1AF2147D008836ED /* Default-568h@2x.png */,
 				338DAA0A1AB185AE00594ED0 /* Main.storyboard */,
 				338DAA0D1AB185AE00594ED0 /* Images.xcassets */,
 				338DAA0F1AB185AE00594ED0 /* LaunchScreen.xib */,
@@ -356,6 +359,7 @@
 				33EEABD71ADBA9420045DAB1 /* GMPlainChartViewController.xib in Resources */,
 				338DAA0C1AB185AE00594ED0 /* Main.storyboard in Resources */,
 				338DAA111AB185AE00594ED0 /* LaunchScreen.xib in Resources */,
+				3342DD401AF2147D008836ED /* Default-568h@2x.png in Resources */,
 				338DAA0E1AB185AE00594ED0 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -416,6 +420,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		3342DD3E1AF2147D008836ED /* Default-568h@2x.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3342DD3F1AF2147D008836ED /* Base */,
+			);
+			name = "Default-568h@2x.png";
+			sourceTree = "<group>";
+		};
 		338DAA0A1AB185AE00594ED0 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

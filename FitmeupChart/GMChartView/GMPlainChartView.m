@@ -349,7 +349,7 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
     
     if (path == GMPointUpToDown)
     {
-        return y - (space>stepY/2.0 ? stepY : 0);
+        return y - (space>stepY/2.0 ? stepY : stepY);
     }
     
     if (path == GMPointDownToUp)
