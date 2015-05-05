@@ -52,6 +52,7 @@ typedef NS_ENUM(NSUInteger, GMChartInterpolation)
     CGFloat _leftPadding;
     
     NSMutableArray* _labelsGrid;
+    NSMutableDictionary *_tileCache;
 }
 
 @property (nonatomic, strong) UIColor* yAxisColor;
@@ -70,7 +71,6 @@ typedef NS_ENUM(NSUInteger, GMChartInterpolation)
 @property (nonatomic) CGFloat chartTopPadding;
 @property (nonatomic) CGFloat chartBottomPadding;
 @property (nonatomic, weak) NSObject<GMChartViewProtocol>* delegate;
-@property (nonatomic) BOOL isCached;
 @property (nonatomic) GMChartInterpolation chartInterpolation;
 @property (nonatomic) BOOL shouldAddMinYAverage;
 
@@ -99,6 +99,6 @@ typedef NS_ENUM(NSUInteger, GMChartInterpolation)
 - (void) drawCirclesOnAxisWithContext: (CGContextRef) context;
 - (CGFloat) height;
 - (CGFloat) width;
-- (UIImage*) viewImage;
+- (void) clearTilesCache;
 
 @end

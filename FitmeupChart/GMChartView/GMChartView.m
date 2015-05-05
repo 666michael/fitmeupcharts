@@ -120,6 +120,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
                                              selector: @selector(didRotateDeviceChangeNotification:)
                                                  name: UIDeviceOrientationDidChangeNotification
                                                object: nil];
+    _tileCache = [[NSMutableDictionary alloc] init];
 }
 
 //=============================================================================
@@ -156,6 +157,15 @@ static const NSInteger kVerticalLinesStartIndex = -1;
 - (void) setDataSetsWithArray: (NSArray*) dataSets
 {
     _dataSets = [dataSets copy];
+    [self clearTilesCache];
+    [self setNeedsDisplay];
+}
+
+//=============================================================================
+
+- (void) clearTilesCache
+{
+    [_tileCache removeAllObjects];
 }
 
 //=============================================================================
@@ -172,19 +182,70 @@ static const NSInteger kVerticalLinesStartIndex = -1;
 
 - (void) drawRect: (CGRect) rect
 {
-    if (!self.isCached)
+    UIImage *tileImage = [self cacheForRect: rect];
+    
+    if (tileImage)
     {
-        NSLog(@"draw");
-        [self plotChart];
-        if ([_dataSets count])
-            [self plotChartData];
-        if ([self.delegate respondsToSelector: @selector(chartView:widthValueChanged:andHeightValueChanged:)])
-        {
-            [self.delegate chartView: self
-                   widthValueChanged: _plotWidth
-               andHeightValueChanged: _plotHeight];
-        }
+        CGContextDrawImage(UIGraphicsGetCurrentContext(), rect, tileImage.CGImage);
+        return;
     }
+    
+    [self prepareImageForRect: rect];
+    
+    NSLog(@"draw");
+    [self plotChart];
+    if ([_dataSets count])
+        [self plotChartData];
+    if ([self.delegate respondsToSelector: @selector(chartView:widthValueChanged:andHeightValueChanged:)])
+    {
+        [self.delegate chartView: self
+               widthValueChanged: _plotWidth
+           andHeightValueChanged: _plotHeight];
+    }
+    
+    [self saveAndDrawImage: tileImage
+                   forRect: rect];
+}
+
+//=============================================================================
+
+- (UIImage*) cacheForRect: (CGRect) rect
+{
+    return [_tileCache objectForKey: [self cacheKeyForRect: rect]];
+}
+
+//=============================================================================
+
+- (NSString*) cacheKeyForRect: (CGRect) rect
+{
+   return [NSString stringWithFormat:@"%f%f%f%f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height];
+}
+
+//=============================================================================
+
+- (void) prepareImageForRect: (CGRect) rect
+{
+    // prepare to draw the tile image
+    UIGraphicsBeginImageContextWithOptions(rect.size, YES, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    // filp coords
+    CGContextTranslateCTM(context, 0, rect.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+}
+
+//=============================================================================
+
+- (void) saveAndDrawImage: (UIImage*) tileImage
+                  forRect: (CGRect) rect
+{
+    tileImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    [_tileCache setObject: tileImage
+                   forKey: [self cacheKeyForRect: rect]];
+    
+    CGContextDrawImage(UIGraphicsGetCurrentContext(), rect, tileImage.CGImage);
 }
 
 //=============================================================================
@@ -242,7 +303,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     
     CGFloat xTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
     CGFloat yTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
-
+    
     [_xAxisLabel setFrame: CGRectMake(_chartPadding, _plotHeight + _chartTopPadding + xTextHeight / 2.0, _plotWidth, xTextHeight)];
     [_yAxisLabel setFrame: CGRectMake(_chartPadding, _chartTopPadding - yTextHeight * kTextScaleHeight, _plotWidth, yTextHeight)];
 }
@@ -279,7 +340,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     _yGridLines = fixedCount;
     
     _labelsGrid = [NSMutableArray array];
-
+    
     NSInteger count = 0;
     if (self.gridSize == GMGridSize18)
     {
@@ -753,7 +814,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
 //=============================================================================
 
 - (CGFloat) height
-{    
+{
     if(self.gridSize == GMGridSize18)
     {
         CGFloat yLabelsOffset = (((CGRectGetWidth(self.frame) - 2 * _chartPadding) /kDefaultXSquaresCount) * kDefaultCellsOffset);

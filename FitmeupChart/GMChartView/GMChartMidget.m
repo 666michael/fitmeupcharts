@@ -75,6 +75,7 @@ const CGFloat lineWidth = 2;
 - (void) setupDefaultViewLayout
 {
     self.chartView = [[GMPlainChartView alloc] initWithFrame: self.bounds];
+    [self addSubview: self.chartView];
     [self.chartView setChartInterpolation: GMChartInterpolationQuad];
     [self.chartView.xAxisLabel setText: @""];
     [self.chartView.yAxisLabel setText: @""];
@@ -114,7 +115,6 @@ const CGFloat lineWidth = 2;
     
     [self.chartView setDataSetsWithArray: @[self.totalDataSet]];
     self.chartView.delegate = self;
-    [self addSubview: self.chartView];
     
     //[self setupImageView];
     
@@ -314,7 +314,6 @@ andHeightValueChanged: (CGFloat) heightValue
 {
     [self setInitialWidth: widthValue
                 andHeight: heightValue];
-    //[chartView setIsCached: YES];
 }
 
 //=============================================================================

@@ -17,5 +17,4 @@
 - (void)    chartView: (GMChartView*) chartView
     widthValueChanged: (CGFloat) widthValue
 andHeightValueChanged: (CGFloat) heightValue;
-
 @end
