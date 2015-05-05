@@ -356,6 +356,11 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
     {
         return y +  (space<stepY/2.0 ? stepY : 0);
     }
+    
+    if (path == GMPointNone)
+    {
+        return y + stepY;
+    }
     return y;
 }
 

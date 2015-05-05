@@ -30,6 +30,13 @@
 
 - (void)initChart
 {
+    if (!self.chartView)
+    {
+        self.chartView = [GMChartFactory plainChartWithFrame: CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 214.0f)]
+        ;
+        [self.view addSubview: self.chartView];
+    }
+    
     [self.chartView setChartInterpolation: GMChartInterpolationHermite];
     [self.chartView.xAxisLabel setText: @""];
     [self.chartView.yAxisLabel setText: @""];
@@ -45,7 +52,7 @@
     [self.chartView setIsStepUsed: YES];
     [self.chartView setGridSize: GMGridSize18];
     [self.chartView setShouldDrawCirclesOnAxis: NO];
-    //[self.chartView setDataSetsWithArray: @[dataSet1]];
+    [self.chartView setBackgroundColor: [UIColor whiteColor]];
     
     [self.chartMidget setDelegate: self];
 }
@@ -82,7 +89,7 @@
     startDateChanged: (NSDate*) date
 {
     [self.currentDateLabel setText: [NSString stringWithFormat: @"%@", date]];
-    //[self.chartView setDataSetsWithArray: @[[GMCoreDataHelper testDataSetWithStartDate: date]]];
+    [self.chartView setDataSetsWithArray: @[[GMCoreDataHelper testDataSetWithStartDate: date]]];
 }
 
 @end

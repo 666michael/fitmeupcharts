@@ -185,10 +185,6 @@
         
         return pt1.xValue > pt2.xValue;
     }];
-    //[_dataPoints enumerateObjectsWithOptions: NSEnumerationReverse
-    //                              usingBlock: ^(id obj, NSUInteger idx, BOOL *stop) {
-    //                                  [self placeDataPointInGroup: obj];
-    //                              }];
 }
 
 #define kElementsToShow 14

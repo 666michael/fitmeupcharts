@@ -154,7 +154,6 @@ const CGFloat lineWidth = 2;
     [self.imageCacheView  setAutoresizingMask: (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
     [self.imageCacheView  setTranslatesAutoresizingMaskIntoConstraints: NO];
     [self addSubview: self.imageCacheView];
-    [self.imageCacheView setImage: [self.chartView viewImage]];
 }
 
 //=============================================================================
@@ -342,7 +341,7 @@ andHeightValueChanged: (CGFloat) heightValue
 
 - (void) redrawView
 {
-    [self.chartView setIsCached: NO];
+    [self.chartView clearTilesCache];
     [self.chartView setNeedsDisplay];
 }
 
