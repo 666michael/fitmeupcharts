@@ -219,20 +219,36 @@
         [self placeDataPointInGroup: pt1];
         return pt1.xValue > pt2.xValue;
     }];
-    
+    NSMutableArray *groups = [NSMutableArray arrayWithCapacity: kElementsToShow];
     if ([[_weeks allKeys] count] < kElementsToShow)
     {
-        
+        for (NSDictionary *data in [_weeks allValues])
+        {
+            [groups addObject: [[GMDataPoint alloc] initWithXValue: [[data objectForKey: @"date"] integerValue]
+                                                            yValue: [[data objectForKey: @"value"] floatValue] / [[data objectForKey: @"count"] floatValue]]];
+        }
     }
+    else
     if ([[_months allKeys] count] < kElementsToShow)
     {
-        
-    }
+        for (NSDictionary *data in [_months allValues])
+        {
+            [groups addObject: [[GMDataPoint alloc] initWithXValue: [[data objectForKey: @"date"] integerValue]
+                                                            yValue: [[data objectForKey: @"value"] floatValue] / [[data objectForKey: @"count"] floatValue]]];
+        }
+    } else
     if ([[_years allKeys] count] < kElementsToShow)
     {
-        
+        for (NSDictionary *data in [_years allValues])
+        {
+            [groups addObject: [[GMDataPoint alloc] initWithXValue: [[data objectForKey: @"date"] integerValue]
+                                                            yValue: [[data objectForKey: @"value"] floatValue] / [[data objectForKey: @"count"] floatValue]]];
+        }
     }
-    return nil;
+    GMDataSet *dataSet = [[GMDataSet alloc] initWithDataPoints: groups];
+    [dataSet setPlotColor: self.plotColor];
+    [dataSet setPlotName: self.plotName];
+    return dataSet;
 }
 
 - (void) placeDataPointInGroup: (GMDataPoint*) dataPoint
@@ -391,4 +407,16 @@
 
 //=============================================================================
 
+
+- (NSString*) description
+{
+    NSString *points = @"";
+    for (GMDataPoint *point in _dataPoints)
+    {
+        points = [points stringByAppendingFormat: @"%@\n", point];
+    }
+    return points;
+}
+
+//=============================================================================
 @end
