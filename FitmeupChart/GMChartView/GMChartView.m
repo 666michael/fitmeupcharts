@@ -187,7 +187,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     if (tileImage)
     {
         CGContextDrawImage(UIGraphicsGetCurrentContext(), rect, tileImage.CGImage);
-        //return;
+        return;
     }
     
     [self prepareImageForRect: rect];

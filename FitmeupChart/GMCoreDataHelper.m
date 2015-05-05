@@ -201,17 +201,32 @@ NSString *storeFilename = @"DataModel.sqlite";
                             @([[dateFormat dateFromString: @"11.11.2014"] timeIntervalSinceReferenceDate]): @61.5
                             };
     GMDataSet *dataSet = [[GMDataSet alloc] initWithDictionary: data1];
-
-    GMDatePoint *pt12 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-7 * SECS_PER_DAY]  yValue:66.5];
-    GMDatePoint *pt13 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-6 * SECS_PER_DAY]  yValue:65.9];
+    GMDatePoint *pt5 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-14 * SECS_PER_DAY]  yValue:62.0];
+    GMDatePoint *pt6 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-13 * SECS_PER_DAY]  yValue:63.0];
+    GMDatePoint *pt7 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-12 * SECS_PER_DAY]  yValue:64.0];
+    GMDatePoint *pt8 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-11 * SECS_PER_DAY]  yValue:63.0];
+    GMDatePoint *pt9 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-10 * SECS_PER_DAY]  yValue:65.0];
+    GMDatePoint *pt10 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-9 * SECS_PER_DAY]  yValue:63.0];
+    GMDatePoint *pt11 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-8 * SECS_PER_DAY]  yValue:64.0];
+    GMDatePoint *pt12 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-7 * SECS_PER_DAY]  yValue:63.0];
+    
+    GMDatePoint *pt13 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-6 * SECS_PER_DAY]  yValue:65.4];
     GMDatePoint *pt14 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-5  *SECS_PER_DAY]  yValue:66];
     GMDatePoint *pt15 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-4 * SECS_PER_DAY]  yValue:65];
     GMDataPoint *pt16 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-3 * SECS_PER_DAY]  yValue:65];
     GMDataPoint *pt17 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-2  *SECS_PER_DAY]  yValue:65.0];
     GMDataPoint *pt18 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:-1 * SECS_PER_DAY]  yValue:64.0];
-    GMDataPoint *pt19 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:0 * SECS_PER_DAY]  yValue:66];
+    GMDataPoint *pt19 = [[GMDatePoint alloc] initWithDate:[NSDate dateWithTimeIntervalSinceNow:0 * SECS_PER_DAY]  yValue:70];
     
     //[dataSet1 addDataPoint:pt11];
+    [dataSet addDataPoint:pt5];
+    [dataSet addDataPoint:pt6];
+    [dataSet addDataPoint:pt7];
+    [dataSet addDataPoint:pt8];
+    [dataSet addDataPoint:pt9];
+    [dataSet addDataPoint:pt10];
+    [dataSet addDataPoint:pt11];
+    
     [dataSet addDataPoint:pt12];
     [dataSet addDataPoint:pt13];
     [dataSet addDataPoint:pt14];

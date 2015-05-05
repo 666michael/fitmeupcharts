@@ -28,9 +28,9 @@ typedef NS_ENUM(NSUInteger, GMDataAggregation)
     CGFloat _maxX;
     CGFloat _maxY;
     NSMutableArray* _days;
-    NSMutableArray* _weeks;
-    NSMutableArray* _months;
-    NSMutableArray* _years;
+    NSMutableDictionary* _weeks;
+    NSMutableDictionary* _months;
+    NSMutableDictionary* _years;
 }
 
 @property (nonatomic, strong) UIColor* plotColor;
@@ -56,5 +56,6 @@ typedef NS_ENUM(NSUInteger, GMDataAggregation)
 - (void) aggregateByType: (GMDataAggregation) type;
 - (NSInteger) daysInSet;
 - (GMDataSet*) dataSetFromDate: (NSDate*) startDate;
+- (GMDataSet*) sortedGroups;
 
 @end

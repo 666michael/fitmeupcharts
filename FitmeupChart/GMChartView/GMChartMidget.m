@@ -324,16 +324,16 @@ andHeightValueChanged: (CGFloat) heightValue
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
     [self.innerFlagView setFrame: CGRectMake(width - flagRange, 0, flagRange, flagRange)];
     [self.innerLineView setFrame: CGRectMake(width - lineWidth, 0, lineWidth, height)];
-    [self setWidthForTimeFlagWithValue: width - [self stepWidth]];
+    [self setWidthForTimeFlagWithValue: width - [self stepWidth]*2.0];
     [self setMaxWidth];
     [self.imageCacheView setFrame: CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame))];
     
     if (self.delegate && [self.delegate respondsToSelector: @selector(chartMidget:startDateChanged:)])
     {
         NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
-        self.startDate =  [startDate dateByAddingTimeInterval: ((width - [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK];
+        self.startDate =  [startDate dateByAddingTimeInterval: ((width - [self stepWidth]*2.0) / [self stepWidth]) * SECS_PER_WEEK];
         [self.delegate chartMidget: self
-                  startDateChanged: [self.startDate gm_startOfNextDay]];
+                  startDateChanged: [self.startDate gm_startOfDay]];
     }
 }
 

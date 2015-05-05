@@ -20,4 +20,7 @@
 - (NSInteger) gm_monthsBetweenDate: (NSDate*) startDate;
 - (NSInteger) gm_yearsBetweenDate: (NSDate*) startDate;
 
+- (NSInteger) gm_weekNumber;
+- (NSInteger) gm_monthNumber;
+- (NSInteger) gm_yearNumber;
 @end

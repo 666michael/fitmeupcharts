@@ -36,7 +36,7 @@
 
 - (NSString*) description
 {
-    return [NSString stringWithFormat: @"x: %f y: %f", super.xValue, super.yValue];
+    return [NSString stringWithFormat: @"x: %@ y: %f", [NSDate dateWithTimeIntervalSinceReferenceDate: super.xValue], super.yValue];
 }
 
 //=============================================================================

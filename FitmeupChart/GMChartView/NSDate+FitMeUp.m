@@ -58,7 +58,7 @@
                                                fromDate: self
                                                  toDate:startDate
                                                 options: 0];
-    return [components day];
+    return [components weekOfYear];
 }
 
 //=============================================================================
@@ -70,7 +70,7 @@
                                                fromDate: self
                                                  toDate:startDate
                                                 options: 0];
-    return [components day];
+    return [components month];
 }
 
 //=============================================================================
@@ -82,9 +82,36 @@
                                                fromDate: self
                                                  toDate:startDate
                                                 options: 0];
-    return [components day];
+    return [components year];
 }
 
 //=============================================================================
 
+- (NSInteger) gm_weekNumber
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components: NSCalendarUnitWeekOfYear
+                                               fromDate: self];
+    return [components weekOfYear];
+}
+
+//=============================================================================
+
+- (NSInteger) gm_monthNumber
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components: NSCalendarUnitMonth
+                                               fromDate: self];
+    return [components month];
+}
+
+//=============================================================================
+
+- (NSInteger) gm_yearNumber
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components: NSCalendarUnitYear
+                                               fromDate: self];
+    return [components year];
+}
 @end

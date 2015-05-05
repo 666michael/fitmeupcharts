@@ -31,9 +31,9 @@
     
     _dataPoints = [NSMutableArray arrayWithCapacity: 0];
     _days = [NSMutableArray arrayWithCapacity: 0];
-    _weeks = [NSMutableArray arrayWithCapacity: 0];
-    _months = [NSMutableArray arrayWithCapacity: 0];
-    _years = [NSMutableArray arrayWithCapacity: 0];
+    _weeks = [NSMutableDictionary dictionaryWithCapacity: 0];
+    _months = [NSMutableDictionary dictionaryWithCapacity: 0];
+    _years = [NSMutableDictionary dictionaryWithCapacity: 0];
     
     _minX = MAXFLOAT;
     _minY = MAXFLOAT;
@@ -182,12 +182,59 @@
         
         if(pt2.yValue < _minY)
             _minY = pt2.yValue;
-        
         return pt1.xValue > pt2.xValue;
     }];
 }
 
-#define kElementsToShow 14
+#define kElementsToShow 7
+- (GMDataSet*) sortedGroups
+{
+    NSLog(@"Total points %d", [_dataPoints count]);
+    [_dataPoints sortUsingComparator: ^NSComparisonResult(GMDataPoint* pt1, GMDataPoint* pt2) {
+        
+        if(pt1.xValue > _maxX)
+            _maxX = pt1.xValue;
+        
+        if(pt1.xValue < _minX)
+            _minX = pt1.xValue;
+        
+        if(pt2.xValue > _maxX)
+            _maxX = pt2.xValue;
+        
+        if(pt2.xValue < _minX)
+            _minX = pt2.xValue;
+        
+        if(pt1.yValue > _maxY)
+            _maxY = pt1.yValue;
+        
+        if(pt1.yValue < _minY)
+            _minY = pt1.yValue;
+        
+        if(pt2.yValue > _maxY)
+            _maxY = pt2.yValue;
+        
+        if(pt2.yValue < _minY)
+            _minY = pt2.yValue;
+        
+        [self placeDataPointInGroup: pt1];
+        return pt1.xValue > pt2.xValue;
+    }];
+    
+    if ([[_weeks allKeys] count] < kElementsToShow)
+    {
+        
+    }
+    if ([[_months allKeys] count] < kElementsToShow)
+    {
+        
+    }
+    if ([[_years allKeys] count] < kElementsToShow)
+    {
+        
+    }
+    return nil;
+}
+
 - (void) placeDataPointInGroup: (GMDataPoint*) dataPoint
 {
     if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_daysBetweenDate: [NSDate date]] < kElementsToShow)
@@ -196,15 +243,72 @@
     }
     if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_weeksBetweenDate: [NSDate date]] < kElementsToShow)
     {
-        
+        NSInteger weekNumber = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_weekNumber];
+        if (![_weeks objectForKey: @(weekNumber)])
+        {
+            [_weeks setObject: [@{
+                                 @"value" : @([dataPoint yValue]),
+                                 @"date" : @([dataPoint xValue]),
+                                 @"count" : @1} mutableCopy]
+                        forKey: @(weekNumber)];
+        }
+        else
+        {
+            NSMutableDictionary *dict = [_weeks objectForKey: @(weekNumber)];
+            
+            [dict setObject: @([[dict objectForKey: @"count"] integerValue]+1)
+                     forKey: @"count"];
+            [dict setObject: @([[dict objectForKey: @"value"] integerValue]+[dataPoint yValue])
+                     forKey: @"value"];
+            [_weeks setObject: dict
+                     forKey: @(weekNumber)];
+        }
     }
     if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_monthsBetweenDate: [NSDate date]] < kElementsToShow)
     {
-        
+        NSInteger monthNumber = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_monthNumber];
+        if (![_months objectForKey: @(monthNumber)])
+        {
+            [_months setObject: [@{
+                                  @"value" : @([dataPoint yValue]),
+                                  @"date" : @([dataPoint xValue]),
+                                  @"count" : @1} mutableCopy]
+                       forKey: @(monthNumber)];
+        }
+        else
+        {
+            NSMutableDictionary *dict = [_months objectForKey: @(monthNumber)];
+            
+            [dict setObject: @([[dict objectForKey: @"count"] integerValue]+1)
+                     forKey: @"count"];
+            [dict setObject: @([[dict objectForKey: @"value"] integerValue]+[dataPoint yValue])
+                     forKey: @"value"];
+            [_months setObject: dict
+                       forKey: @(monthNumber)];
+        }
     }
     if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_yearsBetweenDate: [NSDate date]] < kElementsToShow)
     {
-        
+        NSInteger yearNumber = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_yearNumber];
+        if (![_years objectForKey: @(yearNumber)])
+        {
+            [_years setObject: [@{
+                                   @"value" : @([dataPoint yValue]),
+                                   @"date" : @([dataPoint xValue]),
+                                   @"count" : @1} mutableCopy]
+                        forKey: @(yearNumber)];
+        }
+        else
+        {
+            NSMutableDictionary *dict = [_years objectForKey: @(yearNumber)];
+            
+            [dict setObject: @([[dict objectForKey: @"count"] integerValue]+1)
+                     forKey: @"count"];
+            [dict setObject: @([[dict objectForKey: @"value"] integerValue]+[dataPoint yValue])
+                     forKey: @"value"];
+            [_years setObject: dict
+                        forKey: @(yearNumber)];
+        }
     }
 }
 
