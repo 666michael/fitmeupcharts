@@ -15,6 +15,10 @@
 
 //=============================================================================
 
+#define kElementsToShow 7
+
+//=============================================================================
+
 @implementation GMDataSet
 
 //=============================================================================
@@ -153,7 +157,7 @@
     return CGPointMake(_maxX, _maxY);
 }
 
-//=============================================================================
+
 
 - (void) sortPoints
 {
@@ -186,9 +190,15 @@
     }];
 }
 
-#define kElementsToShow 7
+//=============================================================================
+
 - (GMDataSet*) sortedGroups
 {
+    [_days removeAllObjects];
+    [_weeks removeAllObjects];
+    [_months removeAllObjects];
+    [_years removeAllObjects];
+    
     NSLog(@"Total points %d", [_dataPoints count]);
     [_dataPoints sortUsingComparator: ^NSComparisonResult(GMDataPoint* pt1, GMDataPoint* pt2) {
         
@@ -220,6 +230,11 @@
         return pt1.xValue > pt2.xValue;
     }];
     NSMutableArray *groups = [NSMutableArray arrayWithCapacity: kElementsToShow];
+    if ([_days count] < kElementsToShow)
+    {
+        [groups addObjectsFromArray: _days];
+    }
+    else
     if ([[_weeks allKeys] count] < kElementsToShow)
     {
         for (NSDictionary *data in [_weeks allValues])
@@ -251,11 +266,14 @@
     return dataSet;
 }
 
+#warning Refactore
+//=============================================================================
 - (void) placeDataPointInGroup: (GMDataPoint*) dataPoint
 {
     if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_daysBetweenDate: [NSDate date]] < kElementsToShow)
     {
-        [_days addObject: dataPoint];
+        if(![_days containsObject: dataPoint])
+            [_days addObject: dataPoint];
     }
     if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_weeksBetweenDate: [NSDate date]] < kElementsToShow)
     {
