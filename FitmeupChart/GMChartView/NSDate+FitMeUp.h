@@ -23,4 +23,8 @@
 - (NSInteger) gm_weekNumber;
 - (NSInteger) gm_monthNumber;
 - (NSInteger) gm_yearNumber;
+- (NSDate*) gm_startOfWeek;
++ (NSDate*) gm_dateByWeekNumber: (NSInteger) weekNumber
+                        andYear: (NSInteger) yearNumber;
+
 @end

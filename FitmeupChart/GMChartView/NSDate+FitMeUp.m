@@ -114,4 +114,39 @@
                                                fromDate: self];
     return [components year];
 }
+
+//=============================================================================
+
+- (NSDate*) gm_startOfWeek
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    
+    NSDateComponents *components = [calendar components: NSWeekdayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit
+                                               fromDate: self];
+    
+    NSInteger dayofweek = [[[NSCalendar currentCalendar] components: NSWeekdayCalendarUnit
+                                                           fromDate: self] weekday];
+    
+    [components setDay:([components day] - ((dayofweek) - 2))];
+    
+    return [calendar dateFromComponents: components];
+}
+
+//=============================================================================
+
++ (NSDate*) gm_dateByWeekNumber: (NSInteger) weekNumber
+                        andYear: (NSInteger) yearNumber
+{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier: NSGregorianCalendar];
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+    
+    [components setYear: yearNumber];
+    [components setWeekOfYear: weekNumber];
+    [components setWeekday: 1];
+    
+    return [calendar dateFromComponents: components];
+}
+
+//=============================================================================
+
 @end

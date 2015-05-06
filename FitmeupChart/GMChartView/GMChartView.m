@@ -570,7 +570,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     if (self.isStepUsed)
     {
         CGFloat stepX = (_plotWidth / _xGridLines) * 2;
-        res = stepX * ((xValue - _minX) / SECS_PER_DAY);
+        res = stepX * ((xValue - _minX) / (SECS_PER_DAY*7));
     }
     else
     {
@@ -610,7 +610,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     
     UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize];
     
-    NSInteger amountPerLine = SECS_PER_DAY / 2;
+    NSInteger amountPerLine = (SECS_PER_DAY *7) / 2;
     
     for (NSInteger i = 0; i < _xGridLines; i++)
     {
