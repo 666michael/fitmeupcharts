@@ -227,6 +227,7 @@ const CGFloat lineWidth = 2;
 
 - (void) setWidthForTimeFlagWithValue: (CGFloat) width
 {
+    NSLog(@"set %f", width);
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, CGRectGetHeight(self.timeFlagView.frame))];
     [self.innerFlagView setFrame: CGRectMake(width - flagRange, 0, flagRange, flagRange)];
     [self.innerLineView setFrame: CGRectMake(width - lineWidth, 0, lineWidth, CGRectGetHeight(self.timeFlagView.frame))];
@@ -269,7 +270,7 @@ const CGFloat lineWidth = 2;
         if (self.delegate && [self.delegate respondsToSelector: @selector(chartMidget:startDateChanged:)])
         {
             [self.delegate chartMidget: self
-                      startDateChanged: [self.startDate gm_startOfNextDay]];
+                      startDateChanged: [self.startDate gm_startOfDay]];
         }
         _isResizing = NO;
     }
@@ -280,9 +281,10 @@ const CGFloat lineWidth = 2;
 - (void) setMaxFlagValue
 {
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
-    NSLog(@"max");
-    [self setWidthForTimeFlagWithValue: _maxWidth];
-    self.startDate =  [startDate dateByAddingTimeInterval: (_maxWidth / [self stepWidth]) * SECS_PER_WEEK];
+   
+    [self setWidthForTimeFlagWithValue: _fullWidth- [self stepWidth]];
+    NSLog(@"max %f", ((_fullWidth- [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK);
+    self.startDate =  [startDate dateByAddingTimeInterval: ((_fullWidth- [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK];
 }
 
 //=============================================================================
@@ -332,6 +334,7 @@ andHeightValueChanged: (CGFloat) heightValue
     if (self.delegate && [self.delegate respondsToSelector: @selector(chartMidget:startDateChanged:)])
     {
         NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
+        NSLog(@"init %f", ((width - [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK);
         self.startDate =  [startDate dateByAddingTimeInterval: ((width - [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK];
         [self.delegate chartMidget: self
                   startDateChanged: [self.startDate gm_startOfDay]];

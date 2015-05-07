@@ -23,7 +23,9 @@
     NSDateComponents *components = [calendar components: ( NSCalendarUnitYear |  NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour |  NSCalendarUnitMinute |  NSCalendarUnitSecond )
                                                fromDate: self];
     
-    [components setHour: 0];
+    NSTimeZone* destinationTimeZone = [NSTimeZone systemTimeZone];
+    NSInteger timeZoneOffset = [destinationTimeZone secondsFromGMTForDate: self] / 3600;
+    [components setHour: timeZoneOffset];
     [components setMinute: 0];
     [components setSecond: 0];
     
@@ -128,7 +130,9 @@
                                                            fromDate: self] weekday];
     
     [components setDay:([components day] - ((dayofweek) - 2))];
-    
+    NSTimeZone* destinationTimeZone = [NSTimeZone systemTimeZone];
+    NSInteger timeZoneOffset = [destinationTimeZone secondsFromGMTForDate: self] / 3600;
+    [components setHour: timeZoneOffset];
     return [calendar dateFromComponents: components];
 }
 
@@ -143,7 +147,7 @@
     [components setYear: yearNumber];
     [components setWeekOfYear: weekNumber];
     [components setWeekday: 1];
-    
+    [components setHour: 0];
     return [calendar dateFromComponents: components];
 }
 

@@ -379,7 +379,7 @@
                                  @"date" : @([[NSDate gm_dateByWeekNumber: key
                                                                   andYear: year] timeIntervalSinceReferenceDate]),
                                  @"count" : @1} mutableCopy]
-                      forKey: @(key)];
+                      forKey: innerKey];
         }
         else
         {
