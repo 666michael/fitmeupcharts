@@ -341,27 +341,37 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
           basedOnPath: (GMPointDirection) path
              andSpace: (CGFloat) space
 {
+    CGFloat newY = y;
     CGFloat stepY = _plotHeight/_yGridLines;
     if (path == GMPointDownToDown)
     {
-        return y - stepY;
+        newY = y - stepY;
     }
     
     if (path == GMPointUpToDown)
     {
-        return y - (space>stepY/2.0 ? stepY : stepY);
+        newY = y - (space>stepY/2.0 ? stepY : stepY);
     }
     
     if (path == GMPointDownToUp)
     {
-        return y +  (space<stepY/2.0 ? stepY : 0);
+        newY = y +  (space<stepY/2.0 ? stepY : 0);
     }
     
     if (path == GMPointNone)
     {
-        return y + stepY;
+        newY = y + stepY;
     }
-    return y;
+    
+    /*if (newY < self.chartTopPadding)
+    {
+        newY += stepY;
+    }
+    if (newY > (self.chartTopPadding + [self height]))
+    {
+        newY -= stepY * 2.0;
+    }*/
+    return newY;
 }
 
 //=============================================================================

@@ -9,12 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "GMDataSetProtocol.h"
 
-typedef NS_ENUM(NSUInteger, GMDataAggregation)
+typedef NS_ENUM(NSUInteger, GMDataGrouping)
 {
-    GMDataAggregationDays = 0,
-    GMDataAggregationWeeks,
-    GMDataAggregationMonth,
-    GMDataAggregationYears
+    GMDataGroupDays = 0,
+    GMDataGroupWeeks,
+    GMDataGroupMonth,
+    GMDataGroupYears
 };
 
 @class GMDataPoint;
@@ -31,6 +31,7 @@ typedef NS_ENUM(NSUInteger, GMDataAggregation)
     NSMutableDictionary* _weeks;
     NSMutableDictionary* _months;
     NSMutableDictionary* _years;
+    GMDataGrouping _dataGrouping;
 }
 
 @property (nonatomic, strong) UIColor* plotColor;
@@ -46,6 +47,7 @@ typedef NS_ENUM(NSUInteger, GMDataAggregation)
 - (void) addDataPoint: (GMDataPoint*) dataPoint;
 - (NSInteger) count;
 - (GMDataPoint*) dataPointAtIndex: (NSInteger) index;
+- (NSInteger) indexOfPointWithXValue: (CGFloat) xValue;
 - (GMDataPoint*) lastDataPoint;
 - (CGPoint) minPoint;
 - (CGPoint) maxPoint;
@@ -53,9 +55,10 @@ typedef NS_ENUM(NSUInteger, GMDataAggregation)
 - (NSArray*) pointsArray;
 - (BOOL) hasDataForDate: (NSDate*) date;
 
-- (void) aggregateByType: (GMDataAggregation) type;
 - (NSInteger) daysInSet;
 - (GMDataSet*) dataSetFromDate: (NSDate*) startDate;
 - (GMDataSet*) sortedGroups;
-
+- (GMDataGrouping) dataGrouping;
+- (void) setDataGrouping: (GMDataGrouping) dataGrouping;
+- (NSString*) dateStringForPointAtIndex: (NSInteger) index;
 @end

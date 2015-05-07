@@ -15,7 +15,10 @@
 
 //=============================================================================
 
-#define kElementsToShow 7
+#define kElementsInGroup 7
+#define kMonthsInAYear 12
+#define kWeeksInAYear 52
+#define kEps 0.1f
 
 //=============================================================================
 
@@ -135,6 +138,15 @@
 
 //=============================================================================
 
+- (NSInteger) indexOfPointWithXValue: (CGFloat) xValue
+{
+    return [_dataPoints indexOfObjectPassingTest:^BOOL(GMDataPoint *point, NSUInteger idx, BOOL *stop) {
+        return fabs([point xValue] - xValue) < kEps;
+    }];
+}
+
+//=============================================================================
+
 - (GMDataPoint*) lastDataPoint
 {
     if(!_dataPoints.count)
@@ -230,102 +242,45 @@
         [self placeDataPointInGroup: pt2];
         return pt1.xValue > pt2.xValue;
     }];
-    NSMutableArray *groups = [NSMutableArray arrayWithCapacity: kElementsToShow];
-    if ([_days count] <= kElementsToShow)
+    NSMutableArray *groups = [NSMutableArray arrayWithCapacity: kElementsInGroup];
+    if ([_days count] <= kElementsInGroup)
     {
         [groups addObjectsFromArray: _days];
+        _dataGrouping = GMDataGroupDays;
     }
     else
-        if ([[_weeks allKeys] count] <= kElementsToShow)
+        if ([[_weeks allKeys] count] <= kElementsInGroup)
         {
-            NSInteger key = [[NSDate date] gm_weekNumber];
-            NSInteger year = [[NSDate date] gm_yearNumber];
-            for (NSInteger index = 0; index < kElementsToShow; index++)
-            {
-                NSDictionary *week = _weeks [@(key)];
-                if (!week)
-                {
-                    [_weeks setObject: [@{
-                                          @"value" : @(0.0f),
-                                          @"date" : @([[NSDate gm_dateByWeekNumber: key
-                                                                           andYear: year] timeIntervalSinceReferenceDate]),
-                                          @"count" : @1} mutableCopy]
-                               forKey: @(key)];
-                }
-                
-                key--;
-                if(key==0)
-                {
-#warning Need correct calc
-                    key = 51;
-                    year--;
-                }
-            }
-            for (NSDictionary *data in [_weeks allValues])
-            {
-                [groups addObject: [[GMDataPoint alloc] initWithXValue: [[data objectForKey: @"date"] integerValue]
-                                                                yValue: [[data objectForKey: @"value"] floatValue] / [[data objectForKey: @"count"] floatValue]]];
-            }
+            [self fillDataForGroup: _weeks
+                           withKey: [[NSDate date] gm_weekNumber]
+                    andMaxKeyValue: kWeeksInAYear];
+            
+            [groups addObjectsFromArray: [self unwrapDictionary: _weeks]];
+            _dataGrouping = GMDataGroupWeeks;
         }
         else
-            if ([[_months allKeys] count] <= kElementsToShow)
+            if ([[_months allKeys] count] <= kElementsInGroup)
             {
-                NSInteger key = [[NSDate date] gm_monthNumber];
-                NSInteger year = [[NSDate date] gm_yearNumber];
-                for (NSInteger index = 0; index < kElementsToShow; index++)
+                [self fillDataForGroup: _months
+                               withKey: [[NSDate date] gm_monthNumber]
+                        andMaxKeyValue: kWeeksInAYear];
+                [groups addObjectsFromArray: [self unwrapDictionary: _months]];
+                _dataGrouping = GMDataGroupMonth;
+            }
+            else
+                if ([[_years allKeys] count] <= kElementsInGroup)
                 {
-                    NSDictionary *month = _months [@(key)];
-                    if (!month)
-                    {
-                        [_months setObject: [@{
-                                               @"value" : @(0.0f),
-                                               @"date" : @([[NSDate gm_dateByWeekNumber: key
-                                                                                andYear: year] timeIntervalSinceReferenceDate]),
-                                               @"count" : @1} mutableCopy]
-                                    forKey: @(key)];
-                    }
-                    
-                    key--;
-                    if(key==0)
-                    {
-                        key = 12;
-                        year--;
-                    }
-                }
-                for (NSDictionary *data in [_months allValues])
-                {
-                    [groups addObject: [[GMDataPoint alloc] initWithXValue: [[data objectForKey: @"date"] integerValue]
-                                                                    yValue: [[data objectForKey: @"value"] floatValue] / [[data objectForKey: @"count"] floatValue]]];
-                }
-            } else
-                if ([[_years allKeys] count] <= kElementsToShow)
-                {
-                    NSInteger key = [[NSDate date] gm_monthNumber];
-                    for (NSInteger index = 0; index < kElementsToShow; index++)
-                    {
-                        NSDictionary *year = _years [@(key)];
-                        if (!year)
-                        {
-                            [_years setObject: [@{
-                                                  @"value" : @(0.0f),
-                                                  @"date" : @([[NSDate gm_dateByWeekNumber: 1
-                                                                                   andYear: key] timeIntervalSinceReferenceDate]),
-                                                  @"count" : @1} mutableCopy]
-                                       forKey: @(key)];
-                        }
-                        
-                        key--;
-                    }
-                    for (NSDictionary *data in [_years allValues])
-                    {
-                        [groups addObject: [[GMDataPoint alloc] initWithXValue: [[data objectForKey: @"date"] integerValue]
-                                                                        yValue: [[data objectForKey: @"value"] floatValue] / [[data objectForKey: @"count"] floatValue]]];
-                    }
+                    [self fillDataForGroup: _years
+                                   withKey: [[NSDate date] gm_yearNumber]
+                            andMaxKeyValue: 0];
+                    [groups addObjectsFromArray: [self unwrapDictionary: _years]];
+                    _dataGrouping = GMDataGroupYears;
                 }
     GMDataSet *dataSet = [[GMDataSet alloc] initWithDataPoints: groups];
     [dataSet setPlotColor: self.plotColor];
     [dataSet setPlotName: self.plotName];
     [dataSet sortPoints];
+    [dataSet setDataGrouping: _dataGrouping];
     return dataSet;
 }
 
@@ -334,31 +289,33 @@
 
 - (void) placeDataPointInGroup: (GMDataPoint*) dataPoint
 {
-    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_daysBetweenDate: [NSDate date]] <= kElementsToShow)
+    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_daysBetweenDate: [NSDate date]] <= kElementsInGroup)
     {
         if(![_days containsObject: dataPoint])
             [_days addObject: dataPoint];
     }
-    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_weeksBetweenDate: [NSDate date]] <= kElementsToShow)
+    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_weeksBetweenDate: [NSDate date]] <= kElementsInGroup)
     {
         NSInteger weekNumber = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_weekNumber];
+        NSInteger yearNumber = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_yearNumber];
         [self placePoint: dataPoint
                  inGroup: _weeks
-                 withKey: weekNumber];
+                 withKey: [NSString stringWithFormat: @"%d-%d", weekNumber, yearNumber]];
     }
-    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_monthsBetweenDate: [NSDate date]] <= kElementsToShow)
+    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_monthsBetweenDate: [NSDate date]] <= kElementsInGroup)
     {
         NSInteger monthNumber = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_monthNumber];
+        NSInteger yearNumber = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_yearNumber];
         [self placePoint: dataPoint
                  inGroup: _months
-                 withKey: monthNumber];
+                 withKey: [NSString stringWithFormat: @"%d-%d", monthNumber, yearNumber]];
     }
-    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_yearsBetweenDate: [NSDate date]] <= kElementsToShow)
+    if ([[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_yearsBetweenDate: [NSDate date]] <= kElementsInGroup)
     {
         NSInteger yearNumber = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_yearNumber];
         [self placePoint: dataPoint
                  inGroup: _years
-                 withKey: yearNumber];
+                 withKey: [NSString stringWithFormat: @"%d", yearNumber]];
     }
 }
 
@@ -366,21 +323,21 @@
 
 - (void) placePoint: (GMDataPoint*) dataPoint
             inGroup: (NSMutableDictionary*) group
-            withKey: (NSInteger) key
+            withKey: (NSString*) key
 {
     
-    if (![group objectForKey: @(key)])
+    if (![group objectForKey: key])
     {
         [group setObject: [@{
                              @"value" : @([dataPoint yValue]),
                              @"date" : @([[[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_startOfWeek] timeIntervalSinceReferenceDate]),
                              @"count" : @1,
                              @"dates" : [@[] mutableCopy]} mutableCopy]
-                  forKey: @(key)];
+                  forKey: key];
     }
     else
     {
-        NSMutableDictionary *dict = [group objectForKey: @(key)];
+        NSMutableDictionary *dict = [group objectForKey: key];
         
         NSMutableArray *ids = dict[@"dates"];
         
@@ -394,10 +351,62 @@
             [dict setObject: ids
                      forKey: @"dates"];
             [group setObject: dict
-                      forKey: @(key)];
+                      forKey: key];
         }
     }
     
+}
+
+//=============================================================================
+
+- (void) fillDataForGroup: (NSMutableDictionary*) group
+                  withKey: (NSInteger) startKey
+           andMaxKeyValue: (NSInteger) maxKey
+{
+    NSInteger key = startKey;
+    NSInteger year = [[NSDate date] gm_yearNumber];
+    CGFloat lastValue = 0.0f;
+    for (NSInteger index = 0; index < kElementsInGroup; index++)
+    {
+        NSString *innerKey = [NSString stringWithFormat: @"%d-%d", key, year];
+        if (startKey == year)
+            innerKey = [NSString stringWithFormat: @"%d", year];
+        NSDictionary *keyData = group [innerKey];
+        if (!keyData)
+        {
+            [group setObject: [@{
+                                 @"value" : @(lastValue),
+                                 @"date" : @([[NSDate gm_dateByWeekNumber: key
+                                                                  andYear: year] timeIntervalSinceReferenceDate]),
+                                 @"count" : @1} mutableCopy]
+                      forKey: @(key)];
+        }
+        else
+        {
+            lastValue = [keyData[@"value"] floatValue] / [keyData[@"count"] floatValue];
+        }
+        
+        key--;
+        if(key == 0)
+        {
+            key = maxKey;
+            year--;
+        }
+    }
+}
+
+//=============================================================================
+
+- (NSMutableArray*) unwrapDictionary: (NSMutableDictionary*) group
+{
+    NSMutableArray *unwrappedArr = [NSMutableArray arrayWithCapacity: [[group allValues] count]];
+    
+    for (NSDictionary *data in [group allValues])
+    {
+        [unwrappedArr addObject: [[GMDataPoint alloc] initWithXValue: [[data objectForKey: @"date"] integerValue]
+                                                              yValue: [[data objectForKey: @"value"] floatValue] / [[data objectForKey: @"count"] floatValue]]];
+    }
+    return unwrappedArr;
 }
 
 //=============================================================================
@@ -455,30 +464,49 @@
 
 //=============================================================================
 
-- (void) aggregateByType: (GMDataAggregation) type
+- (GMDataGrouping) dataGrouping
 {
-    switch (type)
-    {
-        case GMDataAggregationDays:
-            
-            break;
-        case GMDataAggregationWeeks:
-            
-            break;
-        case GMDataAggregationMonth:
-            
-            break;
-            
-        case GMDataAggregationYears:
-            
-            break;
-        default:
-            break;
-    }    
+    return _dataGrouping;
 }
 
 //=============================================================================
 
+- (void) setDataGrouping: (GMDataGrouping) dataGrouping
+{
+    _dataGrouping = dataGrouping;
+}
+
+//=============================================================================
+
+- (NSString*) dateStringForPointAtIndex: (NSInteger) index;
+{
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDateFormat: @"dd.MM"];
+    switch ( _dataGrouping)
+    {
+        case GMDataGroupDays:
+        case GMDataGroupWeeks:
+        {
+            [dateFormatter setDateFormat: @"dd.MM"];
+            break;
+        }
+        case GMDataGroupMonth:
+        {
+            [dateFormatter setDateFormat: @"MM"];
+            break;
+        }
+        case GMDataGroupYears:
+        {
+            [dateFormatter setDateFormat: @"yyyy"];
+            break;
+        }
+        default:
+            break;
+    }
+    return [dateFormatter stringFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: [_dataPoints[index] xValue]]];
+}
+
+//=============================================================================
 
 - (NSString*) description
 {

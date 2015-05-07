@@ -516,7 +516,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
         
         CGFloat avgToAdd = fabs(_minY - _maxY) / kAverageMinMaxDelimeter;
         if (self.shouldAddMinYAverage)
-            _minY = _minY - fmaxf(1.0, floorf(avgToAdd));
+            _minY = _minY - fmaxf(5.0, floorf(avgToAdd));
         _maxY = _maxY + fmaxf(1.0, floorf(avgToAdd));
         if(fabs(_minY - _maxY) < 0.1)
         {
@@ -569,8 +569,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     CGFloat res = 0.0f;
     if (self.isStepUsed)
     {
-        CGFloat stepX = (_plotWidth / _xGridLines) * 2;
-        res = stepX * ((xValue - _minX) / (SECS_PER_DAY*7));
+        res =  [self stepScaleForXValue: xValue];
     }
     else
     {
@@ -581,6 +580,28 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     }
     
     return _chartPadding + res + _leftPadding;
+}
+
+//=============================================================================
+
+- (CGFloat) stepScaleForXValue: (CGFloat) xValue
+{
+    CGFloat scale = 0.0f;
+    CGFloat stepX = (_plotWidth / _xGridLines) * 2;
+    switch ([[_dataSets firstObject] dataGrouping])
+    {
+        case GMDataGroupDays:
+            scale = stepX * ((xValue - _minX) / (SECS_PER_DAY));
+            break;
+        case GMDataGroupWeeks:
+        case GMDataGroupMonth:
+        case GMDataGroupYears:
+            scale = stepX * [[_dataSets firstObject] indexOfPointWithXValue: xValue];
+            break;
+        default:
+            break;
+    }
+    return scale;
 }
 
 //=============================================================================
@@ -610,13 +631,28 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     
     UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize];
     
-    NSInteger amountPerLine = (SECS_PER_DAY *7) / 2;
+    NSInteger amountPerLine = (SECS_PER_DAY) / 2;
+    CGFloat stepX = (_plotWidth / _xGridLines) * 2;
     
     for (NSInteger i = 0; i < _xGridLines; i++)
     {
         if (i % 2 == 0)
         {
-            CGFloat x = [self xCoordinatesForValue:_minX + i * amountPerLine];
+            CGFloat x =  0.0f;
+            switch ([[_dataSets firstObject] dataGrouping])
+            {
+                case GMDataGroupDays:
+                    x = [self xCoordinatesForValue:_minX + i * amountPerLine];
+                    break;
+                case GMDataGroupWeeks:
+                case GMDataGroupMonth:
+                case GMDataGroupYears:
+                    x =  self.chartPadding + _leftPadding + (stepX / 2.0)* i;
+                    break;
+                default:
+                    break;
+            }
+            
             CGFloat y = _plotHeight + _chartTopPadding;
             
             CGRect rect = CGRectMake(x - kDefaultSmallCircleRadius, y -kDefaultSmallCircleRadius, 2 *kDefaultSmallCircleRadius, 2 *kDefaultSmallCircleRadius);
@@ -628,7 +664,15 @@ static const NSInteger kVerticalLinesStartIndex = -1;
             NSDictionary *attributes = @{
                                          NSFontAttributeName : textFont,
                                          NSForegroundColorAttributeName : textColor};
-            NSString* legendText = [NSString stringWithFormat:@"%@", [[self defaultDateFormatter] stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate: _minX + i * amountPerLine]]];
+            NSString* legendText = @"";
+            if( [[_dataSets firstObject] dataGrouping] == GMDataGroupDays)
+            {
+                legendText = [NSString stringWithFormat:@"%@", [[self defaultDateFormatter] stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate: _minX + i * amountPerLine]]];
+            }
+            else
+            {
+                legendText = [[_dataSets firstObject] dateStringForPointAtIndex: i/2];
+            }
             
             CGFloat textHeight = [legendText gm_heightForFont: textFont];
             x -= [legendText gm_widthForFont: textFont] / 2.0;
