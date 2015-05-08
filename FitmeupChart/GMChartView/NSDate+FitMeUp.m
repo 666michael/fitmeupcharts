@@ -200,7 +200,6 @@
     [components setYear: yearNumber];
     [components setMonth: monthNumber];
     [components setWeekday: 1];
-    [components setHour: 0];
     return [calendar dateFromComponents: components];
 }
 
@@ -211,10 +210,12 @@
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier: NSGregorianCalendar];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     
+    NSTimeZone* destinationTimeZone = [NSTimeZone systemTimeZone];
+    NSInteger timeZoneOffset = [destinationTimeZone secondsFromGMTForDate: [NSDate date]] / 3600;
+    [components setHour: timeZoneOffset];
     [components setYear: yearNumber];
-    [components setWeekOfYear: 1];
-    [components setWeekday: 1];
-    [components setHour: 0];
+    [components setMonth: 1];
+    [components setDay: 1];
     return [calendar dateFromComponents: components];
 }
 //=============================================================================
