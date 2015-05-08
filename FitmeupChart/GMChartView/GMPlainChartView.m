@@ -360,17 +360,17 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
     
     if (path == GMPointNone)
     {
-        newY = y + stepY;
+        newY = y + (space<stepY/2.0 ? stepY : stepY-space);
     }
     
-    /*if (newY < self.chartTopPadding)
+    if (newY < self.chartTopPadding)
     {
         newY += stepY;
     }
     if (newY > (self.chartTopPadding + [self height]))
     {
         newY -= stepY * 2.0;
-    }*/
+    }
     return newY;
 }
 

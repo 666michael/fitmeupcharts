@@ -263,7 +263,7 @@
         {
             [self fillDataForGroup: _months
                            withKey: [[NSDate date] gm_monthNumber]
-                    andMaxKeyValue: kWeeksInAYear];
+                    andMaxKeyValue: kMonthsInAYear];
             [groups addObjectsFromArray: [self unwrapDictionary: _months]];
             break;
         }
@@ -360,11 +360,20 @@
     
     if (![group objectForKey: key])
     {
+        NSDate *keyStartDate = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_startOfWeek];
+        if (group == _months)
+        {
+            keyStartDate = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_startOfMonth];
+        }
+        if (group == _years)
+        {
+            keyStartDate = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_startOfYear];
+        }
         [group setObject: [@{
                              @"value" : @([dataPoint yValue]),
-                             @"date" : @([[[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_startOfWeek] timeIntervalSinceReferenceDate]),
+                             @"date" : @([ keyStartDate timeIntervalSinceReferenceDate]),
                              @"count" : @1,
-                             @"dates" : [@[] mutableCopy]} mutableCopy]
+                             @"dates" : [@[ @(dataPoint.xValue) ] mutableCopy]} mutableCopy]
                   forKey: key];
     }
     else
@@ -402,14 +411,29 @@
     {
         NSString *innerKey = [NSString stringWithFormat: @"%d-%d", key, year];
         if (startKey == year)
-            innerKey = [NSString stringWithFormat: @"%d", year];
+            innerKey = [NSString stringWithFormat: @"%d", key];
         NSDictionary *keyData = group [innerKey];
         if (!keyData)
         {
+            NSDate *keyStartDate = [NSDate date];
+            if (group == _weeks)
+            {
+                keyStartDate = [NSDate gm_dateByWeekNumber: key
+                                                   andYear: year];
+            }
+            if (group == _months)
+            {
+                keyStartDate = [NSDate gm_dateByMonthNumber: key
+                                                    andYear: year];
+            }
+            if (group == _years)
+            {
+                keyStartDate = [NSDate gm_dateByYearNumber: key];
+            }
+            NSLog(@"Date %@", keyStartDate);
             [group setObject: [@{
                                  @"value" : @(lastValue),
-                                 @"date" : @([[NSDate gm_dateByWeekNumber: key
-                                                                  andYear: year] timeIntervalSinceReferenceDate]),
+                                 @"date" : @([keyStartDate timeIntervalSinceReferenceDate]),
                                  @"count" : @1} mutableCopy]
                       forKey: innerKey];
         }
