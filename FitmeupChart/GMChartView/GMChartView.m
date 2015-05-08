@@ -34,6 +34,9 @@ static const NSInteger kDefaultCellsOffset = 3;
 static const CGFloat kTextScaleHeight = 1.5;
 static const CGFloat kTextLabelOffset = 5.0;
 static const NSInteger kVerticalLinesStartIndex = -1;
+const CGFloat GMChartViewDefaultFontSize = 10.5f;
+const CGFloat GMChartViewDefaultCircleRadius = 2.5f;
+const CGFloat GMChartViewDefaultLineWidth = 2.0f;
 
 //=============================================================================
 
@@ -136,7 +139,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
 {
     _xAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_plotHeight + kAxisLabelsPadding, _chartPadding, _plotWidth, 0)];
     [_xAxisLabel setTextAlignment: NSTextAlignmentCenter];
-    [_xAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize]];
+    [_xAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize: GMChartViewDefaultFontSize]];
     UIViewAutoresizing mask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth
     | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
     [_xAxisLabel setAutoresizingMask: mask];
@@ -148,7 +151,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
 - (void) setupYLabel
 {
     _yAxisLabel = [[UILabel alloc] initWithFrame: CGRectMake(_chartPadding, kAxisLabelsPadding, _plotWidth, 0)];
-    [_yAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
+    [_yAxisLabel setFont: [GMChartUtils gm_defaultBoldFontWithSize: GMChartViewDefaultFontSize]];
     [self addSubview: _yAxisLabel];
 }
 
@@ -300,8 +303,8 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     [_xAxisLabel setTextColor:_xAxisColor];
     [_yAxisLabel setTextColor:_yAxisColor];
     
-    CGFloat xTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
-    CGFloat yTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
+    CGFloat xTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: GMChartViewDefaultFontSize]];
+    CGFloat yTextHeight = [_xAxisLabel.text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: GMChartViewDefaultFontSize]];
     
     [_xAxisLabel setFrame: CGRectMake(_chartPadding, _plotHeight + _chartTopPadding + xTextHeight / 2.0, _plotWidth, xTextHeight)];
     [_yAxisLabel setFrame: CGRectMake(_chartPadding, _chartTopPadding - yTextHeight * kTextScaleHeight, _plotWidth, yTextHeight)];
@@ -366,7 +369,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetLineWidth(context, defaultLineWidth);
+    CGContextSetLineWidth(context, GMChartViewDefaultLineWidth);
     CGContextSetStrokeColorWithColor(context, [_xAxisColor CGColor]);
     
     CGContextMoveToPoint(context, _chartPadding, _plotHeight + _chartTopPadding);
@@ -382,7 +385,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
          andColor: (UIColor*) textColor
 {
     NSDictionary *textAttributes = @{
-                                     NSFontAttributeName : [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize],
+                                     NSFontAttributeName : [GMChartUtils gm_defaultBoldFontWithSize: GMChartViewDefaultFontSize],
                                      NSForegroundColorAttributeName : textColor
                                      };
     [text drawAtPoint: point
@@ -395,7 +398,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetLineWidth(context, defaultLineWidth);
+    CGContextSetLineWidth(context, GMChartViewDefaultLineWidth);
     CGContextSetStrokeColorWithColor(context, [_yAxisColor CGColor]);
     
     CGContextMoveToPoint(context, _chartPadding, _chartTopPadding);
@@ -538,7 +541,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
         [dataSet sortPoints];
         CGContextRef context = UIGraphicsGetCurrentContext();
         
-        CGContextSetLineWidth(context, defaultLineWidth);
+        CGContextSetLineWidth(context, GMChartViewDefaultLineWidth);
         CGContextSetStrokeColorWithColor(context,dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
         CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
         
@@ -628,7 +631,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     
     CGContextSetLineWidth(context, kDefaultGridLineWidth);
     
-    UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize];
+    UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize: GMChartViewDefaultFontSize];
     
     NSInteger amountPerLine = (SECS_PER_DAY) / 2;
     CGFloat stepX = (_plotWidth / _xGridLines) * 2;
@@ -699,7 +702,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     
     CGContextSetLineWidth(context, kDefaultGridLineWidth);
     
-    UIFont* textFont = [GMChartUtils gm_defaultLightFontWithSize:defaultFontSize - 2.0];
+    UIFont* textFont = [GMChartUtils gm_defaultLightFontWithSize: GMChartViewDefaultFontSize - 2.0];
     
     CGFloat stepY = (_maxY -_minY) / _yGridLines;
     
@@ -760,7 +763,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     }
     CGFloat y = _plotHeight + _chartTopPadding + _chartPadding;
     
-    UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize:defaultFontSize];
+    UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize: GMChartViewDefaultFontSize];
     NSDictionary* attributes = @{
                                  NSFontAttributeName : textFont,
                                  NSForegroundColorAttributeName : [UIColor gm_grayColor]};
@@ -850,7 +853,7 @@ static const NSInteger kVerticalLinesStartIndex = -1;
 
 {
     CGContextSetFillColorWithColor(context, color.CGColor);
-    CGRect rect = CGRectMake(x - defaultCircleRadius, y - defaultCircleRadius, 2 * defaultCircleRadius, 2 * defaultCircleRadius);
+    CGRect rect = CGRectMake(x - GMChartViewDefaultLineWidth, y - GMChartViewDefaultLineWidth, 2 * GMChartViewDefaultLineWidth, 2 * GMChartViewDefaultLineWidth);
     CGContextAddEllipseInRect(context, rect);
 }
 

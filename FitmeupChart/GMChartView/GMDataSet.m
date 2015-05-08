@@ -212,6 +212,7 @@
     [_years removeAllObjects];
     
     NSLog(@"Total points %d", [_dataPoints count]);
+    [self detectGroupingAvailability];
     [_dataPoints sortUsingComparator: ^NSComparisonResult(GMDataPoint* pt1, GMDataPoint* pt2) {
         
         if(pt1.xValue > _maxX)
@@ -243,39 +244,41 @@
         return pt1.xValue > pt2.xValue;
     }];
     NSMutableArray *groups = [NSMutableArray arrayWithCapacity: kElementsInGroup];
-    if ([_days count] <= kElementsInGroup)
+    
+    switch (_dataGrouping)
     {
-        [groups addObjectsFromArray: _days];
-        _dataGrouping = GMDataGroupDays;
-    }
-    else
-        if ([[_weeks allKeys] count] <= kElementsInGroup)
+        case GMDataGroupDays:
+            [groups addObjectsFromArray: _days];
+            break;
+        case GMDataGroupWeeks:
         {
             [self fillDataForGroup: _weeks
                            withKey: [[NSDate date] gm_weekNumber]
                     andMaxKeyValue: kWeeksInAYear];
             
             [groups addObjectsFromArray: [self unwrapDictionary: _weeks]];
-            _dataGrouping = GMDataGroupWeeks;
+            break;
         }
-        else
-            if ([[_months allKeys] count] <= kElementsInGroup)
-            {
-                [self fillDataForGroup: _months
-                               withKey: [[NSDate date] gm_monthNumber]
-                        andMaxKeyValue: kWeeksInAYear];
-                [groups addObjectsFromArray: [self unwrapDictionary: _months]];
-                _dataGrouping = GMDataGroupMonth;
-            }
-            else
-                if ([[_years allKeys] count] <= kElementsInGroup)
-                {
-                    [self fillDataForGroup: _years
-                                   withKey: [[NSDate date] gm_yearNumber]
-                            andMaxKeyValue: 0];
-                    [groups addObjectsFromArray: [self unwrapDictionary: _years]];
-                    _dataGrouping = GMDataGroupYears;
-                }
+        case GMDataGroupMonth:
+        {
+            [self fillDataForGroup: _months
+                           withKey: [[NSDate date] gm_monthNumber]
+                    andMaxKeyValue: kWeeksInAYear];
+            [groups addObjectsFromArray: [self unwrapDictionary: _months]];
+            break;
+        }
+        case GMDataGroupYears:
+        {
+            [self fillDataForGroup: _years
+                           withKey: [[NSDate date] gm_yearNumber]
+                    andMaxKeyValue: 0];
+            [groups addObjectsFromArray: [self unwrapDictionary: _years]];
+            break;
+        }
+        default:
+            break;
+    }
+    
     GMDataSet *dataSet = [[GMDataSet alloc] initWithDataPoints: groups];
     [dataSet setPlotColor: self.plotColor];
     [dataSet setPlotName: self.plotName];
@@ -285,6 +288,35 @@
 }
 
 #warning Refactor
+
+//=============================================================================
+
+- (void) detectGroupingAvailability
+{
+    NSDate *firstDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [_dataPoints[0] xValue]];
+    NSDate *lastDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self lastDataPoint] xValue]];
+    if ([firstDate gm_daysBetweenDate: lastDate] <= kElementsInGroup)
+    {
+        _dataGrouping = GMDataGroupDays;
+    }
+    else
+        
+        if ([firstDate gm_weeksBetweenDate: lastDate] <= kElementsInGroup)
+        {
+            _dataGrouping = GMDataGroupWeeks;
+        }
+        else
+            if ([firstDate gm_monthsBetweenDate: lastDate] <= kElementsInGroup)
+            {
+                _dataGrouping = GMDataGroupMonth;
+            }
+            else
+                if ([firstDate gm_yearsBetweenDate: lastDate] <= kElementsInGroup)
+                {
+                    _dataGrouping = GMDataGroupYears;
+                }
+}
+
 //=============================================================================
 
 - (void) placeDataPointInGroup: (GMDataPoint*) dataPoint
@@ -492,7 +524,7 @@
         }
         case GMDataGroupMonth:
         {
-            [dateFormatter setDateFormat: @"MM"];
+            [dateFormatter setDateFormat: @"MMM"];
             break;
         }
         case GMDataGroupYears:

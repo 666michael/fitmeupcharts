@@ -135,7 +135,7 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
         [dataSet sortPoints];
         CGContextRef context = UIGraphicsGetCurrentContext();
         
-        CGContextSetLineWidth(context, defaultLineWidth);
+        CGContextSetLineWidth(context, GMChartViewDefaultLineWidth);
         
         for (NSInteger index = 0; index < [dataSet count]; index++)
         {
@@ -185,11 +185,11 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
        andContext: (CGContextRef) context
 {
     NSDictionary *attributes = @{
-                                 NSFontAttributeName : [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize],
+                                 NSFontAttributeName : [GMChartUtils gm_defaultBoldFontWithSize: GMChartViewDefaultFontSize],
                                  NSForegroundColorAttributeName : color};
     
-    CGFloat textHeight = [text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
-    CGFloat textWidth = [text gm_widthForFont: [GMChartUtils gm_defaultBoldFontWithSize: defaultFontSize]];
+    CGFloat textHeight = [text gm_heightForFont: [GMChartUtils gm_defaultBoldFontWithSize: GMChartViewDefaultFontSize]];
+    CGFloat textWidth = [text gm_widthForFont: [GMChartUtils gm_defaultBoldFontWithSize: GMChartViewDefaultFontSize]];
     
     CGFloat step = (_plotHeight / _yGridLines);
     CGFloat rawY = y - self.chartTopPadding;
@@ -381,22 +381,22 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 {
     if (path == GMPointDownToDown)
     {
-        return x + defaultCircleRadius;
+        return x + GMChartViewDefaultCircleRadius;
     }
     
     if (path == GMPointUpToUp)
     {
-        return x + defaultCircleRadius;
+        return x + GMChartViewDefaultCircleRadius;
     }
     
     if (path == GMPointUpToDown)
     {
-        return x + defaultCircleRadius*2;
+        return x + GMChartViewDefaultCircleRadius*2;
     }
     
     if (path == GMPointDownToUp)
     {
-        return x + defaultCircleRadius;
+        return x + GMChartViewDefaultCircleRadius;
     }
     return x;
 }

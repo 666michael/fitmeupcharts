@@ -18,9 +18,9 @@
 #import "GMChartUtils.h"
 #import "GMChartViewProtocol.h"
 
-#define defaultFontSize  10.5f
-#define defaultCircleRadius 2.5f
-#define defaultLineWidth  2.0f
+extern const CGFloat GMChartViewDefaultFontSize;
+extern const CGFloat GMChartViewDefaultCircleRadius;
+extern const CGFloat GMChartViewDefaultLineWidth;
 
 typedef NS_ENUM(NSUInteger, GMGridSize)
 {
