@@ -32,7 +32,7 @@
 {
     if (!self.chartView)
     {
-        self.chartView = [GMChartFactory plainChartWithFrame: CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 214.0f)]
+        self.chartView = [GMChartFactory plainChartWithFrame: CGRectMake(0, 50.0f, CGRectGetWidth(self.view.frame), 214.0f)]
         ;
         [self.view addSubview: self.chartView];
     }
@@ -52,7 +52,6 @@
     [self.chartView setIsStepUsed: YES];
     [self.chartView setGridSize: GMGridSize18];
     [self.chartView setShouldDrawCirclesOnAxis: NO];
-    [self.chartView setBackgroundColor: [UIColor whiteColor]];
     
     [self.chartMidget setDelegate: self];
 }

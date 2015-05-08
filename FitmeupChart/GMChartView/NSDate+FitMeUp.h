@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#define SECS_PER_DAY (86400)
-#define SECS_PER_WEEK 604800
+#define SECS_PER_DAY 86400.0f
+#define SECS_PER_WEEK 604800.0f
 
 @interface NSDate (FitMeUp)
 

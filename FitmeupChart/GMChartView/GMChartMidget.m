@@ -16,9 +16,9 @@
 
 //=============================================================================
 
-const CGFloat flagRange = 20;
-const CGFloat daysInStep = 7;
-const CGFloat lineWidth = 2;
+const CGFloat kFlagRange = 20;
+const CGFloat kDaysInStep = 7;
+const CGFloat kLineWidth = 2;
 
 //=============================================================================
 
@@ -131,12 +131,12 @@ const CGFloat lineWidth = 2;
     [self.timeFlagView setBackgroundColor: [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.3]];
     [self addSubview: self.timeFlagView];
     
-    self.innerFlagView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - flagRange, 0, flagRange, flagRange)];
+    self.innerFlagView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - kFlagRange, 0, kFlagRange, kFlagRange)];
     [self.innerFlagView setBackgroundColor: self.flagColor];
     [self.innerFlagView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
     [self.innerFlagView setTranslatesAutoresizingMaskIntoConstraints: NO];
     
-    self.innerLineView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - lineWidth, 0, lineWidth, flagRange/5)];
+    self.innerLineView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - kLineWidth, 0, kLineWidth, kFlagRange/5)];
     [self.innerLineView setBackgroundColor: self.flagColor];
     [self.innerLineView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
     [self.innerLineView setTranslatesAutoresizingMaskIntoConstraints: NO];
@@ -163,8 +163,8 @@ const CGFloat lineWidth = 2;
 {
     UIBezierPath *trianglePath = [UIBezierPath bezierPath];
     [trianglePath moveToPoint: CGPointMake(0, 0)];
-    [trianglePath addLineToPoint: CGPointMake(flagRange,0)];
-    [trianglePath addLineToPoint: CGPointMake(flagRange, flagRange)];
+    [trianglePath addLineToPoint: CGPointMake(kFlagRange,0)];
+    [trianglePath addLineToPoint: CGPointMake(kFlagRange, kFlagRange)];
     [trianglePath closePath];
     
     CAShapeLayer *triangleMaskLayer = [CAShapeLayer layer];
@@ -205,7 +205,7 @@ const CGFloat lineWidth = 2;
 
 - (BOOL) touchIsInRange: (UITouch *) touch
 {
-    return fabs([touch locationInView: self].x - CGRectGetMaxX(self.timeFlagView.frame)) < flagRange;
+    return fabs([touch locationInView: self].x - CGRectGetMaxX(self.timeFlagView.frame)) < kFlagRange;
 }
 
 //=============================================================================
@@ -227,10 +227,9 @@ const CGFloat lineWidth = 2;
 
 - (void) setWidthForTimeFlagWithValue: (CGFloat) width
 {
-    NSLog(@"set %f", width);
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, CGRectGetHeight(self.timeFlagView.frame))];
-    [self.innerFlagView setFrame: CGRectMake(width - flagRange, 0, flagRange, flagRange)];
-    [self.innerLineView setFrame: CGRectMake(width - lineWidth, 0, lineWidth, CGRectGetHeight(self.timeFlagView.frame))];
+    [self.innerFlagView setFrame: CGRectMake(width - kFlagRange, 0, kFlagRange, kFlagRange)];
+    [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, CGRectGetHeight(self.timeFlagView.frame))];
 }
 
 //=============================================================================
@@ -250,7 +249,6 @@ const CGFloat lineWidth = 2;
     if (_isResizing)
     {
         UITouch *touch = [touches anyObject];
-        NSLog(@"%f", [touch locationInView: self].x);
         if([touch locationInView: self].x >=  self.chartView.chartPadding + _maxWidth)
         {
             [self setMaxFlagValue];
@@ -262,9 +260,11 @@ const CGFloat lineWidth = 2;
             }
             else
             {
+                CGFloat rawX = [touch locationInView: self].x - self.chartView.chartPadding;
+                NSLog(@"%0.0f from %0.0f", rawX, _fullWidth);
+
                 NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
-                CGFloat countOfSteps = floorf([touch locationInView: self].x / [self stepWidth]);
-                NSLog(@"mid");
+                CGFloat countOfSteps = floorf(rawX / [self stepWidth]);
                 self.startDate =  [startDate dateByAddingTimeInterval: countOfSteps * SECS_PER_WEEK];
             }
         if (self.delegate && [self.delegate respondsToSelector: @selector(chartMidget:startDateChanged:)])
@@ -283,7 +283,6 @@ const CGFloat lineWidth = 2;
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
    
     [self setWidthForTimeFlagWithValue: _fullWidth- [self stepWidth]];
-    NSLog(@"max %f", ((_fullWidth- [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK);
     self.startDate =  [startDate dateByAddingTimeInterval: ((_fullWidth- [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK];
 }
 
@@ -301,7 +300,12 @@ const CGFloat lineWidth = 2;
 - (CGFloat) stepWidth
 {
     NSInteger days = [self.totalDataSet daysInSet];
-    return (_fullWidth / days) * daysInStep;
+    return (_fullWidth / days) * kDaysInStep;
+}
+
+- (NSInteger) stepsTotal
+{
+    return (_fullWidth / [self stepWidth]);
 }
 
 //=============================================================================
@@ -325,8 +329,8 @@ andHeightValueChanged: (CGFloat) heightValue
 {
     _fullWidth = width;
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
-    [self.innerFlagView setFrame: CGRectMake(width - flagRange, 0, flagRange, flagRange)];
-    [self.innerLineView setFrame: CGRectMake(width - lineWidth, 0, lineWidth, height)];
+    [self.innerFlagView setFrame: CGRectMake(width - kFlagRange, 0, kFlagRange, kFlagRange)];
+    [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, height)];
     [self setWidthForTimeFlagWithValue: width - [self stepWidth]];
     [self setMaxWidth];
     [self.imageCacheView setFrame: CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame))];
@@ -334,7 +338,6 @@ andHeightValueChanged: (CGFloat) heightValue
     if (self.delegate && [self.delegate respondsToSelector: @selector(chartMidget:startDateChanged:)])
     {
         NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
-        NSLog(@"init %f", ((width - [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK);
         self.startDate =  [startDate dateByAddingTimeInterval: ((width - [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK];
         [self.delegate chartMidget: self
                   startDateChanged: [self.startDate gm_startOfDay]];

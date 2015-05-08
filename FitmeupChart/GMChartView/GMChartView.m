@@ -192,7 +192,6 @@ static const NSInteger kVerticalLinesStartIndex = -1;
     
     [self prepareImageForRect: rect];
     
-    NSLog(@"draw");
     [self plotChart];
     if ([_dataSets count])
         [self plotChartData];
