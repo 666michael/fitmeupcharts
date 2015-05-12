@@ -181,8 +181,7 @@
     [components setHour: timeZoneOffset];
     [components setYear: yearNumber];
     [components setWeekOfYear: weekNumber];
-    [components setWeekday: 1];
-    [components setHour: 0];
+    [components setWeekday: 2];
     return [calendar dateFromComponents: components];
 }
 
