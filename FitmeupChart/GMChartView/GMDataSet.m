@@ -20,6 +20,11 @@
 #define kWeeksInAYear 52
 #define kEps 0.1f
 
+static const NSString* const kValues = @"values";
+static const NSString* const kDate   = @"date";
+static const NSString* const kDates  = @"dates";
+static const NSString* const kCount  = @"count";
+
 //=============================================================================
 
 @implementation GMDataSet
@@ -204,7 +209,7 @@
 
 //=============================================================================
 
-- (GMDataSet*) sortedGroups
+- (GMDataSet*) sortedGroupsWithAverageType: (GMDataAverage) averageFunc
 {
     [_days removeAllObjects];
     [_weeks removeAllObjects];
@@ -256,7 +261,8 @@
                            withKey: [[NSDate date] gm_weekNumber]
                     andMaxKeyValue: kWeeksInAYear];
             
-            [groups addObjectsFromArray: [self unwrapDictionary: _weeks]];
+            [groups addObjectsFromArray: [self unwrapDictionary: _weeks
+                                                       withFunc: averageFunc]];
             break;
         }
         case GMDataGroupMonth:
@@ -264,7 +270,8 @@
             [self fillDataForGroup: _months
                            withKey: [[NSDate date] gm_monthNumber]
                     andMaxKeyValue: kMonthsInAYear];
-            [groups addObjectsFromArray: [self unwrapDictionary: _months]];
+            [groups addObjectsFromArray: [self unwrapDictionary: _months
+                                                       withFunc: averageFunc]];
             break;
         }
         case GMDataGroupYears:
@@ -272,11 +279,10 @@
             [self fillDataForGroup: _years
                            withKey: [[NSDate date] gm_yearNumber]
                     andMaxKeyValue: 0];
-            [groups addObjectsFromArray: [self unwrapDictionary: _years]];
+            [groups addObjectsFromArray: [self unwrapDictionary: _years
+                                                       withFunc: averageFunc]];
             break;
         }
-        default:
-            break;
     }
     
     GMDataSet *dataSet = [[GMDataSet alloc] initWithDataPoints: groups];
@@ -370,27 +376,30 @@
             keyStartDate = [[NSDate dateWithTimeIntervalSinceReferenceDate: [dataPoint xValue]] gm_startOfYear];
         }
         [group setObject: [@{
-                             @"value" : @([dataPoint yValue]),
-                             @"date" : @([ keyStartDate timeIntervalSinceReferenceDate]),
-                             @"count" : @1,
-                             @"dates" : [@[ @(dataPoint.xValue) ] mutableCopy]} mutableCopy]
+                             kValues : [@[ @([dataPoint yValue])] mutableCopy],
+                             kDate : @([ keyStartDate timeIntervalSinceReferenceDate]),
+                             kCount : @1,
+                             kDates : [@[ @(dataPoint.xValue) ] mutableCopy]} mutableCopy]
                   forKey: key];
     }
     else
     {
         NSMutableDictionary *dict = [group objectForKey: key];
         
-        NSMutableArray *ids = dict[@"dates"];
+        NSMutableArray *ids = dict[kDates];
+        NSMutableArray *values = dict[kValues];
         
         if(![ids containsObject: @(dataPoint.xValue)])
         {
             [ids addObject: @(dataPoint.xValue)];
+            [values addObject: @(dataPoint.yValue)];
+            
             [dict setObject: @([ids count])
-                     forKey: @"count"];
-            [dict setObject: @([[dict objectForKey: @"value"] integerValue]+[dataPoint yValue])
-                     forKey: @"value"];
+                     forKey: kCount];
+            [dict setObject: values
+                     forKey: kValues];
             [dict setObject: ids
-                     forKey: @"dates"];
+                     forKey: kDates];
             [group setObject: dict
                       forKey: key];
         }
@@ -406,12 +415,17 @@
 {
     NSInteger key = startKey;
     NSInteger year = [[NSDate date] gm_yearNumber];
-    CGFloat lastValue = 0.0f;
+    
+    NSArray* lastValues = @[];
+    NSNumber* lastCount = @0;
+    
     for (NSInteger index = 0; index < kElementsInGroup; index++)
     {
         NSString *innerKey = [NSString stringWithFormat: @"%d-%d", key, year];
         if (startKey == year)
+        {
             innerKey = [NSString stringWithFormat: @"%d", key];
+        }
         NSDictionary *keyData = group [innerKey];
         if (!keyData)
         {
@@ -420,6 +434,7 @@
             {
                 keyStartDate = [NSDate gm_dateByWeekNumber: key
                                                    andYear: year];
+                NSLog(@"%@", keyStartDate);
             }
             if (group == _months)
             {
@@ -430,16 +445,16 @@
             {
                 keyStartDate = [NSDate gm_dateByYearNumber: key];
             }
-            NSLog(@"Date %@", keyStartDate);
             [group setObject: [@{
-                                 @"value" : @(lastValue),
-                                 @"date" : @([keyStartDate timeIntervalSinceReferenceDate]),
-                                 @"count" : @1} mutableCopy]
+                                 kValues : lastValues,
+                                 kDate : @([keyStartDate timeIntervalSinceReferenceDate]),
+                                 kCount : lastCount} mutableCopy]
                       forKey: innerKey];
         }
         else
         {
-            lastValue = [keyData[@"value"] floatValue] / [keyData[@"count"] floatValue];
+            lastValues = [keyData[kValues] copy];
+            lastCount = [keyData[kCount] copy];
         }
         
         key--;
@@ -454,14 +469,48 @@
 //=============================================================================
 
 - (NSMutableArray*) unwrapDictionary: (NSMutableDictionary*) group
+                            withFunc: (GMDataAverage) avgFunc
 {
     NSMutableArray *unwrappedArr = [NSMutableArray arrayWithCapacity: [[group allValues] count]];
     
-    for (NSDictionary *data in [group allValues])
+    switch (avgFunc)
     {
-        [unwrappedArr addObject: [[GMDataPoint alloc] initWithXValue: [[data objectForKey: @"date"] integerValue]
-                                                              yValue: [[data objectForKey: @"value"] floatValue] / [[data objectForKey: @"count"] floatValue]]];
+        case GMDataAverageArithmetic:
+        {
+            for (NSDictionary *data in [group allValues])
+            {
+                [unwrappedArr addObject: [[GMDataPoint alloc] initWithXValue: [data[kDate] integerValue]
+                                                                      yValue: [[data[kValues] valueForKeyPath: @"@avg.self"] floatValue] ]];
+            }
+            break;
+        }
+        case GMDataAverageMedian:
+        {
+            
+            for (NSDictionary *data in [group allValues])
+            {
+                CGFloat medianVal = 0;
+                NSUInteger middleIndex;
+                
+                NSArray * groupData = [group objectForKey: kValues];
+                if (self.count % 2 != 0)
+                {
+                    middleIndex = (groupData.count / 2);
+                    medianVal = [[groupData objectAtIndex: middleIndex] floatValue];
+                }
+                else
+                {
+                    middleIndex = (groupData.count / 2) - 1;
+                    medianVal = [[@[[groupData objectAtIndex: middleIndex], [groupData objectAtIndex: middleIndex + 1]] valueForKeyPath:@"@avg.self"] floatValue];
+                }
+                
+                [unwrappedArr addObject: [[GMDataPoint alloc] initWithXValue: [data[kDate] integerValue]
+                                                                      yValue: medianVal ]];
+            }
+            break;
+        }
     }
+    
     return unwrappedArr;
 }
 

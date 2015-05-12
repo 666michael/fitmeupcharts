@@ -17,6 +17,12 @@ typedef NS_ENUM(NSUInteger, GMDataGrouping)
     GMDataGroupYears
 };
 
+typedef NS_ENUM(NSUInteger, GMDataAverage)
+{
+    GMDataAverageArithmetic = 0,
+    GMDataAverageMedian
+};
+
 @class GMDataPoint;
 
 @interface GMDataSet : NSObject
@@ -57,7 +63,7 @@ typedef NS_ENUM(NSUInteger, GMDataGrouping)
 
 - (NSInteger) daysInSet;
 - (GMDataSet*) dataSetFromDate: (NSDate*) startDate;
-- (GMDataSet*) sortedGroups;
+- (GMDataSet*) sortedGroupsWithAverageType: (GMDataAverage) averageFunc;
 - (GMDataGrouping) dataGrouping;
 - (void) setDataGrouping: (GMDataGrouping) dataGrouping;
 - (NSString*) dateStringForPointAtIndex: (NSInteger) index;

@@ -88,7 +88,7 @@
     startDateChanged: (NSDate*) date
 {
     [self.currentDateLabel setText: [NSString stringWithFormat: @"%@", date]];
-    [self.chartView setDataSetsWithArray: @[[[GMCoreDataHelper testDataSetWithStartDate: date] sortedGroups]]];
+    [self.chartView setDataSetsWithArray: @[[[GMCoreDataHelper testDataSetWithStartDate: date] sortedGroupsWithAverageType: GMDataAverageArithmetic]]];
 }
 
 @end
