@@ -81,7 +81,7 @@ const CGFloat kLineWidth = 2;
     [self.chartView.yAxisLabel setText: @""];
     
     [self.chartView setShowGrid: NO];
-    [self.chartView setShouldAddMinYAverage: NO];
+    [self.chartView setShouldAddMinYAverage: YES];
     
     [self.chartView setShouldPlotLabels: NO];
     [self.chartView setShouldUseBezier: YES];

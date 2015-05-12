@@ -290,6 +290,7 @@ static const NSString* const kCount  = @"count";
     [dataSet setPlotName: self.plotName];
     [dataSet sortPoints];
     [dataSet setDataGrouping: _dataGrouping];
+    NSLog(@"end grouping");
     return dataSet;
 }
 
@@ -434,7 +435,6 @@ static const NSString* const kCount  = @"count";
             {
                 keyStartDate = [NSDate gm_dateByWeekNumber: key
                                                    andYear: year];
-                NSLog(@"%@", keyStartDate);
             }
             if (group == _months)
             {
