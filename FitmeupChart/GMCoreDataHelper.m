@@ -235,7 +235,7 @@ NSString *storeFilename = @"DataModel.sqlite";
     [dataSet addDataPoint:pt18];
     [dataSet addDataPoint:pt19];
     
-    for (NSInteger daysBefore = 15; daysBefore < 365*4; daysBefore++)
+    for (NSInteger daysBefore = 15; daysBefore < 365; daysBefore++)
     {
         GMDataPoint *point = [[GMDatePoint alloc] initWithDate: [NSDate dateWithTimeIntervalSinceNow:-daysBefore* SECS_PER_DAY]
                                                         yValue: 65.0f + arc4random() %4 ];

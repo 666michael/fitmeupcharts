@@ -257,6 +257,7 @@ static const NSString* const kCount  = @"count";
             break;
         case GMDataGroupWeeks:
         {
+            NSLog(@"weeks: %d", [[_weeks allKeys] count]);
             [self fillDataForGroup: _weeks
                            withKey: [[NSDate date] gm_weekNumber]
                     andMaxKeyValue: kWeeksInAYear];
@@ -267,6 +268,7 @@ static const NSString* const kCount  = @"count";
         }
         case GMDataGroupMonth:
         {
+            NSLog(@"months: %d", [[_months allKeys] count]);
             [self fillDataForGroup: _months
                            withKey: [[NSDate date] gm_monthNumber]
                     andMaxKeyValue: kMonthsInAYear];
@@ -286,9 +288,15 @@ static const NSString* const kCount  = @"count";
     }
     
     GMDataSet *dataSet = [[GMDataSet alloc] initWithDataPoints: groups];
+    [dataSet sortPoints];
+    if ([dataSet count] > kElementsInGroup)
+    {
+        dataSet = [dataSet dataSetSubsetFromIndex: [dataSet count] - kElementsInGroup];
+    }
     [dataSet setPlotColor: self.plotColor];
     [dataSet setPlotName: self.plotName];
-    [dataSet sortPoints];
+    
+    
     [dataSet setDataGrouping: _dataGrouping];
     NSLog(@"end grouping");
     return dataSet;
@@ -553,6 +561,25 @@ static const NSString* const kCount  = @"count";
     if (indexOfDate != NSNotFound)
     {
         return [[GMDataSet alloc] initWithDataPoints: [_dataPoints subarrayWithRange: NSMakeRange(indexOfDate, _dataPoints.count - indexOfDate)]];
+    }
+    else
+    {
+        return self;
+    }
+}
+
+//=============================================================================
+
+- (GMDataSet*) dataSetSubsetFromIndex: (NSInteger) startIndex
+{
+    if(startIndex <0 && startIndex> [self count])
+    {
+        startIndex = NSNotFound;
+    }
+    
+    if (startIndex != NSNotFound)
+    {
+        return [[GMDataSet alloc] initWithDataPoints: [_dataPoints subarrayWithRange: NSMakeRange(startIndex, _dataPoints.count - startIndex)]];
     }
     else
     {

@@ -63,6 +63,7 @@ typedef NS_ENUM(NSUInteger, GMDataAverage)
 
 - (NSInteger) daysInSet;
 - (GMDataSet*) dataSetFromDate: (NSDate*) startDate;
+- (GMDataSet*) dataSetSubsetFromIndex: (NSInteger) startIndex;
 - (GMDataSet*) sortedGroupsWithAverageType: (GMDataAverage) averageFunc;
 - (GMDataGrouping) dataGrouping;
 - (void) setDataGrouping: (GMDataGrouping) dataGrouping;
