@@ -203,6 +203,7 @@ static const NSString* const kCount  = @"count";
         
         if(pt2.yValue < _minY)
             _minY = pt2.yValue;
+        
         return pt1.xValue > pt2.xValue;
     }];
 }
@@ -286,6 +287,7 @@ static const NSString* const kCount  = @"count";
             break;
         }
     }
+    [self addPointStylesForGroup: groups];
     
     GMDataSet *dataSet = [[GMDataSet alloc] initWithDataPoints: groups];
     [dataSet sortPoints];
@@ -295,8 +297,6 @@ static const NSString* const kCount  = @"count";
     }
     [dataSet setPlotColor: self.plotColor];
     [dataSet setPlotName: self.plotName];
-    
-    
     [dataSet setDataGrouping: _dataGrouping];
     NSLog(@"end grouping");
     return dataSet;
@@ -470,6 +470,26 @@ static const NSString* const kCount  = @"count";
         {
             key = maxKey;
             year--;
+        }
+    }
+}
+
+//=============================================================================
+
+- (void) addPointStylesForGroup: (NSArray*) group
+{
+    for (NSInteger index = 0; index < [group count]; index++)
+    {
+        if(index > 0)
+        {
+            if([group[index - 1] yValue] < [group[index] yValue])
+            {
+                [group[index] setPointStyle: GMPointStyleUpper];
+            }
+            else
+            {
+                [group[index] setPointStyle: GMPointStyleLower];
+            }
         }
     }
 }
