@@ -32,8 +32,7 @@
 {
     if (!self.chartView)
     {
-        self.chartView = [GMChartFactory plainChartWithFrame: CGRectMake(0, 50.0f, CGRectGetWidth(self.view.frame), 214.0f)]
-        ;
+        self.chartView = [GMChartFactory barChartWithFrame: CGRectMake(0, 50.0f, CGRectGetWidth(self.view.frame), 214.0f)];
         [self.view addSubview: self.chartView];
     }
     
