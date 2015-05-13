@@ -640,6 +640,9 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
     {
         if (i % 2 == 0)
         {
+            UIColor *textColor = [self colorForDataSet: _dataSets[0]
+                                              withDate: [NSDate dateWithTimeIntervalSinceReferenceDate:_minX + i * amountPerLine]];
+            
             CGFloat x =  0.0f;
             switch ([[_dataSets firstObject] dataGrouping])
             {
@@ -650,6 +653,7 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
                 case GMDataGroupMonth:
                 case GMDataGroupYears:
                     x =  self.chartPadding + _leftPadding + (stepX / 2.0)* i;
+                    textColor = [UIColor gm_greenColor];
                     break;
                 default:
                     break;
@@ -658,10 +662,7 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
             CGFloat y = _plotHeight + _chartTopPadding;
             
             CGRect rect = CGRectMake(x - kDefaultSmallCircleRadius, y -kDefaultSmallCircleRadius, 2 *kDefaultSmallCircleRadius, 2 *kDefaultSmallCircleRadius);
-            CGContextAddEllipseInRect(context, rect);
-            
-            UIColor *textColor = [self colorForDataSet: _dataSets[0]
-                                              withDate: [NSDate dateWithTimeIntervalSinceReferenceDate:_minX + i * amountPerLine]];
+            CGContextAddEllipseInRect(context, rect);         
             
             NSDictionary *attributes = @{
                                          NSFontAttributeName : textFont,

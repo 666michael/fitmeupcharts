@@ -652,8 +652,6 @@ static const NSString* const kCount  = @"count";
             [dateFormatter setDateFormat: @"yyyy"];
             break;
         }
-        default:
-            break;
     }
     return [dateFormatter stringFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: [_dataPoints[index] xValue]]];
 }
