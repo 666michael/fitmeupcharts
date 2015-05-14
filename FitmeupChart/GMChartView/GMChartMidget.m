@@ -16,9 +16,9 @@
 
 //=============================================================================
 
-const CGFloat kFlagRange = 20;
-const CGFloat kDaysInStep = 7;
-const CGFloat kLineWidth = 2;
+const CGFloat kFlagRange  = 20.0f;
+const CGFloat kDaysInStep = 7.0f;
+const CGFloat kLineWidth  = 1.5f;
 
 //=============================================================================
 

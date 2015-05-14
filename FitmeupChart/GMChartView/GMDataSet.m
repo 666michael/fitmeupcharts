@@ -152,6 +152,16 @@ static const NSString* const kCount  = @"count";
 
 //=============================================================================
 
+- (GMDataPoint*) firstDataPoint
+{
+    if(!_dataPoints.count)
+        return nil;
+    
+    return [_dataPoints firstObject];
+}
+
+//=============================================================================
+
 - (GMDataPoint*) lastDataPoint
 {
     if(!_dataPoints.count)
@@ -520,7 +530,9 @@ static const NSString* const kCount  = @"count";
                 CGFloat medianVal = 0;
                 NSUInteger middleIndex;
                 
-                NSArray * groupData = [group objectForKey: kValues];
+                NSArray * groupData = [[data objectForKey: kValues] sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
+                    return [obj1 isEqualToNumber: obj2];
+                }];
                 if (self.count % 2 != 0)
                 {
                     middleIndex = (groupData.count / 2);

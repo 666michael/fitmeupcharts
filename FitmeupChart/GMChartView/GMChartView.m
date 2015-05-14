@@ -369,7 +369,7 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetLineWidth(context, GMChartViewDefaultLineWidth);
+    CGContextSetLineWidth(context, kDefaultGridLineWidth);
     CGContextSetStrokeColorWithColor(context, [_xAxisColor CGColor]);
     
     CGContextMoveToPoint(context, _chartPadding, _plotHeight + _chartTopPadding);
@@ -398,7 +398,7 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetLineWidth(context, GMChartViewDefaultLineWidth);
+    CGContextSetLineWidth(context, kDefaultGridLineWidth);
     CGContextSetStrokeColorWithColor(context, [_yAxisColor CGColor]);
     
     CGContextMoveToPoint(context, _chartPadding, _chartTopPadding);
@@ -834,15 +834,33 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
                       yCoordinate: self.chartTopPadding
                         fillColor: [UIColor whiteColor]
                        andContext: context];
-    [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding
-                      yCoordinate: _plotHeight + self.chartTopPadding
-                        fillColor: [UIColor whiteColor]
-                       andContext: context];
     [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding + _plotWidth
-                      yCoordinate: _plotHeight + self.chartTopPadding
+                      yCoordinate: self.chartTopPadding
                         fillColor: [UIColor whiteColor]
                        andContext: context];
     CGContextFillPath(context);
+    
+    [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding
+                      yCoordinate: _plotHeight + self.chartTopPadding
+                        fillColor: [UIColor gm_greenColor]
+                       andContext: context];
+    [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding + _plotWidth
+                      yCoordinate: _plotHeight + self.chartTopPadding
+                        fillColor: [UIColor gm_greenColor]
+                       andContext: context];
+    
+    [self drawCircleAtXCoordinate: self.chartPadding
+                      yCoordinate: [self yCoordinatesForValue: [[_dataSets[0] firstDataPoint] yValue]]
+                        fillColor: [UIColor gm_greenColor]
+                       andContext: context];
+    
+    [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding + _plotWidth
+                      yCoordinate: [self yCoordinatesForValue: [[_dataSets[0] lastDataPoint] yValue]]
+                        fillColor: [UIColor gm_greenColor]
+                       andContext: context];
+    CGContextFillPath(context);
+    
+    
 }
 
 //=============================================================================
@@ -854,7 +872,7 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
 
 {
     CGContextSetFillColorWithColor(context, color.CGColor);
-    CGRect rect = CGRectMake(x - GMChartViewDefaultLineWidth, y - GMChartViewDefaultLineWidth, 2 * GMChartViewDefaultLineWidth, 2 * GMChartViewDefaultLineWidth);
+    CGRect rect = CGRectMake(x - GMChartViewDefaultCircleRadius, y - GMChartViewDefaultCircleRadius, 2 * GMChartViewDefaultCircleRadius, 2 * GMChartViewDefaultCircleRadius);
     CGContextAddEllipseInRect(context, rect);
 }
 

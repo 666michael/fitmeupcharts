@@ -54,6 +54,7 @@ typedef NS_ENUM(NSUInteger, GMDataAverage)
 - (NSInteger) count;
 - (GMDataPoint*) dataPointAtIndex: (NSInteger) index;
 - (NSInteger) indexOfPointWithXValue: (CGFloat) xValue;
+- (GMDataPoint*) firstDataPoint;
 - (GMDataPoint*) lastDataPoint;
 - (CGPoint) minPoint;
 - (CGPoint) maxPoint;
