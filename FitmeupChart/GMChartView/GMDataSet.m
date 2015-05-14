@@ -299,15 +299,12 @@ static const NSString* const kCount  = @"count";
     }
     [self addPointStylesForGroup: groups];
     
-    GMDataSet *dataSet = [[GMDataSet alloc] initWithDataPoints: groups];
+    GMDataSet *dataSet = [self copyWithPoints: groups];
     [dataSet sortPoints];
     if ([dataSet count] > kElementsInGroup)
     {
         dataSet = [dataSet dataSetSubsetFromIndex: [dataSet count] - kElementsInGroup];
     }
-    [dataSet setPlotColor: self.plotColor];
-    [dataSet setPlotName: self.plotName];
-    [dataSet setDataGrouping: _dataGrouping];
     NSLog(@"end grouping");
     return dataSet;
 }
@@ -320,23 +317,22 @@ static const NSString* const kCount  = @"count";
 {
     NSDate *firstDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [_dataPoints[0] xValue]];
     NSDate *lastDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self lastDataPoint] xValue]];
-    if ([firstDate gm_daysBetweenDate: lastDate] <= kElementsInGroup)
+    if ([firstDate gm_daysBetweenDate: lastDate] < kElementsInGroup)
     {
         _dataGrouping = GMDataGroupDays;
     }
     else
-        
-        if ([firstDate gm_weeksBetweenDate: lastDate] <= kElementsInGroup)
+        if ([firstDate gm_weeksBetweenDate: lastDate] < kElementsInGroup)
         {
             _dataGrouping = GMDataGroupWeeks;
         }
         else
-            if ([firstDate gm_monthsBetweenDate: lastDate] <= kElementsInGroup)
+            if ([firstDate gm_monthsBetweenDate: lastDate] < kElementsInGroup)
             {
                 _dataGrouping = GMDataGroupMonth;
             }
             else
-                if ([firstDate gm_yearsBetweenDate: lastDate] <= kElementsInGroup)
+                if ([firstDate gm_yearsBetweenDate: lastDate] < kElementsInGroup)
                 {
                     _dataGrouping = GMDataGroupYears;
                 }
@@ -585,7 +581,9 @@ static const NSString* const kCount  = @"count";
     return NO;
 }
 
-- (GMDataSet*) dataSetFromDate: (NSDate*) startDate;
+//=============================================================================
+
+- (GMDataSet*) dataSetFromDate: (NSDate*) startDate
 {
     NSInteger indexOfDate = [_dataPoints indexOfObjectPassingTest: ^BOOL(GMDataPoint *point, NSUInteger idx, BOOL *stop) {
         return point.xValue > [startDate timeIntervalSinceReferenceDate];
@@ -600,6 +598,33 @@ static const NSString* const kCount  = @"count";
     }
 }
 
+//=============================================================================
+
+- (GMDataSet*) dataSetFromDate: (NSDate*) startDate
+                        toDate: (NSDate*) endDate
+
+{
+    NSInteger indexOfFirstDate = [_dataPoints indexOfObjectPassingTest: ^BOOL(GMDataPoint *point, NSUInteger idx, BOOL *stop) {
+        return point.xValue > [startDate timeIntervalSinceReferenceDate];
+    }];
+    NSInteger indexOfLastDate = [_dataPoints indexOfObjectPassingTest: ^BOOL(GMDataPoint *point, NSUInteger idx, BOOL *stop) {
+        return point.xValue > [endDate timeIntervalSinceReferenceDate];
+    }];
+    if (indexOfFirstDate != NSNotFound)
+    {
+        NSInteger toIndex = _dataPoints.count - indexOfFirstDate;
+        
+        if (indexOfLastDate != NSNotFound)
+        {
+            toIndex = _dataPoints.count - indexOfLastDate;
+        }
+        return [[GMDataSet alloc] initWithDataPoints: [_dataPoints subarrayWithRange: NSMakeRange(indexOfFirstDate, toIndex)]];
+    }
+    else
+    {
+        return self;
+    }
+}
 //=============================================================================
 
 - (GMDataSet*) dataSetSubsetFromIndex: (NSInteger) startIndex
@@ -642,7 +667,7 @@ static const NSString* const kCount  = @"count";
 
 //=============================================================================
 
-- (NSString*) dateStringForPointAtIndex: (NSInteger) index;
+- (NSString*) dateStringForPointAtIndex: (NSInteger) index
 {
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     [dateFormatter setDateFormat: @"dd.MM"];
@@ -670,6 +695,43 @@ static const NSString* const kCount  = @"count";
 
 //=============================================================================
 
+- (GMDataSet*) dataSetForMidget
+{
+    NSMutableArray *points = [NSMutableArray arrayWithCapacity: kElementsInGroup];
+    if ([_dataPoints count] > 0)
+    {
+        [points addObject: [[self firstDataPoint] copy]];
+        [points addObject: [[self lastDataPoint] copy]];
+    }
+    
+    CGFloat startX = [[self firstDataPoint] xValue];
+    CGFloat endX = [[self lastDataPoint] xValue];
+    CGFloat stepX = (endX - startX) / (kElementsInGroup + 1);
+    
+    for (NSInteger index = 0; index < kElementsInGroup -1; index++)
+    {
+        GMDataSet *setOfPoints = [self dataSetFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + index * stepX]
+                                                toDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX]];
+        NSLog(@"to %@", [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX]);
+        [points addObject: [[GMDatePoint alloc] initWithDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX]
+                                                      yValue: [setOfPoints averageArithmetic]]];
+    }
+    
+    GMDataSet *dataSet = [self copyWithPoints: points];
+    [dataSet sortPoints];
+    
+    return dataSet;
+}
+
+//=============================================================================
+
+- (CGFloat) averageArithmetic
+{
+    return [[_dataPoints valueForKeyPath: @"@avg.yValue"] floatValue];
+}
+
+//=============================================================================
+
 - (NSString*) description
 {
     NSString *points = @"";
@@ -680,5 +742,40 @@ static const NSString* const kCount  = @"count";
     return points;
 }
 
+//=============================================================================
+
+#pragma mark - NSCopying -
+
+//=============================================================================
+
+- (id)copyWithZone: (NSZone *) zone
+{
+    id copy = [[[self class] alloc] init];
+    
+    if (copy)
+    {
+        [copy setPlotColor: self.plotColor];
+        [copy setPlotName: self.plotName];
+        [copy setDataGrouping: self.dataGrouping];
+    }
+    
+    return copy;
+}
+
+//=============================================================================
+
+- (id) copyWithPoints: (NSArray*) points
+{
+    id copy = [[[self class] alloc] initWithDataPoints: points];
+    
+    if (copy)
+    {
+        [copy setPlotColor: self.plotColor];
+        [copy setPlotName: self.plotName];
+        [copy setDataGrouping: self.dataGrouping];
+    }
+    
+    return copy;
+}
 //=============================================================================
 @end

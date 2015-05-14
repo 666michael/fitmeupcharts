@@ -46,4 +46,24 @@
 
 //=============================================================================
 
+#pragma mark - NSCopying -
+
+//=============================================================================
+
+- (id)copyWithZone: (NSZone *) zone
+{
+    id copy = [[[self class] alloc] initWithXValue: _xValue
+                                            yValue: _yValue];
+    
+    if (copy)
+    {
+        [copy setShouldShowLabel: self.shouldShowLabel];
+        [copy setPointLabelText: self.pointLabelText];
+        [copy setPointStyle: self.pointStyle];
+    }
+    
+    return copy;
+}
+
+//=============================================================================
 @end

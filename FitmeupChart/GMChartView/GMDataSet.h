@@ -25,7 +25,7 @@ typedef NS_ENUM(NSUInteger, GMDataAverage)
 
 @class GMDataPoint;
 
-@interface GMDataSet : NSObject
+@interface GMDataSet : NSObject <NSCopying>
 {
 @private
     NSMutableArray* _dataPoints;
@@ -64,9 +64,14 @@ typedef NS_ENUM(NSUInteger, GMDataAverage)
 
 - (NSInteger) daysInSet;
 - (GMDataSet*) dataSetFromDate: (NSDate*) startDate;
+- (GMDataSet*) dataSetFromDate: (NSDate*) startDate
+                        toDate: (NSDate*) endDate;
 - (GMDataSet*) dataSetSubsetFromIndex: (NSInteger) startIndex;
 - (GMDataSet*) sortedGroupsWithAverageType: (GMDataAverage) averageFunc;
 - (GMDataGrouping) dataGrouping;
 - (void) setDataGrouping: (GMDataGrouping) dataGrouping;
 - (NSString*) dateStringForPointAtIndex: (NSInteger) index;
+
+- (GMDataSet*) dataSetForMidget;
+- (CGFloat) averageArithmetic;
 @end

@@ -14,7 +14,7 @@ typedef NS_ENUM (NSUInteger, GMPointStyle)
     GMPointStyleLower
 };
 
-@interface GMDataPoint : NSObject
+@interface GMDataPoint : NSObject <NSCopying>
 
 @property (nonatomic) CGFloat xValue;
 @property (nonatomic) CGFloat yValue;
