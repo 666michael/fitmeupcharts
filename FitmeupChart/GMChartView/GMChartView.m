@@ -719,7 +719,7 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
             
             NSDictionary *attributes = @{
                                          NSFontAttributeName : textFont,
-                                         NSForegroundColorAttributeName : [UIColor gm_grayColor]};
+                                         NSForegroundColorAttributeName : [UIColor whiteColor]};
             NSString* legendText = [NSString stringWithFormat:@"%.0f", _minY +(i * stepY) ];
             
             x += fminf(kTextLabelOffset, [legendText gm_widthForFont: textFont]);

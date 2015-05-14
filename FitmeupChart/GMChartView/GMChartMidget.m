@@ -95,6 +95,7 @@ const CGFloat kLineWidth = 2;
     [self.chartView setXAxisColor: [UIColor gm_greenColor]];
     [self.chartView setYAxisColor: [UIColor whiteColor]];
     [self.chartView setShouldDrawCirclesOnAxis: YES];
+    [self.chartView setBackgroundColor: [UIColor gm_backgroundColor]];
     
     self.totalDataSet = [GMCoreDataHelper testDataSet];
     self.lastDateType = GMChartLastDateTypeCurrentDateWithLastValue;
@@ -119,7 +120,7 @@ const CGFloat kLineWidth = 2;
     
     //[self setupImageView];
     
-    self.flagColor = [UIColor blackColor];
+    self.flagColor = [UIColor whiteColor];
     [self setupTimeFlag];
 }
 
@@ -128,7 +129,7 @@ const CGFloat kLineWidth = 2;
 - (void) setupTimeFlag
 {
     self.timeFlagView = [[UIView alloc] initWithFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, [self.chartView width], [self.chartView height])];
-    [self.timeFlagView setBackgroundColor: [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.3]];
+    [self.timeFlagView setBackgroundColor: [UIColor clearColor]];
     [self addSubview: self.timeFlagView];
     
     self.innerFlagView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - kFlagRange, 0, kFlagRange, kFlagRange)];
@@ -195,8 +196,8 @@ const CGFloat kLineWidth = 2;
     
     if ([self touchIsInRange: touch])
     {
-        _touchStart = [touch locationInView: self];
         _widthStart = CGRectGetWidth(self.timeFlagView.frame);
+        _touchStart = CGPointMake(_widthStart + self.chartView.chartPadding, 0);
         _isResizing = YES;
     }
 }
@@ -237,8 +238,7 @@ const CGFloat kLineWidth = 2;
 - (BOOL) touchIsInChart: (UITouch *) touch
 {
     CGFloat xCoord = [touch locationInView: self].x;
-    
-    return  self.chartView.chartPadding <= xCoord && xCoord <= self.chartView.chartPadding + _maxWidth - [self stepWidth];
+    return  self.chartView.chartPadding <= xCoord && xCoord <= self.chartView.chartPadding + _maxWidth;
 }
 
 //=============================================================================

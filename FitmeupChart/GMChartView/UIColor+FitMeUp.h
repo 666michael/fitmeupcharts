@@ -13,5 +13,6 @@
 + (UIColor*) gm_greenColor;
 + (UIColor*) gm_redColor;
 + (UIColor*) gm_grayColor;
++ (UIColor*) gm_backgroundColor;
 
 @end

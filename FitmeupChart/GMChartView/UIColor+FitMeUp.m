@@ -18,21 +18,40 @@
 
 + (UIColor*) gm_greenColor
 {
-    return [UIColor colorWithRed:63.0f/255.0f green:180.0f/255.0f blue:119.0f/255.0f alpha:1.0f];
+    return [UIColor colorWithRed: 63.0f/255.0f
+                           green: 180.0f/255.0f
+                            blue: 119.0f/255.0f
+                           alpha: 1.0f];
 }
 
 //=============================================================================
 
 + (UIColor*) gm_redColor
 {
-    return [UIColor colorWithRed:218.0f/255.0f green:64.0f/255.0f blue:59.0f/255.0f alpha:1.0f];
+    return [UIColor colorWithRed: 218.0f/255.0f
+                           green: 64.0f/255.0f
+                            blue: 59.0f/255.0f
+                           alpha: 1.0f];
 }
 
 //=============================================================================
 
 + (UIColor*) gm_grayColor
 {
-    return [UIColor colorWithRed:85.0/255.0f green:86.0/255.0f blue:86.0/255.0f alpha:1.0f];
+    return [UIColor colorWithRed: 85.0/255.0f
+                           green: 86.0/255.0f
+                            blue: 86.0/255.0f
+                           alpha: 1.0f];
+}
+
+//=============================================================================
+
++ (UIColor*) gm_backgroundColor
+{
+    return [UIColor colorWithRed: 39.0/255.0f
+                           green: 42.0/255.0f
+                            blue: 40.0/255.0f
+                           alpha: 1.0f];
 }
 
 //=============================================================================

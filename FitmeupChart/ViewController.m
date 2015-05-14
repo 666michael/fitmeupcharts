@@ -26,13 +26,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     [self initChart];
+    [self.view setBackgroundColor: [UIColor gm_backgroundColor]];
 }
 
 - (void)initChart
 {
     if (!self.chartView)
     {
-        self.chartView = [GMChartFactory barChartWithFrame: CGRectMake(0, 50.0f, CGRectGetWidth(self.view.frame), 214.0f)];
+        self.chartView = [GMChartFactory plainChartWithFrame: CGRectMake(0, 50.0f, CGRectGetWidth(self.view.frame), 214.0f)];
         [self.view addSubview: self.chartView];
     }
     
@@ -47,10 +48,10 @@
     
     [self.chartView setXAxisColor: [UIColor gm_greenColor]];
     [self.chartView setYAxisColor: [UIColor gm_greenColor]];
-    [self.chartView setShouldDrawCirclesOnAxis: YES];
     [self.chartView setIsStepUsed: YES];
     [self.chartView setGridSize: GMGridSize18];
     [self.chartView setShouldDrawCirclesOnAxis: NO];
+    [self.chartView setBackgroundColor: [UIColor gm_backgroundColor]];
     
     [self.chartMidget setDelegate: self];
 }
