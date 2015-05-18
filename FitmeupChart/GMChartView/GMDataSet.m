@@ -310,6 +310,7 @@ static const NSString* const kCount  = @"count";
     [dataSet setPlotName: self.plotName];
     [dataSet setDataGrouping: _dataGrouping];
     NSLog(@"end grouping");
+    
     return dataSet;
 }
 
@@ -317,6 +318,7 @@ static const NSString* const kCount  = @"count";
 
 //=============================================================================
 
+#warning No If
 - (void) detectGroupingAvailability
 {
     NSDate *firstDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [_dataPoints[0] xValue]];
@@ -716,7 +718,6 @@ static const NSString* const kCount  = @"count";
     {
         GMDataSet *setOfPoints = [self dataSetFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + index * stepX]
                                                 toDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX]];
-        NSLog(@"to %@", [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX]);
         [points addObject: [[GMDatePoint alloc] initWithDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX]
                                                       yValue: [setOfPoints averageArithmetic]]];
     }

@@ -44,8 +44,6 @@
     [self.chartView setChartTopPadding: 20.0f];
     [self.chartView setChartBottomPadding: 0.0f];
     
-    [self.chartView setGridSize: GMGridSize16];
-    
     [self.chartView setXAxisColor: [UIColor gm_greenColor]];
     [self.chartView setYAxisColor: [UIColor gm_greenColor]];
     [self.chartView setIsStepUsed: YES];
@@ -89,7 +87,8 @@
 {
     NSLog(@"start grouping");
     [self.currentDateLabel setText: [NSString stringWithFormat: @"%@", date]];
-    [self.chartView setDataSetsWithArray: @[[[GMCoreDataHelper testDataSetWithStartDate: date] sortedGroupsWithAverageType: GMDataAverageArithmetic]]];
+    [self.chartView setDataSetsWithArray: @[[[GMCoreDataHelper testDataSetWithStartDate: date] sortedGroupsWithAverageType: GMDataAverageArithmetic],
+                                            [[GMCoreDataHelper testDataSetSmallWithStartDate: date] sortedGroupsWithAverageType: GMDataAverageArithmetic]]];
 }
 
 @end

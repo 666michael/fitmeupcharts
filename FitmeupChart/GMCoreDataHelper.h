@@ -22,6 +22,8 @@
 - (void)setupCoreData;
 - (void)saveContext;
 
++ (GMDataSet*) testDataSetSmall;
 + (GMDataSet *) testDataSet;
 + (GMDataSet *) testDataSetWithStartDate: (NSDate*) startDate;
++ (GMDataSet *) testDataSetSmallWithStartDate: (NSDate*) startDate;
 @end

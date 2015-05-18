@@ -67,7 +67,7 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
             }
         }
         CGContextSetStrokeColorWithColor(context, dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
-        CGContextDrawPath(context, kCGPathStroke);
+        CGContextDrawPath(context, kCGPathFillStroke);
     }
     else
     {
@@ -96,7 +96,7 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
             [path stroke];
             CGContextSetStrokeColorWithColor(context, dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
             CGContextAddPath(context, [path CGPath]);
-            CGContextDrawPath(context, kCGPathStroke);
+            CGContextDrawPath(context, kCGPathFillStroke);
         }
     }
 }
