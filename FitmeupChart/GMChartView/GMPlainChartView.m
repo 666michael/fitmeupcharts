@@ -109,7 +109,7 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 - (UIColor*) colorForDataSet: (GMDataSet*) dataSet
                     withDate: (NSDate*) date
 {
-    return [UIColor gm_grayColor];
+    return [UIColor gm_greenColor];
 }
 
 //=============================================================================

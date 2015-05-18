@@ -98,7 +98,7 @@ const CGFloat kLineWidth  = 1.5f;
     [self.chartView setBackgroundColor: [UIColor gm_backgroundColor]];
     
     self.totalDataSet = [GMCoreDataHelper testDataSet];
-    //self.totalDataSet = [self.totalDataSet dataSetForMidget];
+    self.totalDataSet = [self.totalDataSet dataSetForMidget];
     self.lastDateType = GMChartLastDateTypeCurrentDateWithLastValue;
     switch (self.lastDateType)
     {

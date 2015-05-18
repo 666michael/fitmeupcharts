@@ -299,12 +299,16 @@ static const NSString* const kCount  = @"count";
     }
     [self addPointStylesForGroup: groups];
     
-    GMDataSet *dataSet = [self copyWithPoints: groups];
+    GMDataSet *dataSet = [[GMDataSet alloc] initWithDataPoints: groups];
+
     [dataSet sortPoints];
     if ([dataSet count] > kElementsInGroup)
     {
         dataSet = [dataSet dataSetSubsetFromIndex: [dataSet count] - kElementsInGroup];
     }
+    [dataSet setPlotColor: self.plotColor];
+    [dataSet setPlotName: self.plotName];
+    [dataSet setDataGrouping: _dataGrouping];
     NSLog(@"end grouping");
     return dataSet;
 }
@@ -708,7 +712,7 @@ static const NSString* const kCount  = @"count";
     CGFloat endX = [[self lastDataPoint] xValue];
     CGFloat stepX = (endX - startX) / (kElementsInGroup + 1);
     
-    for (NSInteger index = 0; index < kElementsInGroup -1; index++)
+    for (NSInteger index = 0; index < kElementsInGroup; index++)
     {
         GMDataSet *setOfPoints = [self dataSetFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + index * stepX]
                                                 toDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX]];
@@ -777,5 +781,7 @@ static const NSString* const kCount  = @"count";
     
     return copy;
 }
+
 //=============================================================================
+
 @end
