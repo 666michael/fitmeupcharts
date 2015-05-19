@@ -13,6 +13,8 @@
 #import "GMDataSet.h"
 #import "GMCoreDataHelper.h"
 #import "GMDatePoint.h"
+#import "GMShadowLayer.h"
+#import "GMShadowView.h"
 
 //=============================================================================
 
@@ -32,8 +34,10 @@ const CGFloat kLineWidth  = 1.5f;
 @property (nonatomic) UIView *innerFlagView;
 @property (nonatomic) UIView *innerLineView;
 @property (nonatomic) UIView *timeFlagView;
+@property (nonatomic) GMShadowView *leftGlowView;
 @property (nonatomic) GMPlainChartView *chartView;
 @property (nonatomic) UIImageView *imageCacheView;
+@property (nonatomic) GMShadowLayer *shadowLayer;
 @end
 
 //=============================================================================
@@ -133,6 +137,10 @@ const CGFloat kLineWidth  = 1.5f;
     [self.timeFlagView setBackgroundColor: [UIColor clearColor]];
     [self addSubview: self.timeFlagView];
     
+    //self.leftGlowView = [[GMShadowView alloc] initWithFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, [self.chartView width], [self.chartView height])];
+    //[self.leftGlowView setBackgroundColor: [UIColor redColor]];
+    //[self addSubview: self.leftGlowView];
+    
     self.innerFlagView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - kFlagRange, 0, kFlagRange, kFlagRange)];
     [self.innerFlagView setBackgroundColor: self.flagColor];
     [self.innerFlagView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
@@ -146,7 +154,18 @@ const CGFloat kLineWidth  = 1.5f;
     self.innerFlagView.layer.mask = [self triangleMask];
     [self.timeFlagView addSubview: self.innerFlagView];
     [self.timeFlagView addSubview: self.innerLineView];
+    
+    [self setupShadow];
 }
+//=============================================================================
+
+- (void) setupShadow
+{
+    self.shadowLayer = [GMShadowLayer layer];
+    [self.layer addSublayer: self.shadowLayer];
+}
+
+//=============================================================================
 
 - (void) setupImageView
 {
@@ -232,6 +251,10 @@ const CGFloat kLineWidth  = 1.5f;
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, CGRectGetHeight(self.timeFlagView.frame))];
     [self.innerFlagView setFrame: CGRectMake(width - kFlagRange, 0, kFlagRange, kFlagRange)];
     [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, CGRectGetHeight(self.timeFlagView.frame))];
+    [self.leftGlowView setFrame: CGRectMake(self.chartView.chartPadding + width, self.chartView.chartTopPadding, CGRectGetWidth(self.frame) - (self.chartView.chartPadding * 2 + width), CGRectGetHeight(self.timeFlagView.frame))];
+    
+    [self.shadowLayer setClipRect: CGRectMake(self.chartView.chartPadding + width - [self stepWidth], 0, CGRectGetWidth(self.frame) - (self.chartView.chartPadding * 2 + width - [self stepWidth]), CGRectGetHeight(self.timeFlagView.frame)+self.chartView.chartTopPadding)];
+    [self.shadowLayer setNeedsDisplay];
 }
 
 //=============================================================================
@@ -332,6 +355,12 @@ andHeightValueChanged: (CGFloat) heightValue
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
     [self.innerFlagView setFrame: CGRectMake(width - kFlagRange, 0, kFlagRange, kFlagRange)];
     [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, height)];
+    
+    self.shadowLayer.frame = CGRectMake(0, 0, width + self.chartView.chartPadding, height+self.chartView.chartTopPadding);
+    [self.shadowLayer setMidgetPath: [self.chartView glowPath]];
+    [self.shadowLayer setClipRect: CGRectMake(self.chartView.chartPadding + width - [self stepWidth], 0, CGRectGetWidth(self.frame) - (self.chartView.chartPadding * 2 + width - [self stepWidth]), height+self.chartView.chartTopPadding)];
+    [self.shadowLayer setNeedsDisplay];
+    
     [self setWidthForTimeFlagWithValue: width - [self stepWidth]];
     [self setMaxWidth];
     [self.imageCacheView setFrame: CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame))];

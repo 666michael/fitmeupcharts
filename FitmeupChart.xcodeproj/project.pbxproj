@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		330565421B0B497F006A336C /* GMShadowLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 330565411B0B497F006A336C /* GMShadowLayer.m */; };
 		331503701AB6CE1800F2FC79 /* UIColor+FitMeUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3315036F1AB6CE1800F2FC79 /* UIColor+FitMeUp.m */; };
 		3342DD401AF2147D008836ED /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3342DD3E1AF2147D008836ED /* Default-568h@2x.png */; };
 		3355055D1ABC50B600193BA2 /* NSDate+FitMeUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3355055C1ABC50B600193BA2 /* NSDate+FitMeUp.m */; };
+		3381B1AA1B0B94A800653445 /* GMShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3381B1A91B0B94A800653445 /* GMShadowView.m */; };
 		338C85501AB2EA100025D2E4 /* NSString+FitMeUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 338C854F1AB2EA100025D2E4 /* NSString+FitMeUp.m */; };
 		338DAA001AB185AE00594ED0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DA9FF1AB185AE00594ED0 /* main.m */; };
 		338DAA031AB185AE00594ED0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 338DAA021AB185AE00594ED0 /* AppDelegate.m */; };
@@ -46,11 +48,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		330565401B0B497F006A336C /* GMShadowLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMShadowLayer.h; path = GMChartView/GMShadowLayer.h; sourceTree = "<group>"; };
+		330565411B0B497F006A336C /* GMShadowLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMShadowLayer.m; path = GMChartView/GMShadowLayer.m; sourceTree = "<group>"; };
 		3315036E1AB6CE1800F2FC79 /* UIColor+FitMeUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+FitMeUp.h"; path = "GMChartView/UIColor+FitMeUp.h"; sourceTree = "<group>"; };
 		3315036F1AB6CE1800F2FC79 /* UIColor+FitMeUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+FitMeUp.m"; path = "GMChartView/UIColor+FitMeUp.m"; sourceTree = "<group>"; };
 		3342DD3F1AF2147D008836ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Base; path = "Base.lproj/Default-568h@2x.png"; sourceTree = "<group>"; };
 		3355055B1ABC50B600193BA2 /* NSDate+FitMeUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+FitMeUp.h"; path = "GMChartView/NSDate+FitMeUp.h"; sourceTree = "<group>"; };
 		3355055C1ABC50B600193BA2 /* NSDate+FitMeUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+FitMeUp.m"; path = "GMChartView/NSDate+FitMeUp.m"; sourceTree = "<group>"; };
+		3381B1A81B0B94A800653445 /* GMShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMShadowView.h; path = GMChartView/GMShadowView.h; sourceTree = "<group>"; };
+		3381B1A91B0B94A800653445 /* GMShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMShadowView.m; path = GMChartView/GMShadowView.m; sourceTree = "<group>"; };
 		338C854E1AB2EA100025D2E4 /* NSString+FitMeUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+FitMeUp.h"; path = "GMChartView/NSString+FitMeUp.h"; sourceTree = "<group>"; };
 		338C854F1AB2EA100025D2E4 /* NSString+FitMeUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+FitMeUp.m"; path = "GMChartView/NSString+FitMeUp.m"; sourceTree = "<group>"; };
 		338DA9FA1AB185AE00594ED0 /* FitmeupChart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitmeupChart.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -239,6 +245,10 @@
 				33A68BCB1AE78FC3009571C4 /* GMChartMidgetProtocol.h */,
 				33EEABD81ADBBB920045DAB1 /* GMChartMidget.h */,
 				33EEABD91ADBBB920045DAB1 /* GMChartMidget.m */,
+				330565401B0B497F006A336C /* GMShadowLayer.h */,
+				330565411B0B497F006A336C /* GMShadowLayer.m */,
+				3381B1A81B0B94A800653445 /* GMShadowView.h */,
+				3381B1A91B0B94A800653445 /* GMShadowView.m */,
 			);
 			name = Charts;
 			sourceTree = "<group>";
@@ -390,11 +400,13 @@
 				338DAA031AB185AE00594ED0 /* AppDelegate.m in Sources */,
 				338DAA351AB199E900594ED0 /* GMDatePoint.m in Sources */,
 				338DAA2C1AB186DC00594ED0 /* GMChartView.m in Sources */,
+				3381B1AA1B0B94A800653445 /* GMShadowView.m in Sources */,
 				338C85501AB2EA100025D2E4 /* NSString+FitMeUp.m in Sources */,
 				33A68BD31AE7ACD5009571C4 /* GMEntity.m in Sources */,
 				338DAA091AB185AE00594ED0 /* ViewController.m in Sources */,
 				3395FD151AD7FCE80045C7A0 /* GMPlainChartView.m in Sources */,
 				338DAA381AB19A8600594ED0 /* GMChartFactory.m in Sources */,
+				330565421B0B497F006A336C /* GMShadowLayer.m in Sources */,
 				33A68BD01AE7AC7E009571C4 /* DataModel.xcdatamodeld in Sources */,
 				33DC2A4E1AD2885F00D21199 /* GMChartUtils.m in Sources */,
 				338DAA001AB185AE00594ED0 /* main.m in Sources */,

@@ -23,6 +23,8 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
     GMPointNone
 };
 
+static const CGFloat kShadowRadius = 25.0f;
+
 //=============================================================================
 
 @implementation GMPlainChartView
@@ -48,6 +50,11 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 - (void) plotDataSet: (GMDataSet*) dataSet
          withContext: (CGContextRef) context
 {
+    NSShadow* shadow = [[NSShadow alloc] init];
+    [shadow setShadowColor: [[UIColor gm_greenColor] colorWithAlphaComponent: 1]];
+    [shadow setShadowOffset: CGSizeMake(0, 0)];
+    [shadow setShadowBlurRadius: kShadowRadius];
+    
     if (!self.shouldUseBezier)
     {
         for (NSInteger index = 0; index < [dataSet count]; index++)
@@ -67,14 +74,15 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
             }
         }
         CGContextSetStrokeColorWithColor(context, dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
-        CGContextDrawPath(context, kCGPathFillStroke);
+        CGContextDrawPath(context, kCGPathStroke);
     }
     else
     {
         [dataSet setDataSource: self];
         UIBezierPath *path = nil;
         
-        switch (self.chartInterpolation) {
+        switch (self.chartInterpolation)
+        {
             case GMChartInterpolationHermite:
             {
                 path = [GMChartUtils gm_interpolateCGPointsWithHermiteForDataSet: [dataSet pointsArray]];
@@ -89,20 +97,47 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
             default:
                 break;
         }
-        
-        
         if(path)
-        {
-            [path stroke];
+        {            
+            _glowPath = [path copy];
             CGContextSetStrokeColorWithColor(context, dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
             CGContextAddPath(context, [path CGPath]);
-            CGContextDrawPath(context, kCGPathFillStroke);
+            CGContextDrawPath(context, kCGPathStroke);
+            
+            [path addLineToPoint: CGPointMake([[[dataSet pointsArray] lastObject] CGPointValue].x, self.chartTopPadding * 2 + [self height])];
+            [path addLineToPoint: CGPointMake([[[dataSet pointsArray] firstObject] CGPointValue].x, self.chartTopPadding * 2 + [self height])];
+            [path closePath];
+            
+            UIBezierPath *clipPath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake( 100, 0, [self width] - 100, [self height] + self.chartTopPadding * 2)
+                                                                cornerRadius: 0];
+            clipPath.usesEvenOddFillRule = YES;
+            //[clipPath addClip];
+            
+            CGContextSaveGState(context);
+            UIRectClip(path.bounds);
+            CGContextSetShadowWithColor(context, CGSizeZero, 0, NULL);
+            
+            CGContextSetAlpha(context, CGColorGetAlpha([shadow.shadowColor CGColor]));
+            CGContextBeginTransparencyLayer(context, NULL);
+            {
+                UIColor* opaqueShadow = [shadow.shadowColor colorWithAlphaComponent: 1];
+                CGContextSetShadowWithColor(context, shadow.shadowOffset, shadow.shadowBlurRadius, [opaqueShadow CGColor]);
+                CGContextSetBlendMode(context, kCGBlendModeSourceOut);
+                CGContextBeginTransparencyLayer(context, NULL);
+                
+                //
+                [opaqueShadow setFill];
+                [path fill];
+                
+                CGContextEndTransparencyLayer(context);
+            }
+            CGContextEndTransparencyLayer(context);
+            CGContextRestoreGState(context);
+            
+            CGContextDrawPath(context, kCGPathStroke);
         }
     }
 }
-
-//=============================================================================
-
 
 //=============================================================================
 
@@ -422,4 +457,5 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
 }
 
 //=============================================================================
+
 @end

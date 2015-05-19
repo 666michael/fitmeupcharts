@@ -53,6 +53,7 @@ typedef NS_ENUM(NSUInteger, GMChartInterpolation)
     
     NSMutableArray* _labelsGrid;
     NSMutableDictionary *_tileCache;
+    UIBezierPath *_glowPath;
 }
 
 @property (nonatomic, strong) UIColor* yAxisColor;
@@ -100,5 +101,7 @@ typedef NS_ENUM(NSUInteger, GMChartInterpolation)
 - (CGFloat) height;
 - (CGFloat) width;
 - (void) clearTilesCache;
+
+- (UIBezierPath*) glowPath;
 
 @end

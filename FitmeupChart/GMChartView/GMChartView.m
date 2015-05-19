@@ -204,7 +204,7 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
                widthValueChanged: _plotWidth
            andHeightValueChanged: _plotHeight];
     }
-    
+    NSLog(@"draw");
     [self saveAndDrawImage: tileImage
                    forRect: rect];
 }
@@ -902,7 +902,6 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
 
 //=============================================================================
 
-
 - (UIImage *)viewImage
 {
     UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, [UIScreen mainScreen].scale);
@@ -911,6 +910,13 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
+}
+
+//=============================================================================
+
+- (UIBezierPath*) glowPath;
+{
+    return _glowPath;
 }
 
 //=============================================================================
