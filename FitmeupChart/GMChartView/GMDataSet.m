@@ -121,7 +121,10 @@ static const NSString* const kCount  = @"count";
 
 - (void) addDataPoint: (GMDataPoint*) dataPoint
 {
-    [_dataPoints addObject: dataPoint];
+    if (![self hasDataForDate: [NSDate dateWithTimeIntervalSinceReferenceDate: dataPoint.xValue]])
+    {
+        [_dataPoints addObject: dataPoint];
+    }
 }
 
 //=============================================================================
@@ -309,7 +312,6 @@ static const NSString* const kCount  = @"count";
     [dataSet setPlotColor: self.plotColor];
     [dataSet setPlotName: self.plotName];
     [dataSet setDataGrouping: _dataGrouping];
-    NSLog(@"end grouping");
     
     return dataSet;
 }

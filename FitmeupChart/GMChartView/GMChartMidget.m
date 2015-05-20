@@ -103,7 +103,7 @@ const CGFloat kLineWidth  = 1.5f;
     [self.chartView setGlowIntensity: 0.5f];
     
     self.totalDataSet = [GMCoreDataHelper testDataSet];
-    self.totalDataSet = [self.totalDataSet dataSetForMidget];
+    //self.totalDataSet = [self.totalDataSet dataSetForMidget];
     self.lastDateType = GMChartLastDateTypeCurrentDateWithLastValue;
     switch (self.lastDateType)
     {
@@ -320,7 +320,7 @@ const CGFloat kLineWidth  = 1.5f;
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
    
     [self setWidthForTimeFlagWithValue: _fullWidth- [self stepWidth]];
-    self.startDate =  [startDate dateByAddingTimeInterval: ((_fullWidth- [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK];
+    self.startDate =  [[startDate dateByAddingTimeInterval: ((_fullWidth- [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK] gm_startOfNextDay];
 }
 
 //=============================================================================
@@ -369,18 +369,17 @@ andHeightValueChanged: (CGFloat) heightValue
     [self.innerFlagView setFrame: CGRectMake(width - kFlagRange, 0, kFlagRange, kFlagRange)];
     [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, height)];
     
-    NSLog(@"%@", [self.chartView glowPath]);
     [self.shadowLayer setMidgetPath: [self.chartView glowPath]];
     [self.shadowLayer setNeedsDisplay];
     
     [self setWidthForTimeFlagWithValue: width - [self stepWidth]];
     [self setMaxWidth];
+    
     [self.imageCacheView setFrame: CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame))];
     
     if (self.delegate && [self.delegate respondsToSelector: @selector(chartMidget:startDateChanged:)])
     {
-        NSDate *startDate = [NSDate dateWithTimeIntervalSinceReferenceDate: [[self.totalDataSet dataPointAtIndex: 0] xValue]];
-        self.startDate =  [startDate dateByAddingTimeInterval: ((width - [self stepWidth]) / [self stepWidth]) * SECS_PER_WEEK];
+        [self setMaxFlagValue];
         [self.delegate chartMidget: self
                   startDateChanged: [self.startDate gm_startOfDay]];
     }
