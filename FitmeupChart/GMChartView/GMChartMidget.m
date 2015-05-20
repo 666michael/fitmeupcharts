@@ -163,6 +163,14 @@ const CGFloat kLineWidth  = 1.5f;
 - (void) setupShadow
 {
     self.shadowLayer = [GMShadowLayer layer];
+    
+    NSMutableDictionary *newActions = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNull null], @"onOrderIn",
+                                       [NSNull null], @"onOrderOut",
+                                       [NSNull null], @"sublayers",
+                                       [NSNull null], @"contents",
+                                       [NSNull null], @"bounds",
+                                       nil];
+    self.shadowLayer.actions = newActions;
     [self.leftGlowView.layer addSublayer: self.shadowLayer];
 }
 
@@ -254,7 +262,6 @@ const CGFloat kLineWidth  = 1.5f;
     [self.innerFlagView setFrame: CGRectMake(width - kFlagRange, 0, kFlagRange, kFlagRange)];
     [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, height)];
     [self.leftGlowView setFrame: CGRectMake(self.chartView.chartPadding + width, self.chartView.chartTopPadding, CGRectGetWidth(self.frame) - (self.chartView.chartPadding * 2 + width), height)];
-    
     
     [CATransaction begin];
     [CATransaction setDisableActions: YES];
@@ -360,9 +367,8 @@ andHeightValueChanged: (CGFloat) heightValue
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
     [self.innerFlagView setFrame: CGRectMake(width - kFlagRange, 0, kFlagRange, kFlagRange)];
     [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, height)];
-    [self.leftGlowView setMidgetPath: [self.chartView glowPath]];
-    [self.leftGlowView setNeedsDisplay];
     
+    NSLog(@"%@", [self.chartView glowPath]);
     [self.shadowLayer setMidgetPath: [self.chartView glowPath]];
     [self.shadowLayer setNeedsDisplay];
     

@@ -51,7 +51,7 @@ static const CGFloat kShadowRadius = 25.0f;
          withContext: (CGContextRef) context
 {
     NSShadow* shadow = [[NSShadow alloc] init];
-    [shadow setShadowColor: [[UIColor gm_greenColor] colorWithAlphaComponent: 0.4f]];
+    [shadow setShadowColor: [[UIColor gm_greenColor] colorWithAlphaComponent: 0.3f]];
     [shadow setShadowOffset: CGSizeMake(0, 0)];
     [shadow setShadowBlurRadius: kShadowRadius];
     
@@ -99,7 +99,7 @@ static const CGFloat kShadowRadius = 25.0f;
         }
         if(path)
         {            
-            _glowPath = [path copy];
+            
             CGContextSetStrokeColorWithColor(context, dataSet.plotColor ? [dataSet.plotColor CGColor] : [UIColor whiteColor].CGColor);
             CGContextAddPath(context, [path CGPath]);
             CGContextDrawPath(context, kCGPathStroke);
@@ -107,11 +107,7 @@ static const CGFloat kShadowRadius = 25.0f;
             [path addLineToPoint: CGPointMake([[[dataSet pointsArray] lastObject] CGPointValue].x, self.chartTopPadding * 2 + [self height])];
             [path addLineToPoint: CGPointMake([[[dataSet pointsArray] firstObject] CGPointValue].x, self.chartTopPadding * 2 + [self height])];
             [path closePath];
-            
-            UIBezierPath *clipPath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake( 100, 0, [self width] - 100, [self height] + self.chartTopPadding * 2)
-                                                                cornerRadius: 0];
-            clipPath.usesEvenOddFillRule = YES;
-            //[clipPath addClip];
+            _glowPath = [path copy];
             
             CGContextSaveGState(context);
             UIRectClip(path.bounds);
@@ -125,7 +121,6 @@ static const CGFloat kShadowRadius = 25.0f;
                 CGContextSetBlendMode(context, kCGBlendModeSourceOut);
                 CGContextBeginTransparencyLayer(context, NULL);
                 
-                //
                 [opaqueShadow setFill];
                 [path fill];
                 
