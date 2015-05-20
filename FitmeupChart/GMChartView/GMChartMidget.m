@@ -255,7 +255,11 @@ const CGFloat kLineWidth  = 1.5f;
     [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, height)];
     [self.leftGlowView setFrame: CGRectMake(self.chartView.chartPadding + width, self.chartView.chartTopPadding, CGRectGetWidth(self.frame) - (self.chartView.chartPadding * 2 + width), height)];
     
-    self.shadowLayer.frame = CGRectMake(-self.chartView.chartPadding - width, -self.chartView.chartTopPadding, 320, height+self.chartView.chartTopPadding);
+    
+    [CATransaction begin];
+    [CATransaction setDisableActions: YES];
+    self.shadowLayer.frame = CGRectMake(-self.chartView.chartPadding - width, -self.chartView.chartTopPadding, CGRectGetWidth(self.frame), height+self.chartView.chartTopPadding);
+    [CATransaction commit];
 }
 
 //=============================================================================
