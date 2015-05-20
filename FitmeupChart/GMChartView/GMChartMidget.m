@@ -137,9 +137,10 @@ const CGFloat kLineWidth  = 1.5f;
     [self.timeFlagView setBackgroundColor: [UIColor clearColor]];
     [self addSubview: self.timeFlagView];
     
-    //self.leftGlowView = [[GMShadowView alloc] initWithFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, [self.chartView width], [self.chartView height])];
-    //[self.leftGlowView setBackgroundColor: [UIColor redColor]];
-    //[self addSubview: self.leftGlowView];
+    self.leftGlowView = [[GMShadowView alloc] initWithFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, [self.chartView width], [self.chartView height])];
+    [self.leftGlowView setBackgroundColor: [UIColor clearColor]];
+    [self.leftGlowView setClipsToBounds: YES];
+    [self addSubview: self.leftGlowView];
     
     self.innerFlagView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - kFlagRange, 0, kFlagRange, kFlagRange)];
     [self.innerFlagView setBackgroundColor: self.flagColor];
@@ -162,7 +163,7 @@ const CGFloat kLineWidth  = 1.5f;
 - (void) setupShadow
 {
     self.shadowLayer = [GMShadowLayer layer];
-    [self.layer addSublayer: self.shadowLayer];
+    [self.leftGlowView.layer addSublayer: self.shadowLayer];
 }
 
 //=============================================================================
@@ -248,13 +249,13 @@ const CGFloat kLineWidth  = 1.5f;
 
 - (void) setWidthForTimeFlagWithValue: (CGFloat) width
 {
-    [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, CGRectGetHeight(self.timeFlagView.frame))];
+    CGFloat height = CGRectGetHeight(self.timeFlagView.frame);
+    [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
     [self.innerFlagView setFrame: CGRectMake(width - kFlagRange, 0, kFlagRange, kFlagRange)];
-    [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, CGRectGetHeight(self.timeFlagView.frame))];
-    [self.leftGlowView setFrame: CGRectMake(self.chartView.chartPadding + width, self.chartView.chartTopPadding, CGRectGetWidth(self.frame) - (self.chartView.chartPadding * 2 + width), CGRectGetHeight(self.timeFlagView.frame))];
+    [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, height)];
+    [self.leftGlowView setFrame: CGRectMake(self.chartView.chartPadding + width, self.chartView.chartTopPadding, CGRectGetWidth(self.frame) - (self.chartView.chartPadding * 2 + width), height)];
     
-    [self.shadowLayer setClipRect: CGRectMake(self.chartView.chartPadding + width - [self stepWidth], 0, CGRectGetWidth(self.frame) - (self.chartView.chartPadding * 2 + width - [self stepWidth]), CGRectGetHeight(self.timeFlagView.frame)+self.chartView.chartTopPadding)];
-    [self.shadowLayer setNeedsDisplay];
+    self.shadowLayer.frame = CGRectMake(-self.chartView.chartPadding - width, -self.chartView.chartTopPadding, 320, height+self.chartView.chartTopPadding);
 }
 
 //=============================================================================
@@ -355,10 +356,10 @@ andHeightValueChanged: (CGFloat) heightValue
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
     [self.innerFlagView setFrame: CGRectMake(width - kFlagRange, 0, kFlagRange, kFlagRange)];
     [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, height)];
+    [self.leftGlowView setMidgetPath: [self.chartView glowPath]];
+    [self.leftGlowView setNeedsDisplay];
     
-    self.shadowLayer.frame = CGRectMake(0, 0, width + self.chartView.chartPadding, height+self.chartView.chartTopPadding);
     [self.shadowLayer setMidgetPath: [self.chartView glowPath]];
-    [self.shadowLayer setClipRect: CGRectMake(self.chartView.chartPadding + width - [self stepWidth], 0, CGRectGetWidth(self.frame) - (self.chartView.chartPadding * 2 + width - [self stepWidth]), height+self.chartView.chartTopPadding)];
     [self.shadowLayer setNeedsDisplay];
     
     [self setWidthForTimeFlagWithValue: width - [self stepWidth]];

@@ -51,7 +51,7 @@ static const CGFloat kShadowRadius = 25.0f;
          withContext: (CGContextRef) context
 {
     NSShadow* shadow = [[NSShadow alloc] init];
-    [shadow setShadowColor: [[UIColor gm_greenColor] colorWithAlphaComponent: 1]];
+    [shadow setShadowColor: [[UIColor gm_greenColor] colorWithAlphaComponent: 0.4f]];
     [shadow setShadowOffset: CGSizeMake(0, 0)];
     [shadow setShadowBlurRadius: kShadowRadius];
     

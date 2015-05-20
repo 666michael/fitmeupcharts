@@ -10,4 +10,6 @@
 
 @interface GMShadowView : UIView
 
+@property (nonatomic, strong) UIBezierPath *midgetPath;
+
 @end
