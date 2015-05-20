@@ -71,6 +71,7 @@ typedef NS_ENUM(NSUInteger, GMChartInterpolation)
 @property (nonatomic) CGFloat chartPadding;
 @property (nonatomic) CGFloat chartTopPadding;
 @property (nonatomic) CGFloat chartBottomPadding;
+@property (nonatomic) CGFloat glowIntensity;
 @property (nonatomic, weak) NSObject<GMChartViewProtocol>* delegate;
 @property (nonatomic) GMChartInterpolation chartInterpolation;
 @property (nonatomic) BOOL shouldAddMinYAverage;

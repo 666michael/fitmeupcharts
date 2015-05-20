@@ -100,6 +100,7 @@ const CGFloat kLineWidth  = 1.5f;
     [self.chartView setYAxisColor: [UIColor whiteColor]];
     [self.chartView setShouldDrawCirclesOnAxis: YES];
     [self.chartView setBackgroundColor: [UIColor gm_backgroundColor]];
+    [self.chartView setGlowIntensity: 0.5f];
     
     self.totalDataSet = [GMCoreDataHelper testDataSet];
     self.totalDataSet = [self.totalDataSet dataSetForMidget];

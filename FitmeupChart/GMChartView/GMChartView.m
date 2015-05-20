@@ -34,6 +34,7 @@ static const NSInteger kDefaultCellsOffset = 3;
 static const CGFloat kTextScaleHeight = 1.5;
 static const CGFloat kTextLabelOffset = 5.0;
 static const NSInteger kVerticalLinesStartIndex = -1;
+static const NSInteger kDefaultGlowIntensity = 1.0f;
 const CGFloat GMChartViewDefaultFontSize = 10.5f;
 const CGFloat GMChartViewDefaultCircleRadius = 2.5f;
 const CGFloat GMChartViewDefaultLineWidth = 2.0f;
@@ -99,6 +100,7 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
     _maxY = 0.0f;
     
     _minGridSize = kDefaultMinGridSize;
+    _glowIntensity = kDefaultGlowIntensity;
     
     self.showGrid = YES;
     self.shouldAddMinYAverage = YES;
@@ -107,7 +109,7 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
     self.chartTopPadding = kDefaultChartTopPadding;
     self.chartBottomPadding = kDefaultChartBottomPadding;
     
-    [self setShouldUseBezier: YES];
+    [self setShouldUseBezier: NO];
     [self setShouldPlotLabels: YES];
     
     [self setGridSize: GMGridSize16];

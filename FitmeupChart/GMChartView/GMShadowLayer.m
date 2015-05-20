@@ -26,14 +26,9 @@
     NSShadow* shadow = [[NSShadow alloc] init];
     [shadow setShadowColor: [[UIColor redColor] colorWithAlphaComponent: 1]];
     [shadow setShadowOffset: CGSizeMake(0, 0)];
-    [shadow setShadowBlurRadius: 25.0f];
+    [shadow setShadowBlurRadius: 40.0f];
     
     CGContextSetShadowWithColor(context, CGSizeZero, 0, NULL);
-    
-    
-    UIBezierPath *clipPath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake( 0, 0, 100, 100)
-                                                        cornerRadius: 0];
-    clipPath.usesEvenOddFillRule = YES;
     
     CGContextSetAlpha(context, CGColorGetAlpha([shadow.shadowColor CGColor]));
     CGContextBeginTransparencyLayer(context, NULL);
@@ -43,8 +38,6 @@
         CGContextSetBlendMode(context, kCGBlendModeSourceOut);
         CGContextBeginTransparencyLayer(context, NULL);
         
-        //[clipPath addClip];
-        //[opaqueShadow setFill];
         CGContextDrawPath(context, kCGPathFill);
         
         CGContextEndTransparencyLayer(context);

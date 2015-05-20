@@ -23,7 +23,7 @@ typedef NS_ENUM(NSUInteger, GMPointDirection)
     GMPointNone
 };
 
-static const CGFloat kShadowRadius = 25.0f;
+static const CGFloat kShadowRadius = 40.0f;
 
 //=============================================================================
 
@@ -51,7 +51,7 @@ static const CGFloat kShadowRadius = 25.0f;
          withContext: (CGContextRef) context
 {
     NSShadow* shadow = [[NSShadow alloc] init];
-    [shadow setShadowColor: [[UIColor gm_greenColor] colorWithAlphaComponent: 0.3f]];
+    [shadow setShadowColor: [[UIColor gm_greenColor] colorWithAlphaComponent: self.glowIntensity]];
     [shadow setShadowOffset: CGSizeMake(0, 0)];
     [shadow setShadowBlurRadius: kShadowRadius];
     
