@@ -104,7 +104,7 @@ const CGFloat kLineWidth  = 1.5f;
     [self.chartView setGlowIntensity: 0.5f];
     
     self.totalDataSet = [GMCoreDataHelper testDataSet];
-    //self.totalDataSet = [self.totalDataSet dataSetForMidget];
+    self.totalDataSet = [self.totalDataSet dataSetForMidget];
     self.lastDateType = GMChartLastDateTypeCurrentDateWithLastValue;
     switch (self.lastDateType)
     {

@@ -613,20 +613,20 @@ static const NSString* const kCount  = @"count";
 
 {
     NSInteger indexOfFirstDate = [_dataPoints indexOfObjectPassingTest: ^BOOL(GMDataPoint *point, NSUInteger idx, BOOL *stop) {
-        return point.xValue > [startDate timeIntervalSinceReferenceDate];
+        return point.xValue >= [startDate timeIntervalSinceReferenceDate];
     }];
     NSInteger indexOfLastDate = [_dataPoints indexOfObjectPassingTest: ^BOOL(GMDataPoint *point, NSUInteger idx, BOOL *stop) {
         return point.xValue > [endDate timeIntervalSinceReferenceDate];
     }];
     if (indexOfFirstDate != NSNotFound)
     {
-        NSInteger toIndex = _dataPoints.count - indexOfFirstDate;
+        NSInteger len = _dataPoints.count - indexOfFirstDate;
         
         if (indexOfLastDate != NSNotFound)
         {
-            toIndex = _dataPoints.count - indexOfLastDate;
+            len = indexOfLastDate - indexOfFirstDate;
         }
-        return [[GMDataSet alloc] initWithDataPoints: [_dataPoints subarrayWithRange: NSMakeRange(indexOfFirstDate, toIndex)]];
+        return [[GMDataSet alloc] initWithDataPoints: [_dataPoints subarrayWithRange: NSMakeRange(indexOfFirstDate, len)]];
     }
     else
     {
@@ -708,18 +708,24 @@ static const NSString* const kCount  = @"count";
     NSMutableArray *points = [NSMutableArray arrayWithCapacity: kElementsInGroup];
     if ([_dataPoints count] > 0)
     {
-        [points addObject: [[self firstDataPoint] copy]];
-        [points addObject: [[self lastDataPoint] copy]];
+        //[points addObject: [[self firstDataPoint] copy]];
+        //[points addObject: [[self lastDataPoint] copy]];
     }
     
     CGFloat startX = [[self firstDataPoint] xValue];
     CGFloat endX = [[self lastDataPoint] xValue];
     CGFloat stepX = (endX - startX) / (kElementsInGroup + 1);
     
-    for (NSInteger index = 0; index < kElementsInGroup; index++)
+    for (NSInteger index = 0; index <= kElementsInGroup; index++)
     {
         GMDataSet *setOfPoints = [self dataSetFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + index * stepX]
                                                 toDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX]];
+        NSLog(@"%d %@-%@\n%@", index, [NSDate dateWithTimeIntervalSinceReferenceDate: startX + index * stepX], [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX], setOfPoints);
+        if (index == 0)
+        {
+            [points addObject: [[GMDatePoint alloc] initWithDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX]
+                                                          yValue: [setOfPoints averageArithmetic]]];
+        }
         [points addObject: [[GMDatePoint alloc] initWithDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX]
                                                       yValue: [setOfPoints averageArithmetic]]];
     }
