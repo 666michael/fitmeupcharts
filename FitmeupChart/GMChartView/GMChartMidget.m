@@ -18,7 +18,8 @@
 
 //=============================================================================
 
-const CGFloat kFlagRange  = 20.0f;
+const CGFloat kFlagRange  = 30.0f;
+const CGFloat kFlagSize  = 20.0f;
 const CGFloat kDaysInStep = 7.0f;
 const CGFloat kLineWidth  = 1.5f;
 
@@ -143,12 +144,12 @@ const CGFloat kLineWidth  = 1.5f;
     [self.leftGlowView setClipsToBounds: YES];
     [self addSubview: self.leftGlowView];
     
-    self.innerFlagView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - kFlagRange, 0, kFlagRange, kFlagRange)];
+    self.innerFlagView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - kFlagSize, 0, kFlagSize, kFlagSize)];
     [self.innerFlagView setBackgroundColor: self.flagColor];
     [self.innerFlagView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
     [self.innerFlagView setTranslatesAutoresizingMaskIntoConstraints: NO];
     
-    self.innerLineView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - kLineWidth, 0, kLineWidth, kFlagRange/5)];
+    self.innerLineView = [[UIView alloc] initWithFrame: CGRectMake([self.chartView width] - kLineWidth, 0, kLineWidth, kFlagSize/5)];
     [self.innerLineView setBackgroundColor: self.flagColor];
     [self.innerLineView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin )];
     [self.innerLineView setTranslatesAutoresizingMaskIntoConstraints: NO];
@@ -194,8 +195,8 @@ const CGFloat kLineWidth  = 1.5f;
 {
     UIBezierPath *trianglePath = [UIBezierPath bezierPath];
     [trianglePath moveToPoint: CGPointMake(0, 0)];
-    [trianglePath addLineToPoint: CGPointMake(kFlagRange,0)];
-    [trianglePath addLineToPoint: CGPointMake(kFlagRange, kFlagRange)];
+    [trianglePath addLineToPoint: CGPointMake(kFlagSize, 0)];
+    [trianglePath addLineToPoint: CGPointMake(kFlagSize, kFlagSize)];
     [trianglePath closePath];
     
     CAShapeLayer *triangleMaskLayer = [CAShapeLayer layer];
@@ -260,7 +261,7 @@ const CGFloat kLineWidth  = 1.5f;
 {
     CGFloat height = CGRectGetHeight(self.timeFlagView.frame);
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
-    [self.innerFlagView setFrame: CGRectMake(width - kFlagRange, 0, kFlagRange, kFlagRange)];
+    [self.innerFlagView setFrame: CGRectMake(width - kFlagSize, 0, kFlagSize, kFlagSize)];
     [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, height)];
     [self.leftGlowView setFrame: CGRectMake(self.chartView.chartPadding + width, self.chartView.chartTopPadding, CGRectGetWidth(self.frame) - (self.chartView.chartPadding * 2 + width), height)];
     
@@ -366,7 +367,7 @@ andHeightValueChanged: (CGFloat) heightValue
 {
     _fullWidth = width;
     [self.timeFlagView setFrame: CGRectMake(self.chartView.chartPadding, self.chartView.chartTopPadding, width, height)];
-    [self.innerFlagView setFrame: CGRectMake(width - kFlagRange, 0, kFlagRange, kFlagRange)];
+    [self.innerFlagView setFrame: CGRectMake(width - kFlagSize, 0, kFlagSize, kFlagSize)];
     [self.innerLineView setFrame: CGRectMake(width - kLineWidth, 0, kLineWidth, height)];
     
     [self.shadowLayer setMidgetPath: [self.chartView glowPath]];
