@@ -706,28 +706,28 @@ static const NSString* const kCount  = @"count";
 - (GMDataSet*) dataSetForMidget
 {
     NSMutableArray *points = [NSMutableArray arrayWithCapacity: kElementsInGroup];
-    if ([_dataPoints count] > 0)
-    {
-        //[points addObject: [[self firstDataPoint] copy]];
-        //[points addObject: [[self lastDataPoint] copy]];
-    }
     
     CGFloat startX = [[self firstDataPoint] xValue];
     CGFloat endX = [[self lastDataPoint] xValue];
     CGFloat stepX = (endX - startX) / (kElementsInGroup + 1);
+    CGFloat lastData = 0.0f;
     
     for (NSInteger index = 0; index <= kElementsInGroup; index++)
     {
         GMDataSet *setOfPoints = [self dataSetFromDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + index * stepX]
                                                 toDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX]];
-        NSLog(@"%d %@-%@\n%@", index, [NSDate dateWithTimeIntervalSinceReferenceDate: startX + index * stepX], [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX], setOfPoints);
         if (index == 0)
         {
+            lastData = [setOfPoints averageArithmetic];
             [points addObject: [[GMDatePoint alloc] initWithDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX]
-                                                          yValue: [setOfPoints averageArithmetic]]];
+                                                          yValue: lastData]];
+        }
+        if (setOfPoints.count > 0)
+        {
+            lastData = [setOfPoints averageArithmetic];
         }
         [points addObject: [[GMDatePoint alloc] initWithDate: [NSDate dateWithTimeIntervalSinceReferenceDate: startX + (index + 1) * stepX]
-                                                      yValue: [setOfPoints averageArithmetic]]];
+                                                      yValue: lastData]];
     }
     
     GMDataSet *dataSet = [self copyWithPoints: points];
