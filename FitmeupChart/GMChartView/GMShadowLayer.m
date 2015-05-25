@@ -19,8 +19,8 @@
         CGContextClipToRect(context, _clipRect);
     }
     
-    CGContextSetStrokeColorWithColor(context, [UIColor gm_greenColor].CGColor);
-    CGContextSetFillColorWithColor(context, [UIColor gm_greenColor].CGColor);
+    CGContextSetStrokeColorWithColor(context, [UIColor gm_fitmeupBoldGreenColor].CGColor);
+    CGContextSetFillColorWithColor(context, [UIColor gm_fitmeupBoldGreenColor].CGColor);
     CGContextAddPath(context, [self.midgetPath CGPath]);
     
     NSShadow* shadow = [[NSShadow alloc] init];

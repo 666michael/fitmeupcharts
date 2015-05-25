@@ -16,7 +16,7 @@
 
 //=============================================================================
 
-+ (UIColor*) gm_greenColor
++ (UIColor*) gm_fitmeupBoldGreenColor
 {
     return [UIColor colorWithRed: 63.0f/255.0f
                            green: 180.0f/255.0f
@@ -26,7 +26,7 @@
 
 //=============================================================================
 
-+ (UIColor*) gm_redColor
++ (UIColor*) gm_fitmeupRedColor
 {
     return [UIColor colorWithRed: 218.0f/255.0f
                            green: 64.0f/255.0f
@@ -36,7 +36,7 @@
 
 //=============================================================================
 
-+ (UIColor*) gm_grayColor
++ (UIColor*) gm_fitmeupLightGrayColor
 {
     return [UIColor colorWithRed: 85.0/255.0f
                            green: 86.0/255.0f
@@ -46,7 +46,7 @@
 
 //=============================================================================
 
-+ (UIColor*) gm_backgroundColor
++ (UIColor*) gm_fitmeupDarkGrayColor
 {
     return [UIColor colorWithRed: 39.0/255.0f
                            green: 42.0/255.0f

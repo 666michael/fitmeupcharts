@@ -97,10 +97,10 @@ const CGFloat kLineWidth  = 1.5f;
     
     [self.chartView setGridSize: GMGridSize16];
     
-    [self.chartView setXAxisColor: [UIColor gm_greenColor]];
+    [self.chartView setXAxisColor: [UIColor gm_fitmeupBoldGreenColor]];
     [self.chartView setYAxisColor: [UIColor whiteColor]];
     [self.chartView setShouldDrawCirclesOnAxis: YES];
-    [self.chartView setBackgroundColor: [UIColor gm_backgroundColor]];
+    [self.chartView setBackgroundColor: [UIColor gm_fitmeupDarkGrayColor]];
     [self.chartView setGlowIntensity: 0.5f];
     
     self.totalDataSet = [GMCoreDataHelper testDataSet];

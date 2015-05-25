@@ -10,9 +10,9 @@
 
 @interface UIColor (FitMeUp)
 
-+ (UIColor*) gm_greenColor;
-+ (UIColor*) gm_redColor;
-+ (UIColor*) gm_grayColor;
-+ (UIColor*) gm_backgroundColor;
++ (UIColor*) gm_fitmeupBoldGreenColor;
++ (UIColor*) gm_fitmeupRedColor;
++ (UIColor*) gm_fitmeupLightGrayColor;
++ (UIColor*) gm_fitmeupDarkGrayColor;
 
 @end

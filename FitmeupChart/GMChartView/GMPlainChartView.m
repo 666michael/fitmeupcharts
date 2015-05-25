@@ -51,7 +51,7 @@ static const CGFloat kShadowRadius = 40.0f;
          withContext: (CGContextRef) context
 {
     NSShadow* shadow = [[NSShadow alloc] init];
-    [shadow setShadowColor: [[UIColor gm_greenColor] colorWithAlphaComponent: self.glowIntensity]];
+    [shadow setShadowColor: [[UIColor gm_fitmeupBoldGreenColor] colorWithAlphaComponent: self.glowIntensity]];
     [shadow setShadowOffset: CGSizeMake(0, 0)];
     [shadow setShadowBlurRadius: kShadowRadius];
     
@@ -139,7 +139,7 @@ static const CGFloat kShadowRadius = 40.0f;
 - (UIColor*) colorForDataSet: (GMDataSet*) dataSet
                     withDate: (NSDate*) date
 {
-    return [UIColor gm_greenColor];
+    return [UIColor gm_fitmeupBoldGreenColor];
 }
 
 //=============================================================================
@@ -182,7 +182,7 @@ static const CGFloat kShadowRadius = 40.0f;
             if (dataPoint.shouldShowLabel)
             {
                 
-                UIColor* colorForText = dataPoint.pointStyle == GMPointStyleUpper ? [UIColor gm_redColor] : [UIColor gm_greenColor];
+                UIColor* colorForText = dataPoint.pointStyle == GMPointStyleUpper ? [UIColor gm_fitmeupRedColor] : [UIColor gm_fitmeupBoldGreenColor];
                 [self drawCircleAtXCoordinate: x
                                   yCoordinate: y
                                     fillColor: colorForText

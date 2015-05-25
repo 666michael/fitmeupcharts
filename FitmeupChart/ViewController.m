@@ -26,7 +26,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     [self initChart];
-    [self.view setBackgroundColor: [UIColor gm_backgroundColor]];
+    [self.view setBackgroundColor: [UIColor gm_fitmeupDarkGrayColor]];
 }
 
 - (void)initChart
@@ -44,12 +44,12 @@
     [self.chartView setChartTopPadding: 20.0f];
     [self.chartView setChartBottomPadding: 0.0f];
     
-    [self.chartView setXAxisColor: [UIColor gm_greenColor]];
-    [self.chartView setYAxisColor: [UIColor gm_greenColor]];
+    [self.chartView setXAxisColor: [UIColor gm_fitmeupBoldGreenColor]];
+    [self.chartView setYAxisColor: [UIColor gm_fitmeupBoldGreenColor]];
     [self.chartView setIsStepUsed: YES];
     [self.chartView setGridSize: GMGridSize18];
     [self.chartView setShouldDrawCirclesOnAxis: NO];
-    [self.chartView setBackgroundColor: [UIColor gm_backgroundColor]];
+    [self.chartView setBackgroundColor: [UIColor gm_fitmeupDarkGrayColor]];
     
     [self.chartMidget setDelegate: self];
 }

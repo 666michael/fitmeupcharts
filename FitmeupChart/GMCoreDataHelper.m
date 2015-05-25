@@ -208,7 +208,7 @@ NSString *storeFilename = @"DataModel.sqlite";
     [dataSet addDataPoint:pt19];
     
     [dataSet sortPoints];
-    [dataSet setPlotColor: [UIColor gm_redColor]];
+    [dataSet setPlotColor: [UIColor gm_fitmeupRedColor]];
     
     return dataSet;
 }
@@ -291,11 +291,11 @@ static GMDataSet* testData;
         {
             GMDataPoint *point = [[GMDatePoint alloc] initWithDate: [NSDate dateWithTimeIntervalSinceNow:-daysBefore* SECS_PER_DAY]
                                                             yValue: 65.0f + arc4random() %4 ];
-            //[dataSet addDataPoint: point];
+            [dataSet addDataPoint: point];
         }
         
         [dataSet sortPoints];
-        [dataSet setPlotColor: [UIColor gm_greenColor]];
+        [dataSet setPlotColor: [UIColor gm_fitmeupBoldGreenColor]];
         testData = dataSet;
     }
     return testData;
@@ -306,7 +306,7 @@ static GMDataSet* testData;
 + (GMDataSet *) testDataSetWithStartDate: (NSDate*) startDate
 {
     GMDataSet *subSet = [[self testDataSet] dataSetFromDate: startDate];
-    [subSet setPlotColor: [UIColor gm_greenColor]];
+    [subSet setPlotColor: [UIColor gm_fitmeupBoldGreenColor]];
     [subSet sortPoints];
     return subSet;
 }
@@ -316,7 +316,7 @@ static GMDataSet* testData;
 + (GMDataSet *) testDataSetSmallWithStartDate: (NSDate*) startDate
 {
     GMDataSet *subSet = [[self testDataSetSmall] dataSetFromDate: startDate];
-    [subSet setPlotColor: [UIColor gm_greenColor]];
+    [subSet setPlotColor: [UIColor gm_fitmeupBoldGreenColor]];
     [subSet sortPoints];
     return subSet;
 }

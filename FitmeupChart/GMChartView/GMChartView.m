@@ -75,8 +75,8 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
 {
     [self setBackgroundColor: [UIColor whiteColor]];
     
-    _xAxisColor = [UIColor gm_grayColor];
-    _yAxisColor = [UIColor gm_grayColor];
+    _xAxisColor = [UIColor gm_fitmeupLightGrayColor];
+    _yAxisColor = [UIColor gm_fitmeupLightGrayColor];
     _backgroundColor = [UIColor whiteColor];
     
     _leftPadding = 0.0f;
@@ -655,7 +655,7 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
                 case GMDataGroupMonth:
                 case GMDataGroupYears:
                     x =  self.chartPadding + _leftPadding + (stepX / 2.0)* i;
-                    textColor = [UIColor gm_greenColor];
+                    textColor = [UIColor gm_fitmeupBoldGreenColor];
                     break;
                 default:
                     break;
@@ -694,7 +694,7 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
 - (UIColor*) colorForDataSet: (GMDataSet*) dataSet
                     withDate: (NSDate*) date
 {
-    return [UIColor gm_grayColor];
+    return [UIColor gm_fitmeupLightGrayColor];
 }
 
 //=============================================================================
@@ -769,9 +769,9 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
     UIFont* textFont = [GMChartUtils gm_defaultBoldFontWithSize: GMChartViewDefaultFontSize];
     NSDictionary* attributes = @{
                                  NSFontAttributeName : textFont,
-                                 NSForegroundColorAttributeName : [UIColor gm_grayColor]};
+                                 NSForegroundColorAttributeName : [UIColor gm_fitmeupLightGrayColor]};
     
-    UIColor* legendColor = [_dataSets[index] plotColor] ? [_dataSets[index] plotColor] : [UIColor gm_grayColor];
+    UIColor* legendColor = [_dataSets[index] plotColor] ? [_dataSets[index] plotColor] : [UIColor gm_fitmeupLightGrayColor];
     [self drawRounedRectWithRect: CGRectMake(x, y,kDefaultLegendSquare,kDefaultLegendSquare)
                     cornerRaduis:kDefaultSmallCircleRadius * 2
                            color: legendColor
@@ -844,21 +844,21 @@ const CGFloat GMChartViewDefaultLineWidth = 2.0f;
     
     [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding
                       yCoordinate: _plotHeight + self.chartTopPadding
-                        fillColor: [UIColor gm_greenColor]
+                        fillColor: [UIColor gm_fitmeupBoldGreenColor]
                        andContext: context];
     [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding + _plotWidth
                       yCoordinate: _plotHeight + self.chartTopPadding
-                        fillColor: [UIColor gm_greenColor]
+                        fillColor: [UIColor gm_fitmeupBoldGreenColor]
                        andContext: context];
     
     [self drawCircleAtXCoordinate: self.chartPadding
                       yCoordinate: [self yCoordinatesForValue: [[_dataSets[0] firstDataPoint] yValue]]
-                        fillColor: [UIColor gm_greenColor]
+                        fillColor: [UIColor gm_fitmeupBoldGreenColor]
                        andContext: context];
     
     [self drawCircleAtXCoordinate: self.chartPadding + _leftPadding + _plotWidth
                       yCoordinate: [self yCoordinatesForValue: [[_dataSets[0] lastDataPoint] yValue]]
-                        fillColor: [UIColor gm_greenColor]
+                        fillColor: [UIColor gm_fitmeupBoldGreenColor]
                        andContext: context];
     CGContextFillPath(context);
     

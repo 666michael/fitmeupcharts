@@ -80,6 +80,6 @@
 - (UIColor*) colorForDataSet: (GMDataSet*) dataSet
                     withDate: (NSDate*) date
 {
-    return [dataSet hasDataForDate: date] ? [UIColor gm_greenColor] : [UIColor gm_grayColor];
+    return [dataSet hasDataForDate: date] ? [UIColor gm_fitmeupBoldGreenColor] : [UIColor gm_fitmeupLightGrayColor];
 }
 @end
